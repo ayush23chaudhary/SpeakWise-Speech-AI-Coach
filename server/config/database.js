@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
+const URI ="mongodb+srv://ayush23chaudhary:JbmiDXSwZsvJBfIH@client.y5s93z3.mongodb.net/speakwise";
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://ayush23chaudhary:JbmiDXSwZsvJBfIH@client.y5s93z3.mongodb.net/speakwise', {
+    const conn = await mongoose.connect(process.env.MONGODB_URI || URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
