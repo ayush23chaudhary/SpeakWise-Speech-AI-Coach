@@ -96,3 +96,90 @@ logs
 *.db
 *.sqlite
 *.sqlite3
+=======
+# Python
+# Compiled Python files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# Distribution / packaging
+.Python
+build/
+dist/
+*.egg-info/
+.installed.cfg
+*.manifest
+*.spec
+
+# Tests and coverage
+.pytest_cache/
+.coverage
+.mypy_cache/
+htmlcov/
+.nox/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook specific files
+.ipynb_checkpoints/
+*.nbdata
+*.bak
+
+# Environment variables
+.env
+*.env
+.flaskenv
+
+# Data directories (raw data often too large or sensitive for Git)
+# Raw data should ideally be managed via DVC or stored in object storage
+data/raw/
+data/processed/
+data/external/
+
+
+# Model artifacts (trained models, weights, scalers)
+# These should be versioned with DVC or stored in a model registry (e.g., MLflow)
+# but kept out of Git for size and sensitivity.
+models/
+!models/.gitkeep # Keep the directory but ignore its contents
+models/*
+# Exception: If you have a .gitkeep or specific small config files you want to keep inside 'models/',
+# you'll need to add exceptions like:
+# !models/README.md
+# !models/configs/
+
+# Logs
+*.log
+logs/
+celerybeat-schedule/
+
+Cloud specific (e.g., temporary credentials, cache files)
+.aws/
+.gcloud/
+.azure/
+
+# IDE and temporary files specific to certain tools
+*.sublime-project
+*.sublime-workspace
+*.vscode-workspace
+
+# Frontend build artifacts (if app/ contains a separate JS framework)
+app/dist/
+app/build/
+app/node_modules/ # If you have a JS frontend
