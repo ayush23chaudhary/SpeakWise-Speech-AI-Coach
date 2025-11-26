@@ -45,22 +45,18 @@ const useAudioRecorder = () => {
         }
       };
       
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
-        setAudioBlob(blob);
-        setAudioUrl(URL.createObjectURL(blob));
-      };
+      // onstop will be handled when stopRecording is called (so caller can await the blob)
       
       mediaRecorder.onerror = (event) => {
         setError('Recording error occurred');
         console.error('MediaRecorder error:', event);
       };
       
-      // Start recording
-      mediaRecorder.start(100); // Collect data every 100ms
-      setIsRecording(true);
-      setIsPaused(false);
-      startTimeRef.current = Date.now();
+  // Start recording
+  mediaRecorder.start(100); // Collect data every 100ms
+  setIsRecording(true);
+  setIsPaused(false);
+  startTimeRef.current = Date.now();
       
       // Start duration timer
       durationIntervalRef.current = setInterval(() => {
@@ -123,32 +119,65 @@ const useAudioRecorder = () => {
   }, [isRecording, isPaused]);
 
   const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      
-      // Stop all streams
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
+    // Return a promise that resolves when the mediaRecorder onstop fires and blob is available
+    return new Promise((resolve, reject) => {
+      try {
+        if (mediaRecorderRef.current && isRecording) {
+          const mediaRecorder = mediaRecorderRef.current;
+          const chunks = [];
+
+          // Collect any remaining data events (some browsers buffer final chunks)
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data && event.data.size > 0) {
+              chunks.push(event.data);
+            }
+          };
+
+          mediaRecorder.onstop = async () => {
+            try {
+              const blob = new Blob(chunks.length ? chunks : [new Blob()], { type: 'audio/webm' });
+              setAudioBlob(blob);
+              setAudioUrl(URL.createObjectURL(blob));
+
+              // Stop all streams
+              if (streamRef.current) {
+                streamRef.current.getTracks().forEach(track => track.stop());
+              }
+
+              // Clear intervals
+              if (durationIntervalRef.current) {
+                clearInterval(durationIntervalRef.current);
+              }
+
+              if (volumeIntervalRef.current) {
+                cancelAnimationFrame(volumeIntervalRef.current);
+              }
+
+              // Close audio context
+              if (audioAnalyzerRef.current) {
+                audioAnalyzerRef.current.audioContext.close();
+              }
+
+              setIsRecording(false);
+              setIsPaused(false);
+
+              resolve(blob);
+            } catch (err) {
+              reject(err);
+            }
+          };
+
+          // Trigger stop
+          mediaRecorder.stop();
+        } else {
+          // Nothing to stop; resolve with existing audioBlob if present
+          resolve(audioBlob);
+        }
+      } catch (error) {
+        reject(error);
       }
-      
-      // Clear intervals
-      if (durationIntervalRef.current) {
-        clearInterval(durationIntervalRef.current);
-      }
-      
-      if (volumeIntervalRef.current) {
-        cancelAnimationFrame(volumeIntervalRef.current);
-      }
-      
-      // Close audio context
-      if (audioAnalyzerRef.current) {
-        audioAnalyzerRef.current.audioContext.close();
-      }
-      
-      setIsRecording(false);
-      setIsPaused(false);
-    }
-  }, [isRecording]);
+    });
+  }, [isRecording, audioBlob]);
 
   const resetRecording = useCallback(() => {
     setAudioBlob(null);

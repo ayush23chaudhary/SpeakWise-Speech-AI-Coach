@@ -272,11 +272,6 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
                       </Button>
                     </div>
                     
-                    {isAnalyzing && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg">
-                        <LoadingSpinner size="lg" text="Analyzing your speech..." />
-                      </div>
-                    )}
                     <Button
                       onClick={analyzeRecording}
                       disabled={isAnalyzing}
@@ -285,7 +280,14 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
                       icon={Upload}
                       className="px-8 py-4 text-lg"
                     >
-                      {isAnalyzing ? 'Analyzing...' : 'Stop & Analyze'}
+                      {isAnalyzing ? (
+                        <>
+                          <LoadingSpinner size="sm" className="mr-2" />
+                          Analyzing...
+                        </>
+                      ) : (
+                        'Stop & Analyze'
+                      )}
                     </Button>
                   </div>
                 )}

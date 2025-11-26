@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mic, BarChart3, TrendingUp } from 'lucide-react';
+import { Mic, BarChart3, TrendingUp, Target } from 'lucide-react';
 
 const TabNavigation = ({ activeTab, setActiveTab }) => {
   const tabs = [
@@ -20,6 +20,12 @@ const TabNavigation = ({ activeTab, setActiveTab }) => {
       label: 'Progress Tracker',
       icon: TrendingUp,
       description: 'Track your improvement over time'
+    },
+    {
+      id: 'practice',
+      label: 'Practice Hub',
+      icon: Target,
+      description: 'Personalized exercises and challenges'
     }
   ];
 

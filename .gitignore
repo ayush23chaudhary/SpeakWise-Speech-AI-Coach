@@ -17,6 +17,10 @@ client/.env
 server/.env
 */.env
 
+# Google Cloud credentials
+*google-credentials*.json
+server/google-credentials.json
+
 # Build outputs
 dist/
 build/
@@ -188,4 +192,4 @@ Cloud specific (e.g., temporary credentials, cache files)
 # Frontend build artifacts (if app/ contains a separate JS framework)
 app/dist/
 app/build/
-app/node_modules/ # If you have a JS frontend
+app/node_modules/ 

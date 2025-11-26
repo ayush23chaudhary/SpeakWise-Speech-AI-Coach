@@ -4,6 +4,7 @@ import TabNavigation from './TabNavigation';
 import PerformanceStudio from '../studio/PerformanceStudio';
 import AnalysisDashboard from '../analysis/AnalysisDashboard';
 import ProgressTracker from '../progress/ProgressTracker';
+import PracticeHub from '../practice/PracticeHub';
 import useThemeStore from '../../store/themeStore';
 
 const MainApp = () => {
@@ -33,6 +34,8 @@ const MainApp = () => {
         return <AnalysisDashboard analysisData={currentAnalysis} />;
       case 'progress':
         return <ProgressTracker />;
+      case 'practice':
+        return <PracticeHub />;
       default:
         return <PerformanceStudio onAnalysisComplete={handleAnalysisComplete} />;
     }

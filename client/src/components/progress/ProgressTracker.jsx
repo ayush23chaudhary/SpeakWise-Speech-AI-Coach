@@ -102,11 +102,11 @@ const ProgressTracker = () => {
       date: formatDate(report.createdAt),
       fullDate: report.createdAt,
       overallScore: report.overallScore,
-      clarity: report.analysisData?.metrics?.clarity || 0,
-      confidence: report.analysisData?.metrics?.confidence || 0,
-      fluency: report.analysisData?.metrics?.fluency || 0,
-      pace: report.analysisData?.metrics?.pace || 0,
-      tone: report.analysisData?.metrics?.tone || 0
+      clarity: report.metrics?.clarity || 0,
+      confidence: report.metrics?.confidence || 0,
+      fluency: report.metrics?.fluency || 0,
+      pace: report.metrics?.pace || 0,
+      tone: report.metrics?.tone || 0
     }));
   };
 
@@ -388,7 +388,10 @@ const ProgressTracker = () => {
                     </div>
                     <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                       <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                        {selectedReport.totalFillerWords || 0}
+                        {selectedReport.fillerWords 
+                          ? Object.values(selectedReport.fillerWords).reduce((sum, count) => sum + count, 0)
+                          : 0
+                        }
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">Filler Words</div>
                     </div>

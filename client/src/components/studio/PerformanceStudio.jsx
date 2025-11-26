@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, Square, Play, Pause } from 'lucide-react';
 import api from '../../utils/api';
+import { useNavigate } from 'react-router-dom';
+import { analyzeAudio } from '../../api';
+import useAuthStore from '../../store/authStore';
 
 const PerformanceStudio = ({ onAnalysisComplete }) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -16,6 +19,8 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
   const streamRef = useRef(null);
   const animationRef = useRef(null);
   const startTimeRef = useRef(null);
+  const navigate = useNavigate();
+  const token = useAuthStore(state => state.token);
 
   // Initialize audio context for volume detection
   useEffect(() => {
@@ -25,7 +30,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
       }
     };
   }, []);
-
+ // ------------------jskbd----
   const startRecording = async () => {
     try {
       // Reset everything first
@@ -142,16 +147,16 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
     setIsAnalyzing(true);
     
     try {
-      const formData = new FormData();
-      formData.append('audio', audioBlob, 'recording.webm');
-      
-      const response = await api.post('/speech/analyze', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      
-      onAnalysisComplete(response.data.report);
+      // Prefer analyzeAudio helper which handles auth and the full URL
+      const analysis = await analyzeAudio(audioBlob, token);
+
+      // If the component was given an onAnalysisComplete callback, call it
+      if (typeof onAnalysisComplete === 'function') {
+        onAnalysisComplete(analysis);
+      } else {
+        // otherwise navigate to analysis route (if available)
+        navigate('/dashboard/analysis', { state: { analysisData: analysis } });
+      }
       
     } catch (error) {
       console.error('Analysis error:', error);

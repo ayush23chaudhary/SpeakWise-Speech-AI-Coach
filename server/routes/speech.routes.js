@@ -2,8 +2,11 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const jwt = require("jsonwebtoken");
 const AnalysisReport = require("../models/AnalysisReport.model");
+const User = require("../models/User.model");
 const auth = require("../middleware/auth");
+const { analyzeSpeech } = require("../controllers/speech.controller");
 
 const router = express.Router();
 
@@ -29,39 +32,26 @@ router.get("/speech-token", auth, async (req, res) => {
     }
 });
 
-// Configure multer for audio file uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, "../uploads");
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        cb(null, `audio-${uniqueSuffix}${path.extname(file.originalname)}`);
-    },
-});
 
+// Configure Multer for file uploads - Use memoryStorage for Google Speech API
 const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 10 * 1024 * 1024, // 10MB limit
-    },
-    fileFilter: (req, file, cb) => {
-        const allowedTypes = [
-            "audio/wav",
-            "audio/mp3",
-            "audio/mpeg",
-            "audio/webm",
-        ];
-        if (allowedTypes.includes(file.mimetype)) {
-            cb(null, true);
-        } else {
-            cb(new Error("Invalid file type. Only audio files are allowed."));
-        }
-    },
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /webm|wav|mp3|ogg|flac/;
+    const extname = allowedTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+    const mimetype = allowedTypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error("Only audio files are allowed!"));
+    }
+  },
 });
 
 // Mock AI analysis function
@@ -142,53 +132,20 @@ router.get("/", (req, res) => {
     res.status(200).json({ message: "Speech routes are working" });
 });
 
-// Analyze speech
-router.post("/analyze", auth, upload.single("audio"), async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ message: "No audio file provided" });
-        }
-
-        // Simulate AI processing delay
-        await new Promise((resolve) =>
-            setTimeout(resolve, 2000 + Math.random() * 1000)
-        );
-
-        // Generate mock analysis
-        const analysisData = generateMockAnalysis();
-
-        // Save analysis report to database
-        const report = new AnalysisReport({
-            userId: req.user._id,
-            analysisData,
-            transcript: analysisData.transcript,
-            overallScore: analysisData.overallScore,
-            audioFileName: req.file.filename,
-        });
-
-        await report.save();
-
-        res.json({
-            message: "Analysis completed successfully",
-            report: {
-                id: report._id,
-                ...analysisData,
-                createdAt: report.createdAt,
-            },
-        });
-    } catch (error) {
-        console.error("Speech analysis error:", error);
-        res.status(500).json({ message: "Analysis failed" });
-    }
-});
+// Analyze speech - Uses Google Speech-to-Text API
+router.post("/analyze", upload.single("audio"), analyzeSpeech);
 
 // Get analysis history
 router.get("/history", auth, async (req, res) => {
     try {
-        const reports = await AnalysisReport.find({ userId: req.user._id })
+        console.log('📋 Fetching history for user:', req.user._id);
+        
+        const reports = await AnalysisReport.find({ user: req.user._id })
             .sort({ createdAt: -1 })
-            .select("-analysisData -audioFileName");
+            .limit(50);
 
+        console.log('   - Found reports:', reports.length);
+        
         res.json({ reports });
     } catch (error) {
         console.error("History fetch error:", error);
@@ -199,19 +156,30 @@ router.get("/history", auth, async (req, res) => {
 // Get specific analysis report
 router.get("/report/:id", auth, async (req, res) => {
     try {
+        console.log('📄 Fetching report:', req.params.id);
+        
         const report = await AnalysisReport.findOne({
             _id: req.params.id,
-            userId: req.user._id,
+            user: req.user._id,
         });
 
         if (!report) {
             return res.status(404).json({ message: "Report not found" });
         }
 
+        console.log('   - Report found:', report._id);
+
         res.json({
             report: {
                 id: report._id,
-                ...report.analysisData,
+                transcript: report.transcript,
+                overallScore: report.overallScore,
+                metrics: report.metrics,
+                pace: report.pace,
+                fillerWords: report.fillerWords,
+                strengths: report.strengths,
+                areasForImprovement: report.areasForImprovement,
+                recommendations: report.recommendations,
                 createdAt: report.createdAt,
             },
         });

@@ -62,6 +62,38 @@ const GuestMainApp = () => {
             </div>
           </div>
         );
+      case 'practice':
+        return (
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+            <div className="max-w-6xl mx-auto">
+              <div className="card text-center py-12">
+                <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-4xl">🎯</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  Practice Hub
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Create an account to access personalized exercises, daily challenges, and track your skill improvements.
+                </p>
+                <div className="flex justify-center space-x-4">
+                  <button
+                    onClick={() => window.location.href = '/register'}
+                    className="btn-primary"
+                  >
+                    Create Account
+                  </button>
+                  <button
+                    onClick={() => window.location.href = '/login'}
+                    className="btn-secondary"
+                  >
+                    Sign In
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       default:
         return <GuestPerformanceStudio onAnalysisComplete={handleAnalysisComplete} />;
     }
