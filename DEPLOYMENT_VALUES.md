@@ -120,8 +120,9 @@ https://speakwise.vercel.app
 Run this command in your terminal (replace with YOUR backend URL):
 
 ```bash
-curl -X POST https://speakwise-backend.onrender.com/api/practice-hub/seed-exercises
+curl -X POST https://speakwise-backend-yuh6.onrender.com/api/practice-hub/seed-exercises
 ```
+https://speakwise-backend-yuh6.onrender.com/
 
 Expected response:
 ```json
@@ -152,11 +153,11 @@ https://speakwise.vercel.app
 
 ## 📊 **Your Deployment URLs**
 
-After deployment, fill these in:
+**Frontend (Vercel):** `https://speak-wise-speech-ai-coach.vercel.app`
 
-**Frontend (Vercel):** `https://_________________.vercel.app`
+**Backend (Render):** `https://speakwise-backend-yuh6.onrender.com`
 
-**Backend (Render):** `https://_________________.onrender.com`
+✅ **Status:** Both deployed and database seeded!
 
 ---
 

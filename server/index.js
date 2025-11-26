@@ -66,6 +66,22 @@ app.use("/api/auth", authRoutes);
 app.use("/api/speech", speechRoutes);
 app.use("/api/practice-hub", practiceHubRoutes);
 
+// Root route
+app.get("/", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "🎤 SpeakWise API Server",
+        version: "1.0.0",
+        status: "running",
+        endpoints: {
+            health: "/api/health",
+            auth: "/api/auth",
+            speech: "/api/speech",
+            practiceHub: "/api/practice-hub"
+        }
+    });
+});
+
 // Health check endpoint
 app.get("/api/health", (req, res) => {
     res.status(200).json({
