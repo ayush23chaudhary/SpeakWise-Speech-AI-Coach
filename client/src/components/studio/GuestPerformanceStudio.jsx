@@ -16,19 +16,26 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
   const [duration, setDuration] = useState(0);
   const [error, setError] = useState(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [pitch, setPitch] = useState(0); // Fundamental frequency in Hz
+  const [frequencyData, setFrequencyData] = useState(new Array(32).fill(0)); // For pitch visualization
   
   const mediaRecorderRef = useRef(null);
   const audioRef = useRef(null);
   const streamRef = useRef(null);
   const animationRef = useRef(null);
+  const pitchAnimationRef = useRef(null);
   const startTimeRef = useRef(null);
   const durationIntervalRef = useRef(null);
+  const pitchHistoryRef = useRef([]); // For smoothing pitch values
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+      }
+      if (pitchAnimationRef.current) {
+        cancelAnimationFrame(pitchAnimationRef.current);
       }
       if (durationIntervalRef.current) {
         clearInterval(durationIntervalRef.current);
@@ -66,8 +73,8 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
       setIsRecording(true);
       startTimeRef.current = Date.now();
       
-      // Start volume monitoring
-      startVolumeMonitoring(stream);
+      // Start volume and pitch monitoring
+      startVolumeAndPitchMonitoring(stream);
       
       console.log('Recording started:', { startTime: startTimeRef.current });
       
@@ -87,6 +94,9 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+      if (pitchAnimationRef.current) {
+        cancelAnimationFrame(pitchAnimationRef.current);
+      }
       
       if (durationIntervalRef.current) {
         clearInterval(durationIntervalRef.current);
@@ -94,26 +104,103 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
     }
   };
 
-  const startVolumeMonitoring = (stream) => {
+  const startVolumeAndPitchMonitoring = (stream) => {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const analyser = audioContext.createAnalyser();
     const microphone = audioContext.createMediaStreamSource(stream);
     
     microphone.connect(analyser);
-    analyser.fftSize = 256;
+    analyser.fftSize = 4096; // Higher FFT size for better frequency resolution
+    analyser.smoothingTimeConstant = 0.85; // Increased smoothing
     
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    const frequencyArray = new Float32Array(bufferLength);
     
-    const updateVolume = () => {
-      if (isRecording) {
-        analyser.getByteFrequencyData(dataArray);
-        const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
-        setVolume(average);
-        animationRef.current = requestAnimationFrame(updateVolume);
+    let frameCount = 0; // For throttling updates
+    
+    // Helper function to smooth pitch values
+    const smoothPitch = (newPitch) => {
+      if (newPitch === 0) return 0;
+      
+      pitchHistoryRef.current.push(newPitch);
+      if (pitchHistoryRef.current.length > 12) {
+        pitchHistoryRef.current.shift();
       }
+      
+      // Calculate weighted average (more weight to recent values)
+      let sum = 0;
+      let weightSum = 0;
+      for (let i = 0; i < pitchHistoryRef.current.length; i++) {
+        const weight = i + 1; // Linear weighting
+        sum += pitchHistoryRef.current[i] * weight;
+        weightSum += weight;
+      }
+      
+      return Math.round(sum / weightSum);
     };
     
-    updateVolume();
+    // For pitch detection
+    const detectPitch = (frequencies) => {
+      // Find the fundamental frequency (pitch)
+      let maxValue = -Infinity;
+      let maxIndex = 0;
+      
+      // Look for peaks in the frequency data (human voice range: 85-500 Hz)
+      const minFreqIndex = Math.floor(85 * bufferLength / (audioContext.sampleRate / 2));
+      const maxFreqIndex = Math.floor(500 * bufferLength / (audioContext.sampleRate / 2));
+      
+      for (let i = minFreqIndex; i < maxFreqIndex; i++) {
+        if (frequencies[i] > maxValue) {
+          maxValue = frequencies[i];
+          maxIndex = i;
+        }
+      }
+      
+      // Convert index to frequency
+      const nyquist = audioContext.sampleRate / 2;
+      const frequency = (maxIndex * nyquist) / bufferLength;
+      
+      // Float32 array returns dB values (typically -100 to 0)
+      // Only return frequency if signal is strong enough (above -70 dB for clearer detection)
+      return maxValue > -70 ? frequency : 0;
+    };
+    
+    const updateVolumeAndPitch = () => {
+      frameCount++;
+      
+      // Update volume every frame
+      analyser.getByteFrequencyData(dataArray);
+      const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
+      setVolume(average);
+      
+      // Update frequency visualization every 2 frames (reduce lag)
+      if (frameCount % 2 === 0) {
+        const barCount = 32;
+        const step = Math.floor(bufferLength / barCount);
+        const visualData = [];
+        for (let i = 0; i < barCount; i++) {
+          const start = i * step;
+          const end = start + step;
+          const slice = dataArray.slice(start, end);
+          const avg = slice.reduce((sum, val) => sum + val, 0) / slice.length;
+          visualData.push(avg);
+        }
+        setFrequencyData(visualData);
+      }
+      
+      // Update pitch every 8 frames (reduce sensitivity even more)
+      if (frameCount % 8 === 0) {
+        analyser.getFloatFrequencyData(frequencyArray);
+        const detectedPitch = detectPitch(frequencyArray);
+        const smoothedPitch = smoothPitch(detectedPitch);
+        setPitch(smoothedPitch);
+      }
+      
+      pitchAnimationRef.current = requestAnimationFrame(updateVolumeAndPitch);
+    };
+    
+    updateVolumeAndPitch();
   };
 
   // Duration timer effect
@@ -289,45 +376,110 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
               
               {/* Vocal Orb Visualizer */}
               <div className="mb-8">
-                <div className="relative w-80 h-80">
+                <div className="relative w-64 h-64">
                   {/* Rotating gradient ring */}
                   {isRecording && (
                     <div 
                       className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 opacity-60"
                       style={{
                         animation: 'rotate-gradient 3s linear infinite',
-                        filter: 'blur(10px)'
+                        filter: 'blur(8px)'
                       }}
                     />
                   )}
                   
                   <div 
                     className={`absolute inset-0 rounded-full transition-all duration-150 ${
-                      isRecording ? 'bg-gradient-to-r from-primary-400 to-primary-600' : 'bg-gray-200 dark:bg-gray-700'
+                      isRecording 
+                        ? 'bg-gradient-to-r from-primary-400 to-primary-600 shadow-2xl' 
+                        : 'bg-gray-200 dark:bg-gray-700'
                     }`}
                     style={{
-                      transform: `scale(${1 + getVolumeIntensity() * 0.4})`,
+                      transform: `scale(${1 + (volume / 100) * 0.3})`,
                       boxShadow: isRecording 
-                        ? `0 0 ${30 + volume * 3}px rgba(59, 130, 246, ${0.4 + volume / 200})` 
+                        ? `0 0 ${20 + volume * 2}px rgba(59, 130, 246, ${0.3 + volume / 200})` 
                         : 'none'
                     }}
                   >
-                    <div className="absolute inset-8 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center">
-                      <Mic className={`w-20 h-20 ${isRecording ? 'text-primary-600' : 'text-gray-400'}`} />
+                    <div className="absolute inset-4 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center">
+                      <Mic className="w-16 h-16 text-gray-500 dark:text-gray-400" />
                     </div>
-                    
-                    {isRecording && (
-                      <div 
-                        className={`absolute inset-0 rounded-full ${getVolumeColor()} opacity-30`}
-                        style={{
-                          transform: `scale(${1 + getVolumeIntensity() * 0.2})`,
-                          transition: 'all 0.1s ease-out'
-                        }}
-                      />
-                    )}
                   </div>
                 </div>
               </div>
+
+              {/* Pitch and Frequency Visualizer */}
+              {isRecording && (
+                <div className="w-full max-w-2xl mb-6 space-y-3">
+                  {/* Pitch Display */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Voice Pitch
+                      </span>
+                      <span className="text-xl font-semibold text-gray-900 dark:text-white tabular-nums">
+                        {pitch > 0 ? `${Math.round(pitch)} Hz` : '-- Hz'}
+                      </span>
+                    </div>
+                    
+                    {/* Pitch range indicator */}
+                    <div className="relative h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div 
+                        className="absolute h-full bg-primary-500 dark:bg-primary-400 transition-all duration-500 ease-out rounded-full"
+                        style={{ 
+                          width: `${Math.min((pitch / 500) * 100, 100)}%`
+                        }}
+                      />
+                    </div>
+                    
+                    {/* Pitch labels */}
+                    <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-1.5">
+                      <span>Low</span>
+                      <span>Mid</span>
+                      <span>High</span>
+                    </div>
+                  </div>
+
+                  {/* Frequency Spectrum Bars */}
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Audio Levels
+                      </span>
+                      <span className="text-xs text-gray-400 dark:text-gray-500">
+                        Frequency spectrum
+                      </span>
+                    </div>
+                    
+                    {/* Spectrum bars */}
+                    <div className="flex items-end justify-between h-20 gap-0.5">
+                      {frequencyData.map((value, index) => {
+                        const height = Math.max((value / 255) * 100, 2);
+                        const opacity = 0.4 + (value / 255) * 0.6;
+                        
+                        return (
+                          <div
+                            key={index}
+                            className="flex-1 rounded-t transition-all duration-150 ease-out"
+                            style={{
+                              height: `${height}%`,
+                              backgroundColor: `rgba(59, 130, 246, ${opacity})`,
+                              minWidth: '3px'
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                    
+                    {/* Frequency labels */}
+                    <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-2">
+                      <span>Low</span>
+                      <span>Mid</span>
+                      <span>High</span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Recording Status */}
               <div className="mb-6">

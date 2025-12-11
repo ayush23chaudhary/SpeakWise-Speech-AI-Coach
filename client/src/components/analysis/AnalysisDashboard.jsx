@@ -15,6 +15,7 @@ import {
   Cell
 } from 'recharts';
 import { Play, Pause, Volume2, TrendingUp, Target, Zap } from 'lucide-react';
+import DetailedMetricsOverview from './DetailedMetricsOverview';
 
 const AnalysisDashboard = ({ analysisData }) => {
   const [currentTranscript, setCurrentTranscript] = useState('');
@@ -181,10 +182,15 @@ const AnalysisDashboard = ({ analysisData }) => {
           </div>
         </div>
 
-        {/* Radar Chart */}
+        {/* Detailed Performance Metrics */}
+        <div className="card">
+          <DetailedMetricsOverview metrics={metrics} />
+        </div>
+
+        {/* Radar Chart - Traditional View */}
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 text-center">
-            Performance Metrics
+            Performance Radar View
           </h3>
           <ResponsiveContainer width="100%" height={300}>
             <RadarChart data={radarData}>
@@ -221,53 +227,161 @@ const AnalysisDashboard = ({ analysisData }) => {
         {/* Recommendations and Feedback */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Strengths */}
-          <div className="card">
-            <h3 className="text-lg font-semibold text-green-600 dark:text-green-400 mb-4">
-              Strengths
-            </h3>
-            <ul className="space-y-2">
-              {strengths.map((strength, index) => (
-                <li key={index} className="flex items-start">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span className="text-gray-700 dark:text-gray-300">{strength}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/30 dark:via-teal-950/30 dark:to-cyan-950/30 border-2 border-emerald-200 dark:border-emerald-800/50 shadow-lg hover:shadow-xl transition-all duration-300">
+            {/* Decorative background pattern */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-teal-400/10 rounded-full -ml-12 -mb-12 blur-2xl"></div>
+            
+            <div className="relative p-6">
+              <div className="flex items-center mb-5">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-emerald-400 rounded-xl blur-lg opacity-50 animate-pulse"></div>
+                  <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                    🎯 Your Strengths
+                  </h3>
+                  <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+                    What you're doing great
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                {strengths.map((strength, index) => (
+                  <div
+                    key={index}
+                    className="group relative p-4 rounded-xl bg-white dark:bg-gray-800/80 border border-emerald-200 dark:border-emerald-800/50 hover:border-emerald-400 dark:hover:border-emerald-600 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
+                  >
+                    <div className="flex items-start">
+                      <div className="relative flex-shrink-0 mt-0.5">
+                        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:scale-110 transition-transform duration-200">
+                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white leading-relaxed">
+                          {strength}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Areas for Improvement */}
-          <div className="card">
-            <h3 className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 mb-4">
-              Areas for Improvement
-            </h3>
-            <ul className="space-y-2">
-              {areasForImprovement.map((area, index) => (
-                <li key={index} className="flex items-start">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span className="text-gray-700 dark:text-gray-300">{area}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-amber-950/30 dark:via-orange-950/30 dark:to-yellow-950/30 border-2 border-amber-200 dark:border-amber-800/50 shadow-lg hover:shadow-xl transition-all duration-300">
+            {/* Decorative background pattern */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-orange-400/10 rounded-full -ml-12 -mb-12 blur-2xl"></div>
+            
+            <div className="relative p-6">
+              <div className="flex items-center mb-5">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-amber-400 rounded-xl blur-lg opacity-50 animate-pulse"></div>
+                  <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                    📈 Growth Areas
+                  </h3>
+                  <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
+                    Opportunities to improve
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                {areasForImprovement.map((area, index) => (
+                  <div
+                    key={index}
+                    className="group relative p-4 rounded-xl bg-white dark:bg-gray-800/80 border border-amber-200 dark:border-amber-800/50 hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
+                  >
+                    <div className="flex items-start">
+                      <div className="relative flex-shrink-0 mt-0.5">
+                        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:scale-110 transition-transform duration-200">
+                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white leading-relaxed">
+                          {area}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Recommendations */}
-        <div className="card">
-          <h3 className="text-lg font-semibold text-primary-600 dark:text-primary-400 mb-4">
-            Recommendations
-          </h3>
-          <ul className="space-y-3">
-            {recommendations.map((recommendation, index) => (
-              <li key={index} className="flex items-start">
-                <div className="w-6 h-6 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
-                  <span className="text-xs font-bold text-primary-600 dark:text-primary-400">
-                    {index + 1}
-                  </span>
+        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-purple-950/30 border-2 border-blue-200 dark:border-blue-800/50 shadow-lg hover:shadow-xl transition-all duration-300">
+          {/* Decorative background pattern */}
+          <div className="absolute top-0 right-0 w-40 h-40 bg-blue-400/10 rounded-full -mr-20 -mt-20 blur-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-400/10 rounded-full -ml-16 -mb-16 blur-2xl"></div>
+          
+          <div className="relative p-6">
+            <div className="flex items-center mb-5">
+              <div className="relative">
+                <div className="absolute inset-0 bg-blue-400 rounded-xl blur-lg opacity-50 animate-pulse"></div>
+                <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
                 </div>
-                <span className="text-gray-700 dark:text-gray-300">{recommendation}</span>
-              </li>
-            ))}
-          </ul>
+              </div>
+              <div className="ml-4">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                  💡 Action Steps
+                </h3>
+                <p className="text-xs text-blue-700 dark:text-blue-400 font-medium">
+                  Practical ways to improve
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {recommendations.map((recommendation, index) => (
+                <div
+                  key={index}
+                  className="group relative p-4 rounded-xl bg-white dark:bg-gray-800/80 border border-blue-200 dark:border-blue-800/50 hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
+                >
+                  <div className="flex items-start">
+                    <div className="relative flex-shrink-0 mt-0.5">
+                      <div className="absolute inset-0 bg-blue-400 rounded-lg blur-md opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                      <div className="relative w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:scale-110 transition-transform duration-200">
+                        <span className="text-sm font-bold text-white">
+                          {index + 1}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="ml-3 flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white leading-relaxed">
+                        {recommendation}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
