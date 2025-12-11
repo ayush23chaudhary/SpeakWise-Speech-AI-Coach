@@ -5,6 +5,7 @@ import AuthPage from './components/auth/AuthPage';
 import MainApp from './components/layout/MainApp';
 import GuestMainApp from './components/layout/GuestMainApp';
 import GuestMode from './components/auth/GuestMode';
+import LandingPage from './components/landing/LandingPage';
 
 function App() {
   const { isAuthenticated, checkAuth, isLoading } = useAuthStore();
@@ -29,6 +30,12 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
+          {/* Landing Page - Public Route */}
+          <Route 
+            path="/" 
+            element={!isAuthenticated ? <LandingPage /> : <Navigate to="/dashboard" replace />} 
+          />
+          
           {/* Guest Mode Routes */}
           <Route 
             path="/guest" 
@@ -38,24 +45,21 @@ function App() {
           {/* Auth Routes */}
           <Route 
             path="/login" 
-            element={!isAuthenticated ? <AuthPage /> : <Navigate to="/" replace />} 
+            element={!isAuthenticated ? <AuthPage /> : <Navigate to="/dashboard" replace />} 
           />
           <Route 
             path="/register" 
-            element={!isAuthenticated ? <AuthPage /> : <Navigate to="/" replace />} 
+            element={!isAuthenticated ? <AuthPage /> : <Navigate to="/dashboard" replace />} 
           />
           
-          {/* Main App Routes */}
+          {/* Dashboard Route - Protected */}
           <Route 
-            path="/" 
+            path="/dashboard/*" 
             element={
               isAuthenticated ? (
                 <MainApp />
               ) : (
-                <GuestMode 
-                  onLogin={() => window.location.href = '/login'}
-                  onRegister={() => window.location.href = '/register'}
-                />
+                <Navigate to="/login" replace />
               )
             } 
           />

@@ -14,7 +14,6 @@ import {
   Radar,
   Cell
 } from 'recharts';
-import PronunciationAssessment from './PronunciationAssessment';
 import { Play, Pause, Volume2, TrendingUp, Target, Zap } from 'lucide-react';
 
 const AnalysisDashboard = ({ analysisData }) => {
@@ -119,9 +118,6 @@ const AnalysisDashboard = ({ analysisData }) => {
             Your latest speech analysis results
           </p>
         </div>
-
-        {/* Pronunciation Assessment */}
-        <PronunciationAssessment />
 
         {/* Overall Score */}
         <div className="card text-center">
