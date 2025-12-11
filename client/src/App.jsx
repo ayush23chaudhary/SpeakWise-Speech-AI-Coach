@@ -9,13 +9,18 @@ import LandingPage from './components/landing/LandingPage';
 
 function App() {
   const { isAuthenticated, checkAuth, isLoading } = useAuthStore();
-  const [showGuestMode, setShowGuestMode] = useState(false);
+  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    checkAuth();
+    const initAuth = async () => {
+      await checkAuth();
+      setInitializing(false);
+    };
+    initAuth();
   }, [checkAuth]);
 
-  if (isLoading) {
+  // Only show loading screen during initial authentication check, not on subsequent operations
+  if (initializing) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">

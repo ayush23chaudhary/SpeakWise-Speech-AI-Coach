@@ -198,10 +198,45 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
         </div>
 
         {/* Main Recording Area */}
-        <div className="card text-center">
+        <div 
+          className={`card flex flex-col items-center justify-center text-center relative transition-all duration-300 ${
+            isRecording ? 'ring-4 ring-primary-400 shadow-2xl' : ''
+          }`}
+          style={{
+            boxShadow: isRecording 
+              ? `0 0 40px rgba(59, 130, 246, 0.6), 0 0 80px rgba(59, 130, 246, 0.3), inset 0 0 40px rgba(59, 130, 246, 0.1)` 
+              : undefined
+          }}
+        >
+          {/* Animated border glow effect */}
+          {isRecording && (
+            <div 
+              className="absolute inset-0 rounded-xl pointer-events-none"
+              style={{
+                background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.8), rgba(147, 51, 234, 0.8), rgba(59, 130, 246, 0.8))',
+                backgroundSize: '200% 200%',
+                animation: 'gradient-flow 3s linear infinite',
+                filter: 'blur(8px)',
+                opacity: 0.5,
+                zIndex: -1
+              }}
+            />
+          )}
+          
           {/* Vocal Orb Visualizer */}
           <div className="mb-8">
-            <div className="relative w-64 h-64 mx-auto">
+            <div className="relative w-64 h-64">
+              {/* Rotating gradient ring */}
+              {isRecording && (
+                <div 
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 opacity-60"
+                  style={{
+                    animation: 'rotate-gradient 3s linear infinite',
+                    filter: 'blur(8px)'
+                  }}
+                />
+              )}
+              
               <div 
                 className={`absolute inset-0 rounded-full transition-all duration-150 ${
                   isRecording 
@@ -219,24 +254,6 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
                   <Mic className={`w-16 h-16 ${isRecording ? 'text-primary-600' : 'text-gray-400'}`} />
                 </div>
               </div>
-              
-              {/* Particle Effect */}
-              {isRecording && (
-                <div className="absolute inset-0 pointer-events-none">
-                  {[...Array(8)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-2 h-2 bg-primary-400 rounded-full animate-ping"
-                      style={{
-                        top: `${20 + Math.sin(i) * 30}%`,
-                        left: `${20 + Math.cos(i) * 30}%`,
-                        animationDelay: `${i * 0.2}s`,
-                        animationDuration: `${1 + volume / 100}s`
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
             </div>
           </div>
 
@@ -264,13 +281,17 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
                 </button>
                 
                 {isRecording && (
-                  <div className="mt-4 text-center">
+                  <div className="mt-4 text-center space-y-2">
                     <p className="text-lg font-mono text-gray-600 dark:text-gray-400">
                       {formatTime(recordingDuration)}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500">
-                      Recording in progress...
-                    </p>
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                      <p className="text-sm text-gray-500 dark:text-gray-500 font-medium">
+                        Recording in progress...
+                      </p>
+                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -305,7 +326,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
                 <button
                   onClick={analyzeRecording}
                   disabled={isAnalyzing}
-                  className="btn-primary text-lg px-8 py-4 rounded-full flex items-center mx-auto"
+                  className="btn-primary text-lg px-8 py-4 rounded-full flex items-center justify-center mx-auto"
                 >
                   {isAnalyzing ? (
                     <>

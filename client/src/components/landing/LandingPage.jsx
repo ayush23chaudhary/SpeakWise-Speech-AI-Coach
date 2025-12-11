@@ -96,19 +96,58 @@ const LandingPage = () => {
       description: 'Users see measurable improvement within 30 days'
     },
     {
-      stat: '10K+',
-      label: 'Active Users',
-      description: 'Join thousands improving their speaking skills'
+      stat: '24/7',
+      label: 'AI Coach Available',
+      description: 'Practice anytime, anywhere with instant feedback'
     },
     {
-      stat: '4.9/5',
-      label: 'User Rating',
-      description: 'Highly rated by professional speakers'
+      stat: '100%',
+      label: 'Free Forever',
+      description: 'All features available at no cost'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200 relative overflow-hidden">
+      {/* Wind Effect - Flowing gradient waves */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        {/* Multiple wind layers */}
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.3) 25%, rgba(234, 179, 8, 0.3) 50%, rgba(147, 51, 234, 0.3) 75%, transparent 100%)',
+            backgroundSize: '200% 100%',
+            animation: 'wind-flow 15s linear infinite'
+          }}
+        ></div>
+        <div 
+          className="absolute inset-0 opacity-15"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(234, 179, 8, 0.4) 20%, rgba(59, 130, 246, 0.4) 40%, rgba(147, 51, 234, 0.4) 60%, rgba(234, 179, 8, 0.4) 80%, transparent 100%)',
+            backgroundSize: '300% 100%',
+            animation: 'wind-flow 20s linear infinite reverse'
+          }}
+        ></div>
+        <div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(147, 51, 234, 0.5) 30%, rgba(234, 179, 8, 0.5) 50%, rgba(59, 130, 246, 0.5) 70%, transparent 100%)',
+            backgroundSize: '250% 100%',
+            animation: 'wind-flow 25s linear infinite'
+          }}
+        ></div>
+        
+        {/* Diagonal wind streaks */}
+        <div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            background: 'linear-gradient(120deg, transparent 0%, rgba(59, 130, 246, 0.4) 30%, transparent 40%, rgba(234, 179, 8, 0.4) 60%, transparent 70%, rgba(147, 51, 234, 0.4) 85%, transparent 100%)',
+            backgroundSize: '300% 300%',
+            animation: 'wind-diagonal 18s linear infinite'
+          }}
+        ></div>
+      </div>
+      
       {/* Navbar */}
       <nav className={`fixed w-full z-50 transition-all duration-300 ${
         scrolled 
@@ -219,10 +258,40 @@ const LandingPage = () => {
 
       {/* Hero Section */}
       <section className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Background decoration */}
+        {/* Animated Background Gradients */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-primary-200 dark:bg-primary-900/20 rounded-full blur-3xl opacity-20"></div>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200 dark:bg-purple-900/20 rounded-full blur-3xl opacity-20"></div>
+          {/* Flowing gradient orbs */}
+          <div 
+            className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-30"
+            style={{
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(147, 51, 234, 0.8))',
+              animation: 'gradient-float 8s ease-in-out infinite'
+            }}
+          ></div>
+          <div 
+            className="absolute top-1/4 left-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-25"
+            style={{
+              background: 'linear-gradient(135deg, rgba(234, 179, 8, 0.6), rgba(251, 146, 60, 0.6))',
+              animation: 'gradient-float 10s ease-in-out infinite reverse'
+            }}
+          ></div>
+          <div 
+            className="absolute bottom-0 left-1/3 w-96 h-96 rounded-full blur-3xl opacity-30"
+            style={{
+              background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.7), rgba(219, 39, 119, 0.7))',
+              animation: 'gradient-float 12s ease-in-out infinite'
+            }}
+          ></div>
+          
+          {/* Animated gradient mesh */}
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              background: 'linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.1) 50%, transparent 70%), linear-gradient(-45deg, transparent 30%, rgba(234, 179, 8, 0.1) 50%, transparent 70%)',
+              backgroundSize: '200% 200%',
+              animation: 'gradient-mesh 15s ease infinite'
+            }}
+          ></div>
         </div>
 
         <div className="max-w-7xl mx-auto">
@@ -285,7 +354,14 @@ const LandingPage = () => {
 
             {/* Right column - Visual element */}
             <div className="relative">
-              <div className="relative bg-gradient-to-br from-primary-500 to-purple-600 rounded-2xl p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
+              <div 
+                className="relative rounded-2xl p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 1), rgba(147, 51, 234, 0.9), rgba(234, 179, 8, 0.8))',
+                  backgroundSize: '200% 200%',
+                  animation: 'gradient-flow 6s ease infinite'
+                }}
+              >
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-6 space-y-4">
                   {/* Mock analysis interface */}
                   <div className="flex items-center justify-between">
@@ -350,12 +426,30 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50">
+      <section id="features" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50 overflow-hidden">
+        {/* Background gradients for features section */}
+        <div className="absolute inset-0 -z-10">
+          <div 
+            className="absolute top-20 right-10 w-72 h-72 rounded-full blur-3xl opacity-20"
+            style={{
+              background: 'linear-gradient(135deg, rgba(234, 179, 8, 0.6), rgba(251, 146, 60, 0.6))',
+              animation: 'gradient-float 9s ease-in-out infinite'
+            }}
+          ></div>
+          <div 
+            className="absolute bottom-20 left-10 w-80 h-80 rounded-full blur-3xl opacity-20"
+            style={{
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(147, 51, 234, 0.6))',
+              animation: 'gradient-float 11s ease-in-out infinite reverse'
+            }}
+          ></div>
+        </div>
+        
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Powerful Features for
-              <span className="block bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-yellow-500 via-primary-600 to-purple-600 bg-clip-text text-transparent">
                 Speaking Excellence
               </span>
             </h2>
@@ -386,10 +480,38 @@ const LandingPage = () => {
       </section>
 
       {/* Benefits/Stats Section */}
-      <section id="benefits" className="py-20 px-4 sm:px-6 lg:px-8">
+      <section id="benefits" className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Background gradient orbs */}
+        <div className="absolute inset-0 -z-10">
+          <div 
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-3xl opacity-20"
+            style={{
+              background: 'radial-gradient(circle, rgba(234, 179, 8, 0.4), rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.4))',
+              animation: 'gradient-pulse 8s ease-in-out infinite'
+            }}
+          ></div>
+        </div>
+        
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-br from-primary-600 to-purple-600 rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl">
-            <div className="text-center mb-12">
+          <div 
+            className="relative rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(147, 51, 234, 0.95), rgba(234, 179, 8, 0.85))',
+              backgroundSize: '200% 200%',
+              animation: 'gradient-flow 8s ease infinite'
+            }}
+          >
+            {/* Animated overlay */}
+            <div 
+              className="absolute inset-0 opacity-30"
+              style={{
+                background: 'linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%)',
+                backgroundSize: '200% 200%',
+                animation: 'gradient-mesh 10s ease infinite'
+              }}
+            ></div>
+            
+            <div className="relative text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
                 Join Thousands of Successful Speakers
               </h2>
@@ -398,16 +520,16 @@ const LandingPage = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="relative grid md:grid-cols-3 gap-8">
               {benefits.map((benefit, index) => (
-                <div key={index} className="text-center">
+                <div key={index} className="text-center backdrop-blur-sm bg-white/10 rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
                   <div className="text-5xl sm:text-6xl font-bold text-white mb-2">
                     {benefit.stat}
                   </div>
-                  <div className="text-xl font-semibold text-primary-100 mb-2">
+                  <div className="text-xl font-semibold text-white mb-2">
                     {benefit.label}
                   </div>
-                  <div className="text-primary-200">
+                  <div className="text-white/90">
                     {benefit.description}
                   </div>
                 </div>

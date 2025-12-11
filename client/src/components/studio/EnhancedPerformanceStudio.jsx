@@ -137,10 +137,45 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Recording Area */}
           <div className="lg:col-span-2">
-            <Card className="text-center">
+            <Card 
+              className={`flex flex-col items-center justify-center text-center relative transition-all duration-300 ${
+                isRecording ? 'ring-4 ring-primary-400 shadow-2xl' : ''
+              }`}
+              style={{
+                boxShadow: isRecording 
+                  ? `0 0 40px rgba(59, 130, 246, 0.6), 0 0 80px rgba(59, 130, 246, 0.3), inset 0 0 40px rgba(59, 130, 246, 0.1)` 
+                  : undefined
+              }}
+            >
+              {/* Animated border glow effect */}
+              {isRecording && (
+                <div 
+                  className="absolute inset-0 rounded-xl pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.8), rgba(147, 51, 234, 0.8), rgba(59, 130, 246, 0.8))',
+                    backgroundSize: '200% 200%',
+                    animation: 'gradient-flow 3s linear infinite',
+                    filter: 'blur(8px)',
+                    opacity: 0.5,
+                    zIndex: -1
+                  }}
+                />
+              )}
+              
               {/* Vocal Orb Visualizer */}
               <div className="mb-8">
-                <div className="relative w-80 h-80 mx-auto">
+                <div className="relative w-80 h-80">
+                  {/* Rotating gradient ring */}
+                  {isRecording && (
+                    <div 
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 opacity-60"
+                      style={{
+                        animation: 'rotate-gradient 3s linear infinite',
+                        filter: 'blur(10px)'
+                      }}
+                    />
+                  )}
+                  
                   {/* Outer glow ring */}
                   <div 
                     className={`absolute inset-0 rounded-full transition-all duration-150 ${
@@ -168,24 +203,6 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
                         }}
                       />
                     )}
-                    
-                    {/* Particle Effect */}
-                    {isRecording && (
-                      <div className="absolute inset-0 pointer-events-none">
-                        {[...Array(12)].map((_, i) => (
-                          <div
-                            key={i}
-                            className="absolute w-3 h-3 bg-primary-400 rounded-full animate-ping"
-                            style={{
-                              top: `${15 + Math.sin(i * 0.5) * 35}%`,
-                              left: `${15 + Math.cos(i * 0.5) * 35}%`,
-                              animationDelay: `${i * 0.1}s`,
-                              animationDuration: `${0.8 + getVolumeIntensity() * 0.4}s`
-                            }}
-                          />
-                        ))}
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -197,8 +214,12 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
                     <div className="text-2xl font-mono text-primary-600 dark:text-primary-400">
                       {getFormattedDuration()}
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      {isPaused ? 'Recording Paused' : 'Recording in progress...'}
+                    <div className="flex items-center justify-center space-x-2">
+                      {!isPaused && <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>}
+                      <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                        {isPaused ? 'Recording Paused' : 'Recording in progress...'}
+                      </div>
+                      {!isPaused && <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>}
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div 

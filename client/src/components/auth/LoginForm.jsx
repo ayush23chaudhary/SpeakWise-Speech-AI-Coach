@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, LogIn } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, LogIn, ArrowLeft } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 
 const LoginForm = ({ onSwitchToRegister }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -32,6 +34,15 @@ const LoginForm = ({ onSwitchToRegister }) => {
 
   return (
     <div className="card max-w-md mx-auto">
+      {/* Back to Landing Page Button */}
+      <button
+        onClick={() => navigate('/')}
+        className="flex items-center text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 mb-4 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Back to Home
+      </button>
+
       <div className="text-center mb-6">
         <div className="mx-auto w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mb-4">
           <LogIn className="w-8 h-8 text-primary-600 dark:text-primary-400" />

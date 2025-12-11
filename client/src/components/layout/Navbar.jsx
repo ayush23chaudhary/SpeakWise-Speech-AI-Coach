@@ -1,14 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Mic, LogOut, Sun, Moon } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import useThemeStore from '../../store/themeStore';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const { isDark, toggleTheme } = useThemeStore();
 
   const handleLogout = () => {
     logout();
+    navigate('/'); // Redirect to landing page
+  };
+
+  const handleLogoClick = () => {
+    navigate('/'); // Navigate to landing page when logo is clicked
   };
 
   return (
@@ -16,7 +23,10 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
+          <button 
+            onClick={handleLogoClick}
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
+          >
             <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
               <Mic className="w-6 h-6 text-white" />
             </div>
@@ -24,7 +34,7 @@ const Navbar = () => {
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">SpeakWise</h1>
               <p className="text-xs text-gray-500 dark:text-gray-400">AI Speech Coach</p>
             </div>
-          </div>
+          </button>
 
           {/* Right side */}
           <div className="flex items-center space-x-4">

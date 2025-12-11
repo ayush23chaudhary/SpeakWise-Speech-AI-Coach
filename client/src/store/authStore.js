@@ -74,16 +74,36 @@ const useAuthStore = create(
       },
 
       checkAuth: async () => {
-        const { token } = get();
-        if (!token) return false;
+        const { token, user } = get();
+        
+        // If no token, user is not authenticated
+        if (!token) {
+          set({ isAuthenticated: false });
+          return false;
+        }
 
+        // If we have both token and user from localStorage, set authenticated immediately
+        if (token && user) {
+          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          set({ isAuthenticated: true });
+          
+          // Optionally verify token in background without blocking
+          api.get('/auth/me').catch(() => {
+            // If token is invalid, logout
+            get().logout();
+          });
+          
+          return true;
+        }
+
+        // If we have token but no user, fetch user data
         try {
           api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           const response = await api.get('/auth/me');
-          const { user } = response.data;
+          const { user: fetchedUser } = response.data;
           
           set({
-            user,
+            user: fetchedUser,
             isAuthenticated: true
           });
           
