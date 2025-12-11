@@ -561,6 +561,18 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
                         'Stop & Analyze'
                       )}
                     </Button>
+                    
+                    {/* Analysis waiting message */}
+                    {isAnalyzing && (
+                      <div className="mt-4 text-center">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Please wait patiently... Server may be busy with multiple users.
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                          Analysis typically takes 5-15 seconds
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

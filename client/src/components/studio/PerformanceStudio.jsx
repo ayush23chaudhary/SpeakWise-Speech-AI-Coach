@@ -514,6 +514,18 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
                     'Stop & Analyze'
                   )}
                 </button>
+                
+                {/* Analysis waiting message */}
+                {isAnalyzing && (
+                  <div className="mt-4 text-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Please wait patiently... Server may be busy with multiple users.
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                      Analysis typically takes 5-15 seconds
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -539,7 +551,8 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
             <li>• Find a quiet environment with minimal background noise</li>
             <li>• Speak clearly and at a comfortable pace</li>
             <li>• Maintain a consistent distance from your microphone</li>
-            <li>• Practice speaking for 30-60 seconds for best results</li>
+            <li>• <span className="font-medium text-primary-600 dark:text-primary-400">Record 15-20 seconds for best and fastest results</span> (optimized for server efficiency)</li>
+            <li>• Practice speaking for 30-60 seconds for comprehensive analysis</li>
           </ul>
         </div>
       </div>
