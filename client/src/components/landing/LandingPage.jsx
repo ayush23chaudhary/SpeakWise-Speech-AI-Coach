@@ -239,10 +239,11 @@ const LandingPage = () => {
               </a>
               <Button
                 variant="outline"
-                className="w-full"
-                onClick={() => navigate('/login')}
+                className="w-full border-2 border-yellow-400 dark:border-yellow-500 hover:border-yellow-500 dark:hover:border-yellow-400 group"
+                onClick={() => navigate('/guest')}
               >
-                Login
+                <Zap className="w-5 h-5 mr-2 text-yellow-500" />
+                Try Demo - No Signup
               </Button>
               <Button
                 variant="primary"
@@ -250,6 +251,13 @@ const LandingPage = () => {
                 onClick={() => navigate('/register')}
               >
                 Sign Up Free
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate('/login')}
+              >
+                Login
               </Button>
             </div>
           </div>
@@ -318,6 +326,21 @@ const LandingPage = () => {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                {/* Try Demo - Primary CTA */}
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={() => navigate('/guest')}
+                  className="group relative overflow-hidden bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 shadow-lg shadow-yellow-400/50 hover:shadow-yellow-500/50 border-0"
+                >
+                  <span className="relative z-10 flex items-center font-semibold">
+                    <Zap className="w-5 h-5 mr-2 animate-pulse" />
+                    Try Free Demo
+                    <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </Button>
+                
+                {/* Sign Up - Secondary CTA */}
                 <Button
                   variant="primary"
                   size="lg"
@@ -327,27 +350,42 @@ const LandingPage = () => {
                   Get Started Free
                   <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
+                
+                {/* Login - Tertiary */}
                 <Button
                   variant="outline"
                   size="lg"
                   onClick={() => navigate('/login')}
+                  className="hidden sm:inline-flex"
                 >
                   Login
                 </Button>
               </div>
 
-              <div className="flex flex-wrap gap-6 justify-center lg:justify-start text-sm text-gray-600 dark:text-gray-400">
-                <div className="flex items-center space-x-2">
-                  <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>No credit card required</span>
+              <div className="flex flex-col gap-3">
+                {/* Demo Badge - Most prominent */}
+                <div className="inline-flex items-center justify-center lg:justify-start">
+                  <div className="px-5 py-3 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 border-2 border-yellow-400 dark:border-yellow-500 rounded-full backdrop-blur-sm shadow-lg animate-pulse">
+                    <span className="text-base font-bold text-gray-900 dark:text-white flex items-center">
+                      <Zap className="w-5 h-5 mr-2 text-yellow-600 dark:text-yellow-400" />
+                      Try Demo FREE – No Signup Required!
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Free forever</span>
+                
+                <div className="flex flex-wrap gap-6 justify-center lg:justify-start text-sm text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>100% Free Forever</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>AI-Powered Analysis</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -540,32 +578,58 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-primary-50/30 dark:from-gray-800/50 dark:to-primary-900/10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
             Ready to Transform Your Speaking Skills?
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
             Start your journey to becoming a confident and effective speaker today. 
-            No credit card required, free forever.
+            Join thousands improving their communication skills with AI-powered feedback.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              variant="primary"
-              size="xl"
-              onClick={() => navigate('/register')}
-              className="group"
-            >
-              Start Free Now
-              <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button
-              variant="outline"
-              size="xl"
-              onClick={() => navigate('/login')}
-            >
-              I Already Have an Account
-            </Button>
+          
+          <div className="flex flex-col gap-6">
+            {/* Primary CTA - Try Demo */}
+            <div className="flex justify-center">
+              <Button
+                variant="primary"
+                size="xl"
+                onClick={() => navigate('/guest')}
+                className="group relative overflow-hidden bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 shadow-xl shadow-yellow-400/50 hover:shadow-yellow-500/60 border-0 px-8"
+              >
+                <span className="relative z-10 flex items-center font-bold text-lg">
+                  <Zap className="w-6 h-6 mr-2 animate-pulse" />
+                  Try Free Demo Now
+                  <ChevronRight className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Button>
+            </div>
+            
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <span className="w-16 h-px bg-gray-300 dark:bg-gray-600"></span>
+              <span>or</span>
+              <span className="w-16 h-px bg-gray-300 dark:bg-gray-600"></span>
+            </div>
+            
+            {/* Secondary CTAs */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                variant="primary"
+                size="xl"
+                onClick={() => navigate('/register')}
+                className="group"
+              >
+                Create Free Account
+                <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button
+                variant="outline"
+                size="xl"
+                onClick={() => navigate('/login')}
+              >
+                I Already Have an Account
+              </Button>
+            </div>
           </div>
         </div>
       </section>

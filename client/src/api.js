@@ -36,3 +36,19 @@ export const analyzeAudio = async (audioBlob, token) => {
   // We need to extract the data property which contains the actual analysis
   return response.data.data || response.data.report || response.data;
 };
+
+export const submitFeedback = async (feedbackData, token = null) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  };
+
+  const url = `${SERVER_BASE}/feedback/submit`;
+  const response = await axios.post(url, feedbackData, config);
+  
+  console.log('💬 Feedback Response:', response.data);
+  
+  return response.data;
+};

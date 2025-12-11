@@ -144,6 +144,24 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
   const analyzeRecording = async () => {
     if (!audioBlob) return;
     
+    // Check minimum duration (at least 3 seconds)
+    if (recordingDuration < 3) {
+      alert('Recording is too short. Please record at least 3 seconds of speech.');
+      return;
+    }
+    
+    // Check audio blob size
+    if (audioBlob.size < 5000) {
+      alert('Audio file is too small. Please speak clearly for at least 3 seconds.');
+      return;
+    }
+    
+    console.log('📊 Starting analysis:', {
+      duration: recordingDuration + 's',
+      blobSize: audioBlob.size + ' bytes',
+      type: audioBlob.type
+    });
+    
     setIsAnalyzing(true);
     
     try {
@@ -160,7 +178,8 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
       
     } catch (error) {
       console.error('Analysis error:', error);
-      alert('Analysis failed. Please try again.');
+      const errorMsg = error.response?.data?.message || error.message || 'Analysis failed';
+      alert(`Analysis failed: ${errorMsg}. Please try recording again with clear speech.`);
     } finally {
       setIsAnalyzing(false);
     }

@@ -1,5 +1,6 @@
 // server/controllers/speech.controller.js
 
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { SpeechClient } = require('@google-cloud/speech');
 const AnalysisReport = require('../models/AnalysisReport.model');
 const jwt = require('jsonwebtoken');
@@ -7,10 +8,15 @@ const User = require('../models/User.model');
 const path = require('path');
 const { generateAIFeedback } = require('../services/aiAnalysis.service');
 
-// Initialize Google Speech Client with credentials
-// The GOOGLE_APPLICATION_CREDENTIALS env var should point to your JSON key file
+// Initialize Gemini AI for text analysis and Google Speech for audio transcription
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// Initialize Google Speech Client for audio transcription (more reliable for STT)
+const credentialsPath = process.env.GOOGLE_APPLICATION_CREDENTIALS || path.join(__dirname, '../google-credentials.json');
+console.log('🔑 Initializing Google Speech Client with credentials:', credentialsPath);
+
 const speechClient = new SpeechClient({
-  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS || path.join(__dirname, '../google-credentials.json')
+  keyFilename: credentialsPath
 });
 
 // --- Paste all the calculation helper functions here ---
@@ -174,44 +180,68 @@ exports.analyzeSpeech = async (req, res) => {
 
   try {
     console.log('🔄 Starting audio processing...');
+    
+    // Check if audio buffer is too small
+    if (req.file.buffer.length < 1000) {
+      console.log('⚠️ Audio file is very small:', req.file.buffer.length, 'bytes');
+      return res.status(400).json({
+        success: false,
+        message: 'Audio recording is too short or empty. Please record at least 3 seconds of speech.',
+        error: 'Audio file too small'
+      });
+    }
+    
     const audioBytes = req.file.buffer.toString('base64');
-    console.log('   - Audio converted to base64, length:', audioBytes.length);
+    console.log('   - Audio buffer size:', req.file.buffer.length, 'bytes');
+    console.log('   - Audio base64 length:', audioBytes.length);
     console.log('   - File MIME type:', req.file.mimetype);
     console.log('   - File original name:', req.file.originalname);
 
     // Determine encoding based on file type
-    let encoding = 'WEBM_OPUS';
-    let sampleRateHertz = 48000;
-    
-    if (req.file.mimetype) {
-      if (req.file.mimetype.includes('ogg')) {
-        encoding = 'OGG_OPUS';
-      } else if (req.file.mimetype.includes('mp4')) {
-        encoding = 'MP3';
-      } else if (req.file.mimetype.includes('webm')) {
-        encoding = 'WEBM_OPUS';
-      }
-    }
-    
-    console.log('   - Using encoding:', encoding);
-
-    const audio = {
-      content: audioBytes,
-    };
-    const config = {
-      encoding: encoding,
-      sampleRateHertz: sampleRateHertz,
+    // Google Speech-to-Text has issues with WEBM directly, try LINEAR16 or use longRunningRecognize
+    let configOptions = {
       languageCode: 'en-US',
       enableWordTimeOffsets: true,
       enableWordConfidence: true,
       enableAutomaticPunctuation: true,
     };
+    
+    // For WEBM, we need to use a different approach
+    // Option 1: Try WEBM_OPUS with proper config
+    // Option 2: Use longRunningRecognize for async processing
+    // Option 3: Let Google auto-detect (works better for some formats)
+    
+    if (req.file.mimetype && req.file.mimetype.includes('webm')) {
+      // For browser WebM recordings, use WEBM_OPUS with explicit config
+      configOptions.encoding = 'WEBM_OPUS';
+      configOptions.sampleRateHertz = 48000;
+      configOptions.audioChannelCount = 1; // Mono audio
+    } else if (req.file.mimetype && req.file.mimetype.includes('ogg')) {
+      configOptions.encoding = 'OGG_OPUS';
+      configOptions.sampleRateHertz = 48000;
+    } else if (req.file.mimetype && req.file.mimetype.includes('mp4')) {
+      configOptions.encoding = 'MP3';
+      configOptions.sampleRateHertz = 48000;
+    } else {
+      // Default fallback
+      configOptions.encoding = 'WEBM_OPUS';
+      configOptions.sampleRateHertz = 48000;
+    }
+    
+    console.log('   - Using encoding:', configOptions.encoding);
+    console.log('   - Sample rate:', configOptions.sampleRateHertz);
+    console.log('   - Audio channels:', configOptions.audioChannelCount || 'default');
+
+    const audio = {
+      content: audioBytes,
+    };
+    const config = configOptions;
     const request = {
       audio: audio,
       config: config,
     };
 
-    // 1. Call Google Speech-to-Text API
+    // 1. Call Google Speech-to-Text API for transcription
     console.log('☁️ Calling Google Speech-to-Text API...');
     const [response] = await speechClient.recognize(request);
     console.log('✅ Google API responded');
@@ -226,7 +256,7 @@ exports.analyzeSpeech = async (req, res) => {
     }
 
     const transcript = result.alternatives[0].transcript || '';
-    const words = result.alternatives[0].words || [];
+    const formattedWords = result.alternatives[0].words || [];
 
     // Check if transcript is empty or too short
     if (!transcript || transcript.trim().length < 3) {
@@ -237,16 +267,16 @@ exports.analyzeSpeech = async (req, res) => {
     }
 
     console.log('   - Transcript:', transcript.substring(0, 50) + '...');
-    console.log('   - Word count:', words.length);
+    console.log('   - Word count:', formattedWords.length);
 
     // 2. Run all our analysis functions
     const fillerWords = analyzeFillerWords(transcript);
     const fillerWordCount = Object.values(fillerWords).reduce((sum, count) => sum + count, 0);
-    const pace = calculatePace(words);
+    const pace = calculatePace(formattedWords);
     
     const metrics = {};
-    metrics.clarity = calculateClarity(words);
-    metrics.fluency = calculateFluency(words, fillerWordCount);
+    metrics.clarity = calculateClarity(formattedWords);
+    metrics.fluency = calculateFluency(formattedWords, fillerWordCount);
     metrics.pace = scorePace(pace.wordsPerMinute);
     // For now, confidence is a composite. Tone would require another API call.
     metrics.confidence = Math.round((metrics.clarity * 0.4) + (metrics.fluency * 0.4) + (metrics.pace * 0.2));
@@ -321,11 +351,26 @@ exports.analyzeSpeech = async (req, res) => {
 
   } catch (error) {
     console.error('❌ Error during speech analysis:', error);
+    console.error('   Error name:', error.name);
+    console.error('   Error message:', error.message);
+    console.error('   Error code:', error.code);
     console.error('   Error stack:', error.stack);
+    
+    // More user-friendly error messages
+    let userMessage = 'Server error during analysis.';
+    if (error.code === 3 || error.message?.includes('credentials')) {
+      userMessage = 'Authentication error with speech service. Please contact support.';
+    } else if (error.code === 'ENOENT') {
+      userMessage = 'Speech service configuration error. Please contact support.';
+    } else if (error.message?.includes('audio')) {
+      userMessage = 'Invalid audio format. Please try recording again.';
+    }
+    
     res.status(500).json({ 
       success: false,
-      message: 'Server error during analysis.', 
-      error: error.message 
+      message: userMessage, 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 };

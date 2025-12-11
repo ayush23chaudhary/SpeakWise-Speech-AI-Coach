@@ -8,6 +8,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth.routes");
 const speechRoutes = require("./routes/speech.routes");
 const practiceHubRoutes = require("./routes/practiceHub.routes");
+const feedbackRoutes = require("./routes/feedback.routes");
 const mongoose = require("mongoose");
 
 const app = express();
@@ -65,6 +66,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/speech", speechRoutes);
 app.use("/api/practice-hub", practiceHubRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 // Root route
 app.get("/", (req, res) => {

@@ -28,17 +28,22 @@ import {
   Lightbulb,
   LogIn,
   UserPlus,
-  Save
+  Save,
+  Star
 } from 'lucide-react';
 import Card from '../common/Card';
 import Button from '../common/Button';
+import FeedbackModal from '../common/FeedbackModal';
 import { CHART_COLORS } from '../../utils/constants';
+import { submitFeedback } from '../../api';
 
 const GuestAnalysisDashboard = ({ analysisData }) => {
   const [currentTranscript, setCurrentTranscript] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentWordIndex, setCurrentWordIndex] = useState(-1);
   const [showSavePrompt, setShowSavePrompt] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
 
   useEffect(() => {
     if (analysisData) {
@@ -135,6 +140,17 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
     if (score >= 80) return { level: 'Excellent', icon: Award, color: 'text-green-600' };
     if (score >= 60) return { level: 'Good', icon: ThumbsUp, color: 'text-yellow-600' };
     return { level: 'Needs Work', icon: AlertTriangle, color: 'text-red-600' };
+  };
+
+  const handleFeedbackSubmit = async (feedbackData) => {
+    try {
+      await submitFeedback(feedbackData, null); // null token for guests
+      setFeedbackSubmitted(true);
+      setShowFeedbackModal(false);
+    } catch (error) {
+      console.error('Failed to submit feedback:', error);
+      throw error;
+    }
   };
 
   const performanceLevel = getPerformanceLevel(overallScore);
@@ -371,6 +387,42 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
           </Card>
         </div>
 
+        {/* Feedback Section */}
+        {!feedbackSubmitted && (
+          <Card className="text-center bg-gradient-to-br from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 border-2 border-primary-200 dark:border-primary-700">
+            <Star className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              How was your experience?
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              Your feedback helps us improve our AI-powered speech analysis
+            </p>
+            <Button
+              onClick={() => setShowFeedbackModal(true)}
+              variant="primary"
+              size="lg"
+              icon={Star}
+              className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
+            >
+              Rate Your Experience
+            </Button>
+          </Card>
+        )}
+
+        {feedbackSubmitted && (
+          <Card className="text-center bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-700">
+            <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-3">
+              <ThumbsUp className="w-8 h-8 text-green-600 dark:text-green-400" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              Thank You for Your Feedback!
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              Your input helps us make SpeakWise better for everyone
+            </p>
+          </Card>
+        )}
+
         {/* Action Buttons */}
         <Card className="text-center">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -395,6 +447,13 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
           </div>
         </Card>
       </div>
+
+      {/* Feedback Modal */}
+      <FeedbackModal
+        isOpen={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+        onSubmit={handleFeedbackSubmit}
+      />
     </div>
   );
 };

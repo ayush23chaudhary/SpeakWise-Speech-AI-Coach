@@ -1,34 +1,137 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, Square, Play, Pause, LogIn, UserPlus } from 'lucide-react';
-import useAudioRecorder from '../../hooks/useAudioRecorder';
+import { Mic, Square, Play, Pause, LogIn, UserPlus, Zap } from 'lucide-react';
 import Button from '../common/Button';
 import Card from '../common/Card';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { RECORDING_TIPS } from '../../utils/constants';
-import { generateGuestAnalysis } from '../../utils/guestUtils';
+import { analyzeAudio } from '../../api';
 
 const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
+  const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [error, setError] = useState(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   
-  const {
-    isRecording,
-    isPaused,
-    audioBlob,
-    audioUrl,
-    volume,
-    duration,
-    error,
-    startRecording,
-    pauseRecording,
-    resumeRecording,
-    stopRecording,
-    resetRecording,
-    getFormattedDuration
-  } = useAudioRecorder();
+  const mediaRecorderRef = useRef(null);
+  const audioRef = useRef(null);
+  const streamRef = useRef(null);
+  const animationRef = useRef(null);
+  const startTimeRef = useRef(null);
+  const durationIntervalRef = useRef(null);
 
-  const audioRef = React.useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      if (durationIntervalRef.current) {
+        clearInterval(durationIntervalRef.current);
+      }
+    };
+  }, []);
+
+  const startRecording = async () => {
+    try {
+      // Reset everything first
+      setDuration(0);
+      startTimeRef.current = null;
+      setVolume(0);
+      setError(null);
+      
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      
+      const chunks = [];
+      
+      mediaRecorder.ondataavailable = (event) => {
+        chunks.push(event.data);
+      };
+      
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        setAudioBlob(blob);
+        setAudioUrl(URL.createObjectURL(blob));
+      };
+      
+      mediaRecorder.start();
+      setIsRecording(true);
+      startTimeRef.current = Date.now();
+      
+      // Start volume monitoring
+      startVolumeMonitoring(stream);
+      
+      console.log('Recording started:', { startTime: startTimeRef.current });
+      
+    } catch (err) {
+      console.error('Error accessing microphone:', err);
+      setError('Unable to access microphone. Please check your permissions.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      streamRef.current.getTracks().forEach(track => track.stop());
+      setIsRecording(false);
+      startTimeRef.current = null;
+      
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      
+      if (durationIntervalRef.current) {
+        clearInterval(durationIntervalRef.current);
+      }
+    }
+  };
+
+  const startVolumeMonitoring = (stream) => {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioContext.createAnalyser();
+    const microphone = audioContext.createMediaStreamSource(stream);
+    
+    microphone.connect(analyser);
+    analyser.fftSize = 256;
+    
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    
+    const updateVolume = () => {
+      if (isRecording) {
+        analyser.getByteFrequencyData(dataArray);
+        const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
+        setVolume(average);
+        animationRef.current = requestAnimationFrame(updateVolume);
+      }
+    };
+    
+    updateVolume();
+  };
+
+  // Duration timer effect
+  useEffect(() => {
+    let intervalId;
+    
+    if (isRecording && startTimeRef.current) {
+      intervalId = setInterval(() => {
+        setDuration(Math.floor((Date.now() - startTimeRef.current) / 1000));
+      }, 1000);
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [isRecording]);
 
   const handlePlayPause = () => {
     if (audioRef.current) {
@@ -56,26 +159,53 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
   const analyzeRecording = async () => {
     if (!audioBlob) return;
     
+    // Check minimum duration (at least 3 seconds)
+    if (duration < 3) {
+      alert('Recording is too short. Please record at least 3 seconds of speech.');
+      return;
+    }
+    
+    // Check audio blob size
+    if (audioBlob.size < 5000) {
+      alert('Audio file is too small. Please speak clearly for at least 3 seconds.');
+      return;
+    }
+    
+    console.log('📊 Starting analysis:', {
+      duration: duration + 's',
+      blobSize: audioBlob.size + ' bytes',
+      type: audioBlob.type
+    });
+    
     setIsAnalyzing(true);
     
     try {
-      // For guest mode, we'll use a mock analysis without saving to database
-      await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 1000));
+      // Guest mode now uses real AI analysis (same as authenticated users)
+      // The /api/speech/analyze endpoint doesn't require authentication
+      const analysis = await analyzeAudio(audioBlob, null); // No token needed for guests
       
-      // Generate mock analysis data
-      const mockAnalysis = generateMockAnalysis();
-      onAnalysisComplete(mockAnalysis);
+      // Pass the real analysis data to the callback
+      onAnalysisComplete(analysis);
       
     } catch (error) {
       console.error('Analysis error:', error);
-      alert('Analysis failed. Please try again.');
+      const errorMsg = error.response?.data?.message || error.message || 'Analysis failed';
+      alert(`Analysis failed: ${errorMsg}. Please try recording again with clear speech.`);
     } finally {
       setIsAnalyzing(false);
     }
   };
 
-  const generateMockAnalysis = () => {
-    return generateGuestAnalysis();
+  const resetRecording = () => {
+    setAudioBlob(null);
+    setAudioUrl(null);
+    setIsPlaying(false);
+    setVolume(0);
+    setDuration(0);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
   };
 
   const downloadRecording = () => {
@@ -89,6 +219,12 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const getVolumeColor = () => {
@@ -116,9 +252,10 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
           </p>
           
           {/* Guest Mode Notice */}
-          <div className="mt-4 inline-flex items-center px-4 py-2 bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 rounded-full text-sm font-medium">
-            <span className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>
-            Guest Mode - Results won't be saved
+          <div className="mt-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-100 to-purple-100 dark:from-yellow-900/20 dark:to-purple-900/20 border border-yellow-300 dark:border-yellow-600 text-yellow-900 dark:text-yellow-100 rounded-lg text-sm font-medium shadow-sm">
+            <Zap className="w-4 h-4 mr-2 text-yellow-500" />
+            <span className="font-semibold">Demo Mode:</span>
+            <span className="ml-1">Full AI analysis • Results not saved • No signup required</span>
           </div>
         </div>
 
@@ -197,14 +334,13 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
                 {isRecording && (
                   <div className="space-y-2">
                     <div className="text-2xl font-mono text-primary-600 dark:text-primary-400">
-                      {getFormattedDuration()}
+                      {formatTime(duration)}
                     </div>
                     <div className="flex items-center justify-center space-x-2">
-                      {!isPaused && <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>}
+                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                       <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                        {isPaused ? 'Recording Paused' : 'Recording in progress...'}
+                        Recording in progress...
                       </div>
-                      {!isPaused && <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>}
                     </div>
                   </div>
                 )}
@@ -230,19 +366,6 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
                     >
                       {isRecording ? 'Stop Recording' : 'Start Recording'}
                     </Button>
-                    
-                    {isRecording && (
-                      <div className="flex justify-center space-x-3">
-                        <Button
-                          onClick={isPaused ? resumeRecording : pauseRecording}
-                          variant="secondary"
-                          size="md"
-                          icon={isPaused ? Play : Pause}
-                        >
-                          {isPaused ? 'Resume' : 'Pause'}
-                        </Button>
-                      </div>
-                    )}
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -359,7 +482,7 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Duration:</span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    {getFormattedDuration()}
+                    {formatTime(duration)}
                   </span>
                 </div>
                 <div className="flex justify-between">
