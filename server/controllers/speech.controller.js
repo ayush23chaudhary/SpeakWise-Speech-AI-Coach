@@ -3,6 +3,7 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { SpeechClient } = require('@google-cloud/speech');
 const AnalysisReport = require('../models/AnalysisReport.model');
+const GuestFeedback = require('../models/GuestFeedback.model');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 const path = require('path');
@@ -674,11 +675,12 @@ exports.analyzeSpeech = async (req, res) => {
       recommendations,
     };
 
-    // 4. Save to Database only if user is authenticated AND it's not a practice exercise
+    // 4. Save to Database
     let reportId = null;
     const isPracticeExercise = req.body.isPracticeExercise === 'true';
     
     if (userId && !isPracticeExercise) {
+      // Authenticated user - save to AnalysisReport
       const newReport = new AnalysisReport({
         user: userId,  // Changed from userId to user to match schema
         transcript: analysisData.transcript,
@@ -696,7 +698,40 @@ exports.analyzeSpeech = async (req, res) => {
     } else if (isPracticeExercise) {
       console.log('   - Practice exercise: analysis not saved to DB');
     } else {
-      console.log('   - Guest mode: analysis not saved to DB');
+      // Guest mode - save to GuestFeedback collection
+      try {
+        // Generate a session ID (from request body or create one)
+        const sessionId = req.body.sessionId || `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        
+        // Calculate recording duration
+        const recordingDuration = formattedWords.length > 0 
+          ? formattedWords[formattedWords.length - 1].endTime.seconds 
+          : 0;
+        
+        const guestFeedback = new GuestFeedback({
+          sessionId: sessionId,
+          ipAddress: req.ip || req.connection.remoteAddress,
+          transcript: analysisData.transcript,
+          overallScore: analysisData.overallScore,
+          metrics: analysisData.metrics,
+          pace: analysisData.pace,
+          fillerWords: analysisData.fillerWords,
+          strengths: analysisData.strengths,
+          areasForImprovement: analysisData.areasForImprovement,
+          recommendations: analysisData.recommendations,
+          recordingDuration: recordingDuration,
+          audioFileSize: req.file.buffer.length,
+          userAgent: req.headers['user-agent'],
+          platform: 'web'
+        });
+        
+        await guestFeedback.save();
+        reportId = guestFeedback._id;
+        console.log('   - Guest feedback saved to DB:', reportId);
+      } catch (guestError) {
+        // Don't fail the request if guest feedback save fails
+        console.error('   - Failed to save guest feedback:', guestError.message);
+      }
     }
 
     // 5. Send report back to client

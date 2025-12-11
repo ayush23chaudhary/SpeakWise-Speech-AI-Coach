@@ -189,4 +189,157 @@ router.get("/report/:id", auth, async (req, res) => {
     }
 });
 
+// ============================================
+// GUEST FEEDBACK ROUTES (Admin/Analytics)
+// ============================================
+
+const GuestFeedback = require("../models/GuestFeedback.model");
+
+/**
+ * GET /api/speech/guest-feedback/analytics
+ * Get guest feedback analytics for the past N days
+ * Query params: days (default: 30)
+ * Auth: Admin only (you can add admin middleware)
+ */
+router.get("/guest-feedback/analytics", auth, async (req, res) => {
+    try {
+        const days = parseInt(req.query.days) || 30;
+        
+        // Get analytics from static method
+        const analytics = await GuestFeedback.getAnalytics(days);
+        
+        // Get recent guest feedback count
+        const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+        const totalGuests = await GuestFeedback.countDocuments({
+            createdAt: { $gte: startDate }
+        });
+        
+        // Get score distribution
+        const scoreDistribution = await GuestFeedback.aggregate([
+            { $match: { createdAt: { $gte: startDate } } },
+            {
+                $bucket: {
+                    groupBy: "$overallScore",
+                    boundaries: [0, 50, 60, 70, 80, 90, 100],
+                    default: "Other",
+                    output: {
+                        count: { $sum: 1 },
+                        avgScore: { $avg: "$overallScore" }
+                    }
+                }
+            }
+        ]);
+        
+        res.json({
+            success: true,
+            data: {
+                period: `${days} days`,
+                totalGuestRecordings: totalGuests,
+                analytics: analytics[0] || {},
+                scoreDistribution
+            }
+        });
+    } catch (error) {
+        console.error("Guest analytics error:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Failed to fetch guest analytics" 
+        });
+    }
+});
+
+/**
+ * GET /api/speech/guest-feedback/recent
+ * Get recent guest feedback entries
+ * Query params: limit (default: 50), page (default: 1)
+ * Auth: Admin only
+ */
+router.get("/guest-feedback/recent", auth, async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 50;
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * limit;
+        
+        const feedbacks = await GuestFeedback.find()
+            .sort({ createdAt: -1 })
+            .limit(limit)
+            .skip(skip)
+            .select('-ipAddress -userAgent') // Exclude sensitive data
+            .lean();
+        
+        const total = await GuestFeedback.countDocuments();
+        
+        res.json({
+            success: true,
+            data: {
+                feedbacks,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    pages: Math.ceil(total / limit)
+                }
+            }
+        });
+    } catch (error) {
+        console.error("Guest feedback fetch error:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Failed to fetch guest feedback" 
+        });
+    }
+});
+
+/**
+ * GET /api/speech/guest-feedback/:id
+ * Get specific guest feedback by ID
+ * Auth: Admin only
+ */
+router.get("/guest-feedback/:id", auth, async (req, res) => {
+    try {
+        const feedback = await GuestFeedback.findById(req.params.id);
+        
+        if (!feedback) {
+            return res.status(404).json({ 
+                success: false,
+                message: "Guest feedback not found" 
+            });
+        }
+        
+        res.json({
+            success: true,
+            data: feedback
+        });
+    } catch (error) {
+        console.error("Guest feedback fetch error:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Failed to fetch guest feedback" 
+        });
+    }
+});
+
+/**
+ * DELETE /api/speech/guest-feedback/cleanup
+ * Anonymize expired guest data (GDPR compliance)
+ * Auth: Admin only
+ */
+router.delete("/guest-feedback/cleanup", auth, async (req, res) => {
+    try {
+        const result = await GuestFeedback.anonymizeExpiredData();
+        
+        res.json({
+            success: true,
+            message: `Anonymized ${result.modifiedCount} expired guest records`,
+            data: result
+        });
+    } catch (error) {
+        console.error("Guest cleanup error:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Failed to cleanup guest data" 
+        });
+    }
+});
+
 module.exports = router;
