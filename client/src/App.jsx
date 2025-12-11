@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import useAuthStore from './store/authStore';
 import AuthPage from './components/auth/AuthPage';
 import MainApp from './components/layout/MainApp';
@@ -75,6 +77,10 @@ function App() {
             element={<Navigate to="/" replace />} 
           />
         </Routes>
+        
+        {/* Vercel Analytics & Speed Insights */}
+        <Analytics />
+        <SpeedInsights />
       </div>
     </Router>
   );
