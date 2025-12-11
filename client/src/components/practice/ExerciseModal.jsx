@@ -299,6 +299,51 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
           </div>
         )}
 
+        {/* Examples/Prompts Section */}
+        {exercise.examples && exercise.examples.length > 0 && !analysisResult && (
+          <div className="mb-6">
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
+              Practice Examples - Choose One:
+            </h3>
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {exercise.examples.map((example, index) => (
+                <div
+                  key={index}
+                  className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-200 dark:border-purple-800 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <span className="inline-block px-3 py-1 bg-purple-600 text-white text-xs font-semibold rounded-full">
+                      {example.type}
+                    </span>
+                    {example.difficulty && (
+                      <Badge
+                        variant={
+                          example.difficulty === 'beginner'
+                            ? 'success'
+                            : example.difficulty === 'intermediate'
+                            ? 'warning'
+                            : 'danger'
+                        }
+                        className="text-xs"
+                      >
+                        {example.difficulty}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-gray-800 dark:text-gray-200 text-base leading-relaxed">
+                    {example.content}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                💡 <strong>Tip:</strong> Choose an example that matches your comfort level and practice it before recording!
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start space-x-3">
