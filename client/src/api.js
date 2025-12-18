@@ -9,11 +9,11 @@ const SERVER_BASE = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
   : '/api'; // Use proxy in development
 
-console.log('🔗 API Configuration:', {
-  VITE_API_URL: import.meta.env.VITE_API_URL,
-  SERVER_BASE: SERVER_BASE,
-  mode: import.meta.env.MODE
-});
+// console.log('🔗 API Configuration:', {
+//   VITE_API_URL: import.meta.env.VITE_API_URL,
+//   SERVER_BASE: SERVER_BASE,
+//   mode: import.meta.env.MODE
+// });
 
 export const analyzeAudio = async (audioBlob, token) => {
   const formData = new FormData();
