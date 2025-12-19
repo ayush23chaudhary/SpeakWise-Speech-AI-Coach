@@ -7,10 +7,7 @@ const SERVER_BASE = `${API_BASE_URL}/api`;
 
 // console.log('🔗 API Configuration:', {
 //   VITE_API_URL: import.meta.env.VITE_API_URL,
-<<<<<<< HEAD
-=======
 //   API_BASE_URL: API_BASE_URL,
->>>>>>> 4830b0c (feat: Add OAuth authentication, enhanced profile with goals/achievements, and deployment guides)
 //   SERVER_BASE: SERVER_BASE,
 //   mode: import.meta.env.MODE
 // });
