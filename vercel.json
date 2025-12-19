@@ -5,4 +5,17 @@
       "destination": "/index.html"
     }
   ]
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "speak-wise-speech-ai-coach.vercel.app"
+        }
+      ],
+      "destination": "https://speakwise.co.in/$1",
+      "permanent": true
+    }
+  ]
 }
