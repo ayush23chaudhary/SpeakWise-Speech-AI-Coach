@@ -5,12 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5001', // Backend server port
-        changeOrigin: true,
-        secure: false,
-      },
-    },
+    // Removed proxy - using direct API calls with CORS instead
+    // This is better for OAuth authentication flows
   },
 })

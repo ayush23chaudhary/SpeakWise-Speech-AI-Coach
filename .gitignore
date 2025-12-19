@@ -193,3 +193,4 @@ Cloud specific (e.g., temporary credentials, cache files)
 app/dist/
 app/build/
 app/node_modules/ 
+server/client_secret*.json

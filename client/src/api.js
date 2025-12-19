@@ -1,16 +1,16 @@
 import axios from 'axios';
 
-// Use environment variable for API URL (falls back to /api for development with proxy)
-const API_BASE_URL = import.meta.env.VITE_API_URL 
-  ? import.meta.env.VITE_API_URL 
-  : 'http://localhost:5001';
+// Use environment variable for API URL (falls back to localhost:5001 for development)
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-const SERVER_BASE = import.meta.env.VITE_API_URL 
-  ? `${import.meta.env.VITE_API_URL}/api`
-  : '/api'; // Use proxy in development
+const SERVER_BASE = `${API_BASE_URL}/api`;
 
 // console.log('🔗 API Configuration:', {
 //   VITE_API_URL: import.meta.env.VITE_API_URL,
+<<<<<<< HEAD
+=======
+//   API_BASE_URL: API_BASE_URL,
+>>>>>>> 4830b0c (feat: Add OAuth authentication, enhanced profile with goals/achievements, and deployment guides)
 //   SERVER_BASE: SERVER_BASE,
 //   mode: import.meta.env.MODE
 // });
@@ -30,7 +30,7 @@ export const analyzeAudio = async (audioBlob, token) => {
   const url = `${SERVER_BASE}/speech/analyze`;
   const response = await axios.post(url, formData, config);
   
-  console.log('📊 API Response:', response.data);
+  console.log(' API Response:', response.data);
   
   // Backend returns { success, message, data: {...analysisData} }
   // We need to extract the data property which contains the actual analysis
@@ -48,7 +48,7 @@ export const submitFeedback = async (feedbackData, token = null) => {
   const url = `${SERVER_BASE}/feedback/submit`;
   const response = await axios.post(url, feedbackData, config);
   
-  console.log('💬 Feedback Response:', response.data);
+  console.log(' Feedback Response:', response.data);
   
   return response.data;
 };

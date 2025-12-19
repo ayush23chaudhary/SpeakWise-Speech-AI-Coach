@@ -112,6 +112,46 @@ const useAuthStore = create(
           get().logout();
           return false;
         }
+      },
+
+      // OAuth login method - handles login with existing token from OAuth provider
+      loginWithOAuthToken: async (token) => {
+        set({ isLoading: true });
+        
+        try {
+          // Set token in state and API headers
+          set({ token });
+          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          
+          // Fetch user data with the token
+          const response = await api.get('/auth/me');
+          const { user } = response.data;
+          
+          set({
+            user,
+            isAuthenticated: true,
+            isLoading: false
+          });
+          
+          return { success: true };
+        } catch (error) {
+          set({
+            token: null,
+            user: null,
+            isAuthenticated: false,
+            isLoading: false
+          });
+          delete api.defaults.headers.common['Authorization'];
+          return { 
+            success: false, 
+            error: error.response?.data?.message || 'OAuth authentication failed' 
+          };
+        }
+      },
+
+      // Update user information in store
+      updateUser: (updatedUser) => {
+        set({ user: updatedUser });
       }
     }),
     {

@@ -16,6 +16,9 @@ const AnalysisReportSchema = new Schema({
     fluency: { type: Number },
     pace: { type: Number },
     tone: { type: Number },
+    pronunciation: { type: Number }, // Added for skill breakdown
+    vocabulary: { type: Number }, // Added for skill breakdown
+    grammar: { type: Number }, // Added for skill breakdown
   },
   pace: {
     wordsPerMinute: { type: Number },
@@ -25,6 +28,15 @@ const AnalysisReportSchema = new Schema({
   strengths: [String],
   areasForImprovement: [String],
   recommendations: [String],
+  // Additional tracking fields
+  duration: { type: Number }, // Duration in seconds
+  wordCount: { type: Number }, // Total words spoken
+  exerciseType: { 
+    type: String,
+    enum: ['conversation', 'presentation', 'interview', 'reading', 'freestyle'],
+    default: 'freestyle'
+  },
+  audioUrl: { type: String }, // Store audio recording if needed
 }, { timestamps: true });
 
 module.exports = mongoose.model('AnalysisReport', AnalysisReportSchema);

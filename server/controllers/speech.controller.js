@@ -4,6 +4,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { SpeechClient } = require('@google-cloud/speech');
 const AnalysisReport = require('../models/AnalysisReport.model');
 const GuestFeedback = require('../models/GuestFeedback.model');
+const Goal = require('../models/Goal.model');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 const path = require('path');
@@ -474,6 +475,92 @@ function detectEmotionalTone(transcript) {
 }
 
 /**
+ * Calculate Pronunciation Score
+ * Based on word confidence from Google Speech API
+ */
+function calculatePronunciation(words, transcript) {
+  if (!words || words.length === 0) return 70; // Default neutral score
+  
+  // Average confidence from Google Speech API (indicates pronunciation clarity)
+  const totalConfidence = words.reduce((sum, word) => sum + (word.confidence || 0.8), 0);
+  const avgConfidence = totalConfidence / words.length;
+  
+  // Convert confidence (0-1) to score (0-100)
+  // Multiply by 105 and cap at 100 to allow high scores for good pronunciation
+  const pronunciationScore = Math.min(100, avgConfidence * 105);
+  
+  return Math.round(pronunciationScore);
+}
+
+/**
+ * Calculate Vocabulary Score
+ * Based on word diversity and complexity
+ */
+function calculateVocabulary(transcript) {
+  if (!transcript) return 70; // Default neutral score
+  
+  const words = transcript.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+  if (words.length === 0) return 70;
+  
+  // 1. Lexical Diversity (unique words / total words)
+  const uniqueWords = new Set(words);
+  const diversity = uniqueWords.size / words.length;
+  
+  // 2. Word Length (longer words often indicate more complex vocabulary)
+  const avgWordLength = words.reduce((sum, word) => sum + word.length, 0) / words.length;
+  
+  // 3. Complex words (7+ characters)
+  const complexWords = words.filter(w => w.length >= 7).length;
+  const complexityRatio = complexWords / words.length;
+  
+  // Scoring:
+  // - Diversity: 40% weight (0.5+ diversity is good)
+  // - Average length: 30% weight (5-6 chars is good)
+  // - Complexity: 30% weight (15%+ complex words is good)
+  
+  const diversityScore = Math.min(100, (diversity / 0.5) * 100);
+  const lengthScore = Math.min(100, ((avgWordLength - 3) / 3) * 100);
+  const complexityScore = Math.min(100, (complexityRatio / 0.15) * 100);
+  
+  const vocabularyScore = (diversityScore * 0.4) + (lengthScore * 0.3) + (complexityScore * 0.3);
+  
+  return Math.round(Math.max(60, vocabularyScore)); // Min 60 to avoid harsh scores
+}
+
+/**
+ * Calculate Grammar Score
+ * Simple heuristic-based grammar analysis
+ */
+function calculateGrammar(transcript) {
+  if (!transcript) return 70; // Default neutral score
+  
+  const sentences = transcript.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  if (sentences.length === 0) return 70;
+  
+  let grammarScore = 100;
+  
+  // 1. Sentence structure variety (good grammar has varied sentence lengths)
+  const sentenceLengths = sentences.map(s => s.trim().split(/\s+/).length);
+  const avgLength = sentenceLengths.reduce((a, b) => a + b, 0) / sentenceLengths.length;
+  const variance = sentenceLengths.reduce((sum, len) => sum + Math.pow(len - avgLength, 2), 0) / sentenceLengths.length;
+  const varietyScore = Math.min(100, (Math.sqrt(variance) / 5) * 100); // Higher variance = more variety
+  
+  // 2. Complete sentences (should have reasonable length)
+  const incompleteSentences = sentences.filter(s => s.trim().split(/\s+/).length < 3).length;
+  const completenessRatio = 1 - (incompleteSentences / sentences.length);
+  const completenessScore = completenessRatio * 100;
+  
+  // 3. Capitalization patterns (basic grammar rule)
+  const properCapitalization = sentences.filter(s => /^[A-Z]/.test(s.trim())).length;
+  const capitalizationScore = (properCapitalization / sentences.length) * 100;
+  
+  // Weighted combination
+  grammarScore = (varietyScore * 0.3) + (completenessScore * 0.5) + (capitalizationScore * 0.2);
+  
+  return Math.round(Math.max(65, grammarScore)); // Min 65 to avoid harsh scores
+}
+
+/**
  * Enhanced Overall Score Calculation
  * Based on research in holistic speech assessment
  * 
@@ -503,6 +590,110 @@ function calculateOverallScore(metrics) {
     (metrics.tone * weights.tone);
 
   return Math.round(Math.min(100, overallScore));
+}
+
+/**
+ * Update user goals based on completed session
+ * Returns array of completed goals
+ */
+async function updateUserGoals(userId, analysisData) {
+  try {
+    const Goal = require('../models/Goal.model');
+    const User = require('../models/User.model');
+    const AnalysisReport = require('../models/AnalysisReport.model');
+    
+    // Get all active goals for the user
+    const activeGoals = await Goal.find({ user: userId, status: 'active' });
+    
+    if (activeGoals.length === 0) {
+      return [];
+    }
+    
+    // Get user data for streak info
+    const user = await User.findById(userId);
+    
+    // Get all user reports for calculations
+    const allReports = await AnalysisReport.find({ user: userId }).sort({ createdAt: -1 });
+    
+    const completedGoals = [];
+    
+    for (const goal of activeGoals) {
+      let updated = false;
+      let newValue = goal.currentValue;
+      
+      switch (goal.type) {
+        case 'sessions':
+          // Increment session count
+          newValue = goal.currentValue + 1;
+          updated = true;
+          break;
+          
+        case 'score':
+          // Check if current session score meets/exceeds target
+          if (analysisData.overallScore >= goal.targetValue) {
+            newValue = Math.max(goal.currentValue, analysisData.overallScore);
+            updated = true;
+          }
+          break;
+          
+        case 'streak':
+          // Update with current streak
+          if (user.currentStreak) {
+            newValue = user.currentStreak;
+            updated = true;
+          }
+          break;
+          
+        case 'skill_improvement':
+          // Update specific skill progress
+          if (goal.targetSkill && analysisData.metrics[goal.targetSkill]) {
+            const skillScore = analysisData.metrics[goal.targetSkill];
+            if (skillScore >= goal.targetValue) {
+              newValue = Math.max(goal.currentValue, skillScore);
+              updated = true;
+            }
+          }
+          break;
+          
+        case 'time_practiced':
+          // Accumulate practice time (in minutes)
+          const sessionMinutes = analysisData.duration ? Math.round(analysisData.duration / 60) : 0;
+          newValue = goal.currentValue + sessionMinutes;
+          updated = true;
+          break;
+          
+        case 'custom':
+          // For custom goals, just increment
+          newValue = goal.currentValue + 1;
+          updated = true;
+          break;
+      }
+      
+      if (updated) {
+        goal.currentValue = newValue;
+        
+        // Check if goal is completed
+        if (goal.currentValue >= goal.targetValue && goal.status === 'active') {
+          goal.status = 'completed';
+          goal.completedAt = new Date();
+          completedGoals.push({
+            _id: goal._id,
+            title: goal.title,
+            type: goal.type,
+            targetValue: goal.targetValue,
+            currentValue: goal.currentValue
+          });
+        }
+        
+        await goal.save();
+      }
+    }
+    
+    return completedGoals;
+  } catch (error) {
+    console.error('Error updating user goals:', error);
+    return [];
+  }
 }
 
 // The main controller function
@@ -648,6 +839,11 @@ exports.analyzeSpeech = async (req, res) => {
     // Enhanced tone estimation (without audio features, based on text analysis)
     metrics.tone = estimateTone(formattedWords, transcript, metrics);
 
+    // Add pronunciation, vocabulary, and grammar metrics for skill breakdown
+    metrics.pronunciation = calculatePronunciation(formattedWords, transcript);
+    metrics.vocabulary = calculateVocabulary(transcript);
+    metrics.grammar = calculateGrammar(transcript);
+
     // Calculate overall score with research-based weights
     const overallScore = calculateOverallScore(metrics);
 
@@ -691,10 +887,44 @@ exports.analyzeSpeech = async (req, res) => {
         strengths: analysisData.strengths,
         areasForImprovement: analysisData.areasForImprovement,
         recommendations: analysisData.recommendations,
+        duration: formattedWords.length > 0 
+          ? formattedWords[formattedWords.length - 1].endTime.seconds 
+          : 0,
+        wordCount: formattedWords.length,
       });
       await newReport.save();
       reportId = newReport._id;
       console.log('   - Report saved to DB:', reportId);
+      
+      // Update user streak and check for new badges
+      try {
+        const StreakService = require('../services/streak.service');
+        const AchievementService = require('../services/achievement.service');
+        
+        await StreakService.updateStreak(userId);
+        const newBadges = await AchievementService.checkAndAwardBadges(userId);
+        
+        if (newBadges.length > 0) {
+          console.log(`   - 🏆 Awarded ${newBadges.length} new badge(s):`, newBadges.map(b => b.name).join(', '));
+          // Add badges to response so frontend can show notifications
+          analysisData.newBadges = newBadges;
+        }
+      } catch (error) {
+        console.error('   - ⚠️ Error updating streak/badges:', error.message);
+        // Don't fail the request if badge/streak update fails
+      }
+
+      // Update user goals progress
+      try {
+        const completedGoals = await updateUserGoals(userId, analysisData);
+        if (completedGoals.length > 0) {
+          console.log(`   - 🎯 Completed ${completedGoals.length} goal(s):`, completedGoals.map(g => g.title).join(', '));
+          analysisData.completedGoals = completedGoals;
+        }
+      } catch (error) {
+        console.error('   - ⚠️ Error updating goals:', error.message);
+        // Don't fail the request if goal update fails
+      }
     } else if (isPracticeExercise) {
       console.log('   - Practice exercise: analysis not saved to DB');
     } else {

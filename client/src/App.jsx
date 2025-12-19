@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Toaster } from 'react-hot-toast';
 import useAuthStore from './store/authStore';
 import AuthPage from './components/auth/AuthPage';
+import OAuthCallback from './components/auth/OAuthCallback';
 import MainApp from './components/layout/MainApp';
 import GuestMainApp from './components/layout/GuestMainApp';
 import GuestMode from './components/auth/GuestMode';
 import LandingPage from './components/landing/LandingPage';
+import ProfilePage from './components/profile/ProfilePage';
+import EnhancedProfilePage from './components/profile/EnhancedProfilePage';
 
 function App() {
   const { isAuthenticated, checkAuth, isLoading } = useAuthStore();
@@ -51,6 +55,14 @@ function App() {
           
           {/* Auth Routes */}
           <Route 
+            path="/auth" 
+            element={!isAuthenticated ? <AuthPage /> : <Navigate to="/dashboard" replace />} 
+          />
+          <Route 
+            path="/auth/callback" 
+            element={<OAuthCallback />} 
+          />
+          <Route 
             path="/login" 
             element={!isAuthenticated ? <AuthPage /> : <Navigate to="/dashboard" replace />} 
           />
@@ -70,6 +82,18 @@ function App() {
               )
             } 
           />
+
+          {/* Profile Route - Protected */}
+          <Route 
+            path="/profile" 
+            element={
+              isAuthenticated ? (
+                <EnhancedProfilePage />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
           
           {/* Catch all route */}
           <Route 
@@ -77,6 +101,18 @@ function App() {
             element={<Navigate to="/" replace />} 
           />
         </Routes>
+        
+        {/* Toast Notifications */}
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+          }}
+        />
         
         {/* Vercel Analytics & Speed Insights */}
         <Analytics />

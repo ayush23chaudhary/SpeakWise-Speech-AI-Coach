@@ -2,14 +2,18 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-require("dotenv").config();
+const session = require("express-session");
+require("dotenv").config(); // Load environment variables FIRST
 
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth.routes");
 const speechRoutes = require("./routes/speech.routes");
 const practiceHubRoutes = require("./routes/practiceHub.routes");
 const feedbackRoutes = require("./routes/feedback.routes");
+const goalRoutes = require("./routes/goal.routes");
 const mongoose = require("mongoose");
+const passport = require("./config/passport"); // Import passport AFTER dotenv
+const AchievementService = require("./services/achievement.service");
 
 const app = express();
 
@@ -45,19 +49,67 @@ if (process.env.GOOGLE_CREDENTIALS_BASE64) {
 // Connect to MongoDB
 connectDB();
 
+// Seed achievements on startup
+AchievementService.seedAchievements().catch(err => {
+    console.error('❌ Error seeding achievements:', err);
+});
+
 // CORS configuration
+const allowedOrigins = [
+  'http://localhost:3001',
+  'http://localhost:3000',
+  'http://localhost:5173',
+  process.env.CLIENT_URL
+].filter(Boolean);
+
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: function (origin, callback) {
+    console.log('🌐 CORS check - Origin:', origin);
+    
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      console.log('✅ CORS allowed - No origin (same-origin or non-browser)');
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      console.log('✅ CORS allowed for origin:', origin);
+      callback(null, true);
+    } else {
+      console.log('❌ CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
 };
 
-console.log('🌐 CORS configured for origin:', corsOptions.origin);
+console.log('🌐 CORS configured for origins:', allowedOrigins);
 
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session middleware for OAuth (required by Passport)
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'your-session-secret-change-this',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  })
+);
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Serve uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -67,6 +119,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/speech", speechRoutes);
 app.use("/api/practice-hub", practiceHubRoutes);
 app.use("/api/feedback", feedbackRoutes);
+app.use("/api/goals", goalRoutes);
 
 // Root route
 app.get("/", (req, res) => {

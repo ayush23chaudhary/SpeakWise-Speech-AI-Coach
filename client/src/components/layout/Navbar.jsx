@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mic, LogOut, Sun, Moon } from 'lucide-react';
+import { Mic, LogOut, Sun, Moon, User, ChevronDown } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import useThemeStore from '../../store/themeStore';
 
@@ -8,14 +8,48 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const { isDark, toggleTheme } = useThemeStore();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     logout();
-    navigate('/'); // Redirect to landing page
+    navigate('/');
   };
 
   const handleLogoClick = () => {
-    navigate('/'); // Navigate to landing page when logo is clicked
+    navigate('/');
+  };
+
+  const handleProfileClick = () => {
+    setIsDropdownOpen(false);
+    navigate('/profile');
+  };
+
+  // Get first name from full name
+  const getFirstName = (fullName) => {
+    return fullName?.split(' ')[0] || 'User';
+  };
+
+  // Get initials for avatar
+  const getInitials = (name) => {
+    return name
+      ?.split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2) || 'U';
   };
 
   return (
@@ -51,21 +85,78 @@ const Navbar = () => {
               )}
             </button>
 
-            {/* User Info */}
-            <div className="flex items-center space-x-3">
-              <div className="text-right">
-                <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
-              </div>
-              
-              {/* Logout Button */}
+            {/* User Dropdown */}
+            <div className="relative" ref={dropdownRef}>
               <button
-                onClick={handleLogout}
-                className="p-2 rounded-lg bg-red-100 dark:bg-red-900/20 hover:bg-red-200 dark:hover:bg-red-900/40 transition-colors duration-200"
-                title="Logout"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 dark:from-primary-600 dark:to-primary-700 dark:hover:from-primary-700 dark:hover:to-primary-800 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 border border-primary-400 dark:border-primary-600 group"
               >
-                <LogOut className="w-5 h-5 text-red-600 dark:text-red-400" />
+                {/* Profile Picture or Initials with Ring Effect */}
+                <div className="relative">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-white to-gray-100 flex items-center justify-center overflow-hidden ring-2 ring-white/50 shadow-inner">
+                    {user?.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-primary-700 text-sm font-bold">
+                        {getInitials(user?.name)}
+                      </span>
+                    )}
+                  </div>
+                  {/* Pulsing indicator */}
+                  <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-primary-600 animate-pulse"></div>
+                </div>
+                
+                {/* First Name */}
+                <span className="text-sm font-semibold text-white drop-shadow-sm">
+                  {getFirstName(user?.name)}
+                </span>
+                
+                <ChevronDown className={`w-4 h-4 text-white/90 transition-transform duration-200 group-hover:text-white ${isDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
+
+              {/* Dropdown Menu */}
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 z-50 overflow-hidden">
+                  {/* User Info Section */}
+                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {user?.name}
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                      {user?.email}
+                    </p>
+                  </div>
+
+                  {/* Menu Items */}
+                  <button
+                    onClick={handleProfileClick}
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 dark:from-primary-600 dark:to-primary-700 dark:hover:from-primary-700 dark:hover:to-primary-800 transition-all duration-200 group border-b border-primary-400 dark:border-primary-600"
+                  >
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/20 group-hover:bg-white/30 transition-all">
+                      <User className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <span className="block font-semibold">My Profile</span>
+                      <span className="text-xs opacity-90">View achievements & goals</span>
+                    </div>
+                    <svg className="w-4 h-4 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, Square, Play, Pause } from 'lucide-react';
+import { Mic, Square, Play, Pause, Target, TrendingUp } from 'lucide-react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import { analyzeAudio } from '../../api';
 import useAuthStore from '../../store/authStore';
+import toast from 'react-hot-toast';
 
 const PerformanceStudio = ({ onAnalysisComplete }) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -15,6 +16,8 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [pitch, setPitch] = useState(0); // Fundamental frequency in Hz
   const [frequencyData, setFrequencyData] = useState(new Array(32).fill(0)); // For pitch visualization
+  const [activeGoals, setActiveGoals] = useState([]);
+  const [loadingGoals, setLoadingGoals] = useState(true);
   
   const mediaRecorderRef = useRef(null);
   const audioRef = useRef(null);
@@ -25,6 +28,26 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
   const pitchHistoryRef = useRef([]); // For smoothing pitch values
   const navigate = useNavigate();
   const token = useAuthStore(state => state.token);
+
+  // Fetch active goals
+  useEffect(() => {
+    fetchActiveGoals();
+  }, []);
+
+  const fetchActiveGoals = async () => {
+    try {
+      setLoadingGoals(true);
+      const response = await api.get('/goals');
+      // The API returns { goals: [...] } not just [...]
+      const allGoals = response.data.goals || response.data;
+      const goals = allGoals.filter(goal => goal.status === 'active');
+      setActiveGoals(goals);
+    } catch (error) {
+      console.error('Error fetching goals:', error);
+    } finally {
+      setLoadingGoals(false);
+    }
+  };
 
   // Initialize audio context for volume and pitch detection
   useEffect(() => {
@@ -255,6 +278,65 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
       // Prefer analyzeAudio helper which handles auth and the full URL
       const analysis = await analyzeAudio(audioBlob, token);
 
+      // Check if any new badges were unlocked
+      if (analysis.newBadges && analysis.newBadges.length > 0) {
+        analysis.newBadges.forEach((badge, index) => {
+          setTimeout(() => {
+            toast.success(
+              <div className="flex items-center space-x-3">
+                <span className="text-3xl">{badge.icon}</span>
+                <div>
+                  <div className="font-bold">🎉 Achievement Unlocked!</div>
+                  <div className="text-sm">{badge.name}</div>
+                  <div className="text-xs opacity-75">{badge.description}</div>
+                </div>
+              </div>,
+              {
+                duration: 5000,
+                position: 'top-center',
+                style: {
+                  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+                  color: '#fff',
+                  minWidth: '350px',
+                },
+                icon: '🏆',
+              }
+            );
+          }, index * 1000); // Stagger notifications by 1 second
+        });
+      }
+
+      // Check if any goals were completed
+      if (analysis.completedGoals && analysis.completedGoals.length > 0) {
+        const badgeDelay = (analysis.newBadges?.length || 0) * 1000;
+        analysis.completedGoals.forEach((goal, index) => {
+          setTimeout(() => {
+            toast.success(
+              <div className="flex items-center space-x-3">
+                <span className="text-3xl">🎯</span>
+                <div>
+                  <div className="font-bold">🎊 Goal Completed!</div>
+                  <div className="text-sm">{goal.title}</div>
+                  <div className="text-xs opacity-75">
+                    Target: {goal.targetValue} | Achieved: {goal.currentValue}
+                  </div>
+                </div>
+              </div>,
+              {
+                duration: 6000,
+                position: 'top-center',
+                style: {
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: '#fff',
+                  minWidth: '350px',
+                },
+                icon: '🎯',
+              }
+            );
+          }, badgeDelay + (index * 1000)); // Show after badges, staggered
+        });
+      }
+
       // If the component was given an onAnalysisComplete callback, call it
       if (typeof onAnalysisComplete === 'function') {
         onAnalysisComplete(analysis);
@@ -290,9 +372,36 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Calculate goal progress percentage
+  const calculateGoalProgress = (goal) => {
+    if (!goal.currentValue || !goal.targetValue) return 0;
+    return Math.min((goal.currentValue / goal.targetValue) * 100, 100);
+  };
+
+  // Get goal type display name
+  const getGoalTypeLabel = (type) => {
+    const labels = {
+      sessions: 'Sessions',
+      score: 'Score',
+      streak: 'Day Streak',
+      skill_improvement: 'Skill',
+      time_practiced: 'Practice Time',
+      custom: 'Custom Goal'
+    };
+    return labels[type] || type;
+  };
+
+  // Get goal display value
+  const getGoalDisplayValue = (goal) => {
+    if (goal.type === 'time_practiced') {
+      return `${goal.currentValue}/${goal.targetValue} min`;
+    }
+    return `${goal.currentValue}/${goal.targetValue}`;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -303,17 +412,20 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
           </p>
         </div>
 
-        {/* Main Recording Area */}
-        <div 
-          className={`card flex flex-col items-center justify-center text-center relative transition-all duration-300 ${
-            isRecording ? 'ring-4 ring-primary-400 shadow-2xl' : ''
-          }`}
-          style={{
-            boxShadow: isRecording 
-              ? `0 0 40px rgba(59, 130, 246, 0.6), 0 0 80px rgba(59, 130, 246, 0.3), inset 0 0 40px rgba(59, 130, 246, 0.1)` 
-              : undefined
-          }}
-        >
+        {/* Main Content with Sidebar Layout */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Main Recording Area */}
+          <div className="flex-1">
+            <div 
+              className={`card flex flex-col items-center justify-center text-center relative transition-all duration-300 ${
+                isRecording ? 'ring-4 ring-primary-400 shadow-2xl' : ''
+              }`}
+              style={{
+                boxShadow: isRecording 
+                  ? `0 0 40px rgba(59, 130, 246, 0.6), 0 0 80px rgba(59, 130, 246, 0.3), inset 0 0 40px rgba(59, 130, 246, 0.1)` 
+                  : undefined
+              }}
+            >
           {/* Animated border glow effect */}
           {isRecording && (
             <div 
@@ -554,6 +666,78 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
             <li>• <span className="font-medium text-primary-600 dark:text-primary-400">Record 15-20 seconds for best and fastest results</span> (optimized for server efficiency)</li>
             <li>• Practice speaking for 30-60 seconds for comprehensive analysis</li>
           </ul>
+        </div>
+          </div>
+
+          {/* Sidebar - Goals */}
+          {!loadingGoals && activeGoals.length > 0 && (
+            <div className="lg:w-64 flex-shrink-0">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3 sticky top-6">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-1.5">
+                    <Target className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
+                    <h3 className="text-xs font-semibold text-gray-700 dark:text-gray-300">Goals</h3>
+                  </div>
+                  <button
+                    onClick={() => navigate('/profile?tab=goals')}
+                    className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+                  >
+                    View
+                  </button>
+                </div>
+                
+                <div className="space-y-2">
+                  {activeGoals.slice(0, 3).map((goal) => {
+                    const progress = calculateGoalProgress(goal);
+                    const isNearCompletion = progress >= 80;
+                    
+                    return (
+                      <div
+                        key={goal._id}
+                        className="bg-gray-50 dark:bg-gray-700/50 rounded p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
+                      >
+                        <div className="flex items-start justify-between mb-1">
+                          <h4 className="text-xs font-medium line-clamp-1 text-gray-800 dark:text-gray-200 flex-1">
+                            {goal.title}
+                          </h4>
+                          {isNearCompletion && (
+                            <span className="text-xs ml-1">🔥</span>
+                          )}
+                        </div>
+                        
+                        {/* Progress Bar */}
+                        <div className="relative h-1 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden mb-1">
+                          <div
+                            className={`absolute h-full rounded-full transition-all duration-500 ${
+                              isNearCompletion 
+                                ? 'bg-amber-500' 
+                                : 'bg-primary-500'
+                            }`}
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] text-gray-500 dark:text-gray-400">
+                            {getGoalDisplayValue(goal)}
+                          </span>
+                          <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400">
+                            {Math.round(progress)}%
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                
+                {activeGoals.length > 3 && (
+                  <p className="text-center text-[10px] mt-2 text-gray-500 dark:text-gray-400">
+                    +{activeGoals.length - 3} more
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
