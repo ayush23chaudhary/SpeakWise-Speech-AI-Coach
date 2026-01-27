@@ -28,12 +28,15 @@ import {
   MessageSquare,
   ThumbsUp,
   AlertTriangle,
-  Lightbulb
+  Lightbulb,
+  Shield,
+  TrendingDown
 } from 'lucide-react';
 import Card from '../common/Card';
 import Button from '../common/Button';
 import DetailedMetricsOverview from './DetailedMetricsOverview';
-import { ANALYSIS_RECOMMENDATIONS, CHART_COLORS } from '../../utils/constants';
+import TrustBreakdownTimeline from './TrustBreakdownTimeline';
+import { ANALYSIS_RECOMMENDATIONS, CHART_COLORS, PERCEPTION_RISK_LEVELS, EVALUATION_MODES } from '../../utils/constants';
 
 const EnhancedAnalysisDashboard = ({ analysisData }) => {
   const [currentTranscript, setCurrentTranscript] = useState('');
@@ -57,10 +60,10 @@ const EnhancedAnalysisDashboard = ({ analysisData }) => {
               <TrendingUp className="w-12 h-12 text-gray-400" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              No Analysis Available
+              No Evaluation Available
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Record a speech in the Performance Studio to see your analysis results here.
+              Record a response to see evaluator perception analysis here.
             </p>
           </Card>
         </div>
@@ -75,7 +78,13 @@ const EnhancedAnalysisDashboard = ({ analysisData }) => {
     pace, 
     recommendations, 
     strengths, 
-    areasForImprovement 
+    areasForImprovement,
+    // New evaluator perception fields
+    evaluationMode = 'interview',
+    evaluatorConfidenceIndex,
+    perceptionSignals,
+    criticalMoments,
+    evaluatorJudgments
   } = analysisData;
 
   // Prepare data for charts
@@ -141,13 +150,18 @@ const EnhancedAnalysisDashboard = ({ analysisData }) => {
   };
 
   const getPerformanceLevel = (score) => {
-    if (score >= 80) return { level: 'Excellent', icon: Award, color: 'text-green-600' };
-    if (score >= 60) return { level: 'Good', icon: ThumbsUp, color: 'text-yellow-600' };
-    return { level: 'Needs Work', icon: AlertTriangle, color: 'text-red-600' };
+    if (score >= 75) return { level: 'Stable', icon: Shield, color: 'text-green-600' };
+    if (score >= 60) return { level: 'Moderate Risk', icon: TrendingDown, color: 'text-yellow-600' };
+    return { level: 'High Risk', icon: AlertTriangle, color: 'text-red-600' };
   };
 
-  const performanceLevel = getPerformanceLevel(overallScore);
+  // Use evaluator confidence index if available, otherwise fall back to overallScore
+  const displayScore = evaluatorConfidenceIndex !== undefined ? evaluatorConfidenceIndex : overallScore;
+  const performanceLevel = getPerformanceLevel(displayScore);
   const PerformanceIcon = performanceLevel.icon;
+
+  // Get evaluation mode info
+  const modeInfo = EVALUATION_MODES[evaluationMode.toUpperCase()] || EVALUATION_MODES.INTERVIEW;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
@@ -155,36 +169,39 @@ const EnhancedAnalysisDashboard = ({ analysisData }) => {
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            Analysis Dashboard
+            Evaluation Summary
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
-            Your latest speech analysis results
+            Evaluator Perception Analysis - {modeInfo.label}
           </p>
         </div>
 
-        {/* Overall Score Card */}
+        {/* Evaluator Confidence Index Card - Risk-Based Display */}
         <Card className="text-center">
           <div className="flex items-center justify-center mb-6">
-            <div className={`w-40 h-40 rounded-full flex items-center justify-center ${getScoreBgColor(overallScore)} relative`}>
+            <div className={`w-48 h-48 rounded-full flex items-center justify-center ${getScoreBgColor(displayScore)} relative border-4 ${
+              displayScore >= 75 ? 'border-green-400' : displayScore >= 60 ? 'border-yellow-400' : 'border-red-400'
+            }`}>
               <div className="text-center">
-                <div className={`text-5xl font-bold ${getScoreColor(overallScore)} mb-2`}>
-                  {overallScore}
+                {/* Primary: Risk-Based Status */}
+                <div className={`text-3xl font-bold mb-2 ${performanceLevel.color}`}>
+                  {performanceLevel.level}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">/ 100</div>
-              </div>
-              
-              {/* Performance Level Badge */}
-              <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-2 shadow-lg border border-gray-200 dark:border-gray-700">
-                <PerformanceIcon className={`w-6 h-6 ${performanceLevel.color}`} />
+                <PerformanceIcon className={`w-12 h-12 mx-auto mb-2 ${performanceLevel.color}`} />
+                
+                {/* Secondary: Numeric Index (smaller, less prominent) */}
+                <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">
+                  Index: {displayScore}/100
+                </div>
               </div>
             </div>
           </div>
           
           <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-            Overall Performance Score
+            Evaluator Confidence Assessment
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {performanceLevel.level} - {overallScore >= 80 ? 'Outstanding work!' : overallScore >= 60 ? 'Good progress!' : 'Keep practicing!'}
+          <p className={`text-lg font-medium mb-2 ${performanceLevel.color}`}>
+            {performanceLevel.level} - {displayScore >= 75 ? 'Evaluator confidence maintained' : displayScore >= 60 ? 'Some evaluator concern detected' : 'Evaluator trust likely compromised'}
           </p>
           
           <div className="flex justify-center space-x-4">
@@ -193,19 +210,249 @@ const EnhancedAnalysisDashboard = ({ analysisData }) => {
               variant="outline"
               size="sm"
             >
-              {showDetailedView ? 'Hide Details' : 'Show Details'}
+              {showDetailedView ? 'Hide Technical Details' : 'Show Technical Details'}
             </Button>
             <Button
               onClick={() => window.print()}
               variant="outline"
               size="sm"
             >
-              Print Report
+              Export Report
             </Button>
           </div>
         </Card>
 
-        {/* Detailed Metrics */}
+        {/* Evaluator Judgments (PRIMARY OPINIONATED FEEDBACK) */}
+        {evaluatorJudgments && evaluatorJudgments.length > 0 && (
+          <Card className="border-l-4 border-primary-600">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <AlertTriangle className="w-5 h-5 mr-2 text-primary-600" />
+              Evaluator Perception Assessment
+            </h3>
+            
+            {evaluatorJudgments.map((judgment, index) => (
+              <div 
+                key={index}
+                className={`p-4 rounded-lg mb-3 ${
+                  judgment.severity === 'critical' ? 'bg-red-50 dark:bg-red-900/20 border-l-4 border-red-600' :
+                  judgment.severity === 'high' ? 'bg-orange-50 dark:bg-orange-900/20 border-l-4 border-orange-600' :
+                  judgment.severity === 'moderate' ? 'bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-600' :
+                  'bg-green-50 dark:bg-green-900/20 border-l-4 border-green-600'
+                }`}
+              >
+                <p className="font-semibold text-gray-900 dark:text-white mb-2">
+                  {judgment.message}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  <strong>Why:</strong> {judgment.reasoning}
+                </p>
+                {judgment.impact && (
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <strong>Impact:</strong> {judgment.impact}
+                  </p>
+                )}
+              </div>
+            ))}
+          </Card>
+        )}
+
+        {/* Perception Risk Signals - Primary Display */}
+        {perceptionSignals && (
+          <Card>
+            <div className="mb-6">
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+                Risk Signal Assessment
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                How evaluators might judge your response based on speech patterns
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Pause Risk */}
+              {perceptionSignals.pauseRisk && (
+                <div className={`p-6 rounded-xl border-2 ${
+                  perceptionSignals.pauseRisk.level === 'high' ? 'border-red-300 bg-red-50 dark:bg-red-900/10' :
+                  perceptionSignals.pauseRisk.level === 'moderate' ? 'border-yellow-300 bg-yellow-50 dark:bg-yellow-900/10' :
+                  'border-green-300 bg-green-50 dark:bg-green-900/10'
+                }`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Listener Trust Stability
+                      </h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                        Do silences break evaluator confidence?
+                      </p>
+                    </div>
+                    <div className={`text-3xl ${
+                      perceptionSignals.pauseRisk.level === 'high' ? 'text-red-500' :
+                      perceptionSignals.pauseRisk.level === 'moderate' ? 'text-yellow-500' :
+                      'text-green-500'
+                    }`}>
+                      {perceptionSignals.pauseRisk.level === 'high' ? '⚠️' :
+                       perceptionSignals.pauseRisk.level === 'moderate' ? '⚡' : '✅'}
+                    </div>
+                  </div>
+                  <div className={`text-2xl font-bold mb-2 ${
+                    perceptionSignals.pauseRisk.level === 'high' ? 'text-red-600' :
+                    perceptionSignals.pauseRisk.level === 'moderate' ? 'text-yellow-600' :
+                    'text-green-600'
+                  }`}>
+                    {perceptionSignals.pauseRisk.level === 'high' ? 'High Risk' :
+                     perceptionSignals.pauseRisk.level === 'moderate' ? 'Moderate Risk' : 'Stable'}
+                  </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    {perceptionSignals.pauseRisk.level === 'high' ? 
+                      'Long pauses likely interpreted as uncertainty or lack of preparation by evaluators' :
+                     perceptionSignals.pauseRisk.level === 'moderate' ?
+                      'Some pauses may raise mild concern depending on evaluator patience' :
+                      'Pause patterns unlikely to undermine evaluator trust'}
+                  </p>
+                </div>
+              )}
+
+              {/* Hesitation Severity */}
+              {perceptionSignals.hesitationSeverity && (
+                <div className={`p-6 rounded-xl border-2 ${
+                  perceptionSignals.hesitationSeverity.level === 'high' ? 'border-red-300 bg-red-50 dark:bg-red-900/10' :
+                  perceptionSignals.hesitationSeverity.level === 'moderate' ? 'border-yellow-300 bg-yellow-50 dark:bg-yellow-900/10' :
+                  'border-green-300 bg-green-50 dark:bg-green-900/10'
+                }`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Hesitation Severity
+                      </h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                        Do filler words signal uncertainty?
+                      </p>
+                    </div>
+                    <div className={`text-3xl ${
+                      perceptionSignals.hesitationSeverity.level === 'high' ? 'text-red-500' :
+                      perceptionSignals.hesitationSeverity.level === 'moderate' ? 'text-yellow-500' :
+                      'text-green-500'
+                    }`}>
+                      {perceptionSignals.hesitationSeverity.level === 'high' ? '⚠️' :
+                       perceptionSignals.hesitationSeverity.level === 'moderate' ? '⚡' : '✅'}
+                    </div>
+                  </div>
+                  <div className={`text-2xl font-bold mb-2 ${
+                    perceptionSignals.hesitationSeverity.level === 'high' ? 'text-red-600' :
+                    perceptionSignals.hesitationSeverity.level === 'moderate' ? 'text-yellow-600' :
+                    'text-green-600'
+                  }`}>
+                    {perceptionSignals.hesitationSeverity.level === 'high' ? 'High Risk' :
+                     perceptionSignals.hesitationSeverity.level === 'moderate' ? 'Moderate Risk' : 'Stable'}
+                  </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    {perceptionSignals.hesitationSeverity.level === 'high' ? 
+                      'Filler word clusters signal uncertainty or incomplete preparation to evaluators' :
+                     perceptionSignals.hesitationSeverity.level === 'moderate' ?
+                      'Moderate hesitation may be noticed but not necessarily penalized' :
+                      'Minimal hesitation unlikely to undermine perceived confidence'}
+                  </p>
+                </div>
+              )}
+
+              {/* Confidence Stability */}
+              {perceptionSignals.confidenceStability && (
+                <div className={`p-6 rounded-xl border-2 ${
+                  perceptionSignals.confidenceStability.level === 'high' ? 'border-red-300 bg-red-50 dark:bg-red-900/10' :
+                  perceptionSignals.confidenceStability.level === 'moderate' ? 'border-yellow-300 bg-yellow-50 dark:bg-yellow-900/10' :
+                  'border-green-300 bg-green-50 dark:bg-green-900/10'
+                }`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Perceived Confidence Risk
+                      </h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                        Does vocal delivery convey certainty?
+                      </p>
+                    </div>
+                    <div className={`text-3xl ${
+                      perceptionSignals.confidenceStability.level === 'high' ? 'text-red-500' :
+                      perceptionSignals.confidenceStability.level === 'moderate' ? 'text-yellow-500' :
+                      'text-green-500'
+                    }`}>
+                      {perceptionSignals.confidenceStability.level === 'high' ? '⚠️' :
+                       perceptionSignals.confidenceStability.level === 'moderate' ? '⚡' : '✅'}
+                    </div>
+                  </div>
+                  <div className={`text-2xl font-bold mb-2 ${
+                    perceptionSignals.confidenceStability.level === 'high' ? 'text-red-600' :
+                    perceptionSignals.confidenceStability.level === 'moderate' ? 'text-yellow-600' :
+                    'text-green-600'
+                  }`}>
+                    {perceptionSignals.confidenceStability.level === 'high' ? 'High Risk' :
+                     perceptionSignals.confidenceStability.level === 'moderate' ? 'Moderate Risk' : 'Stable'}
+                  </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    {perceptionSignals.confidenceStability.level === 'high' ? 
+                      'Vocal instability may be interpreted as lack of conviction or expertise' :
+                     perceptionSignals.confidenceStability.level === 'moderate' ?
+                      'Some vocal inconsistency detected but within acceptable range' :
+                      'Vocal delivery conveys consistent confidence to evaluators'}
+                  </p>
+                </div>
+              )}
+
+              {/* Engagement Risk */}
+              {perceptionSignals.engagementRisk && (
+                <div className={`p-6 rounded-xl border-2 ${
+                  perceptionSignals.engagementRisk.level === 'high' ? 'border-red-300 bg-red-50 dark:bg-red-900/10' :
+                  perceptionSignals.engagementRisk.level === 'moderate' ? 'border-yellow-300 bg-yellow-50 dark:bg-yellow-900/10' :
+                  'border-green-300 bg-green-50 dark:bg-green-900/10'
+                }`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Engagement Drop Risk
+                      </h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                        Will evaluators mentally check out?
+                      </p>
+                    </div>
+                    <div className={`text-3xl ${
+                      perceptionSignals.engagementRisk.level === 'high' ? 'text-red-500' :
+                      perceptionSignals.engagementRisk.level === 'moderate' ? 'text-yellow-500' :
+                      'text-green-500'
+                    }`}>
+                      {perceptionSignals.engagementRisk.level === 'high' ? '⚠️' :
+                       perceptionSignals.engagementRisk.level === 'moderate' ? '⚡' : '✅'}
+                    </div>
+                  </div>
+                  <div className={`text-2xl font-bold mb-2 ${
+                    perceptionSignals.engagementRisk.level === 'high' ? 'text-red-600' :
+                    perceptionSignals.engagementRisk.level === 'moderate' ? 'text-yellow-600' :
+                    'text-green-600'
+                  }`}>
+                    {perceptionSignals.engagementRisk.level === 'high' ? 'High Risk' :
+                     perceptionSignals.engagementRisk.level === 'moderate' ? 'Moderate Risk' : 'Stable'}
+                  </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    {perceptionSignals.engagementRisk.level === 'high' ? 
+                      'Monotone delivery likely causes evaluator disengagement or boredom' :
+                     perceptionSignals.engagementRisk.level === 'moderate' ?
+                      'Some vocal flatness detected but may not significantly impact attention' :
+                      'Vocal energy sufficient to maintain evaluator engagement'}
+                  </p>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
+
+        {/* Trust Breakdown Timeline */}
+        {criticalMoments && criticalMoments.length > 0 && (
+          <TrustBreakdownTimeline 
+            criticalMoments={criticalMoments}
+            duration={analysisData.duration || 60}
+          />
+        )}
+
+        {/* Technical Signals (Collapsed View) */}
         {showDetailedView && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(metrics).map(([metric, score]) => (
@@ -407,7 +654,7 @@ const EnhancedAnalysisDashboard = ({ analysisData }) => {
             </div>
           </div>
 
-          {/* Areas for Improvement */}
+          {/* Communication Risks */}
           <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-amber-950/30 dark:via-orange-950/30 dark:to-yellow-950/30 border-2 border-amber-200 dark:border-amber-800/50 shadow-lg hover:shadow-xl transition-all duration-300">
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
             
@@ -421,9 +668,9 @@ const EnhancedAnalysisDashboard = ({ analysisData }) => {
                 </div>
                 <div className="ml-3">
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                    📈 Growth
+                    ⚠️ Communication Risks
                   </h3>
-                  <p className="text-xs text-amber-700 dark:text-amber-400">Areas to improve</p>
+                  <p className="text-xs text-amber-700 dark:text-amber-400">Patterns that undermine evaluator trust</p>
                 </div>
               </div>
               

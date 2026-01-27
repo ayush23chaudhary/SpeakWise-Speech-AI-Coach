@@ -152,6 +152,30 @@ const useAuthStore = create(
       // Update user information in store
       updateUser: (updatedUser) => {
         set({ user: updatedUser });
+      },
+
+      // Check if user needs onboarding
+      needsOnboarding: () => {
+        const { user } = get();
+        // User needs onboarding if authenticated but onboarding not completed
+        return user && (!user.onboarding || !user.onboarding.completed);
+      },
+
+      // Mark onboarding as complete
+      completeOnboarding: (onboardingData) => {
+        const { user } = get();
+        if (user) {
+          set({
+            user: {
+              ...user,
+              onboarding: {
+                ...onboardingData,
+                completed: true,
+                completedAt: new Date().toISOString()
+              }
+            }
+          });
+        }
       }
     }),
     {

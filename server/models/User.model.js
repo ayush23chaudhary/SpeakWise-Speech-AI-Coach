@@ -144,6 +144,75 @@ const userSchema = new mongoose.Schema({
     twitter: String,
     website: String
   },
+  // Onboarding & Personalization
+  onboarding: {
+    completed: {
+      type: Boolean,
+      default: false
+    },
+    user_purpose: {
+      type: String,
+      enum: [
+        'interviews_evaluations',
+        'presentations_pitches', 
+        'everyday_conversations',
+        'confidence_pressure'
+      ],
+      default: null
+    },
+    stress_trigger: {
+      type: String,
+      enum: [
+        'first_30_seconds',
+        'unexpected_questions',
+        'being_judged',
+        'continuous_speaking'
+      ],
+      default: null
+    },
+    completedAt: {
+      type: Date,
+      default: null
+    }
+  },
+  // Journey Mode Progress
+  journeyProgress: {
+    currentLevel: {
+      type: Number,
+      default: 1,
+      min: 1,
+      max: 4
+    },
+    completedTasks: [{
+      taskId: String,
+      taskTitle: String,
+      taskType: String,
+      completedAt: Date,
+      score: Number,
+      reportId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'AnalysisReport'
+      }
+    }],
+    skillProgress: {
+      pronunciation: { type: Boolean, default: false },
+      pace: { type: Boolean, default: false },
+      sentences: { type: Boolean, default: false },
+      fillers: { type: Boolean, default: false },
+      flow: { type: Boolean, default: false },
+      pauses: { type: Boolean, default: false },
+      storytelling: { type: Boolean, default: false },
+      organization: { type: Boolean, default: false },
+      confidence: { type: Boolean, default: false },
+      goal_specific: { type: Boolean, default: false },
+      advanced: { type: Boolean, default: false },
+      real_world: { type: Boolean, default: false }
+    },
+    lastUpdated: {
+      type: Date,
+      default: Date.now
+    }
+  },
   createdAt: {
     type: Date,
     default: Date.now

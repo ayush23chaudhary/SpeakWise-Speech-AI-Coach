@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { analyzeAudio } from '../../api';
 import useAuthStore from '../../store/authStore';
 import toast from 'react-hot-toast';
+import EvaluationModeSelector from './EvaluationModeSelector';
 
 const PerformanceStudio = ({ onAnalysisComplete }) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -18,6 +19,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
   const [frequencyData, setFrequencyData] = useState(new Array(32).fill(0)); // For pitch visualization
   const [activeGoals, setActiveGoals] = useState([]);
   const [loadingGoals, setLoadingGoals] = useState(true);
+  const [evaluationMode, setEvaluationMode] = useState('interview'); // Default mode
   
   const mediaRecorderRef = useRef(null);
   const audioRef = useRef(null);
@@ -276,7 +278,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
     
     try {
       // Prefer analyzeAudio helper which handles auth and the full URL
-      const analysis = await analyzeAudio(audioBlob, token);
+      const analysis = await analyzeAudio(audioBlob, token, evaluationMode);
 
       // Check if any new badges were unlocked
       if (analysis.newBadges && analysis.newBadges.length > 0) {
@@ -344,6 +346,47 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
         // otherwise navigate to analysis route (if available)
         navigate('/dashboard/analysis', { state: { analysisData: analysis } });
       }
+
+      // Check if this was a journey task and complete it
+      const journeyTask = sessionStorage.getItem('journeyTask');
+      if (journeyTask) {
+        try {
+          const task = JSON.parse(journeyTask);
+          const overallScore = analysis.overallScore || 0;
+          
+          // Call the complete task API
+          const response = await api.post('/journey/complete-task', {
+            taskId: task.id,
+            taskTitle: task.title,
+            taskType: task.type,
+            score: overallScore,
+            reportId: analysis._id || null
+          });
+
+          if (response.data.shouldLevelUp) {
+            toast.success(response.data.message, {
+              duration: 5000,
+              icon: '🎉',
+              style: {
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                color: '#fff',
+                fontSize: '16px',
+                fontWeight: 'bold'
+              }
+            });
+          } else if (!response.data.alreadyCompleted) {
+            toast.success('✅ Journey task completed!', {
+              duration: 3000
+            });
+          }
+
+          // Clear the journey task from session storage
+          sessionStorage.removeItem('journeyTask');
+        } catch (error) {
+          console.error('Error completing journey task:', error);
+          // Don't show error to user, just log it
+        }
+      }
       
     } catch (error) {
       console.error('Analysis error:', error);
@@ -405,12 +448,19 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Performance Studio
+            Record Response
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            Record your speech and get AI-powered analysis
+            Record your response and receive evaluator perception analysis
           </p>
         </div>
+
+        {/* Evaluation Mode Selector */}
+        <EvaluationModeSelector
+          selectedMode={evaluationMode}
+          onModeChange={setEvaluationMode}
+          className="mb-6"
+        />
 
         {/* Main Content with Sidebar Layout */}
         <div className="flex flex-col lg:flex-row gap-6">

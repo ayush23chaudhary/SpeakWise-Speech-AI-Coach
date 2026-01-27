@@ -37,6 +37,48 @@ const AnalysisReportSchema = new Schema({
     default: 'freestyle'
   },
   audioUrl: { type: String }, // Store audio recording if needed
+  
+  // ====================================================
+  // EVALUATOR PERCEPTION FIELDS
+  // New fields for evaluator-driven analysis
+  // ====================================================
+  evaluationMode: {
+    type: String,
+    enum: ['interview', 'presentation', 'viva'],
+    default: 'interview'
+  },
+  evaluatorConfidenceIndex: { type: Number }, // 0-100 index
+  perceptionSignals: {
+    pauseRisk: {
+      level: { type: String, enum: ['HIGH_RISK', 'MODERATE_RISK', 'STABLE'] },
+      score: { type: Number }
+    },
+    hesitationSeverity: {
+      level: { type: String, enum: ['HIGH_RISK', 'MODERATE_RISK', 'STABLE'] },
+      score: { type: Number }
+    },
+    confidenceStability: {
+      level: { type: String, enum: ['HIGH_RISK', 'MODERATE_RISK', 'STABLE'] },
+      score: { type: Number }
+    },
+    engagementRisk: {
+      level: { type: String, enum: ['HIGH_RISK', 'MODERATE_RISK', 'STABLE'] },
+      score: { type: Number }
+    }
+  },
+  criticalMoments: [{
+    timestamp: { type: Number },
+    type: { type: String },
+    label: { type: String },
+    severity: { type: String },
+    description: { type: String }
+  }],
+  evaluatorJudgments: [{
+    severity: { type: String },
+    message: { type: String },
+    reasoning: { type: String },
+    impact: { type: String }
+  }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('AnalysisReport', AnalysisReportSchema);

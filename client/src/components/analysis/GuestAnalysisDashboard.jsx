@@ -163,10 +163,10 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            Analysis Dashboard
+            Evaluation Summary
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
-            Your speech analysis results
+            Your evaluator perception analysis
           </p>
           
           {/* Guest Mode Notice */}
@@ -183,10 +183,10 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
               <Save className="w-6 h-6 text-primary-600 dark:text-primary-400 mr-3" />
               <div>
                 <h3 className="text-lg font-semibold text-primary-800 dark:text-primary-200">
-                  Want to save your results?
+                  Want to track your communication trajectory?
                 </h3>
                 <p className="text-sm text-primary-700 dark:text-primary-300">
-                  Create an account to save this analysis and track your progress over time.
+                  Create an account to save evaluator perception scores and monitor risk patterns over time.
                 </p>
               </div>
             </div>
@@ -211,28 +211,32 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
           </div>
         </Card>
 
-        {/* Overall Score Card */}
+        {/* Overall Score Card - Risk-Based Display */}
         <Card className="text-center">
           <div className="flex items-center justify-center mb-6">
-            <div className={`w-40 h-40 rounded-full flex items-center justify-center ${getScoreBgColor(overallScore)} relative`}>
+            <div className={`w-48 h-48 rounded-full flex items-center justify-center ${getScoreBgColor(overallScore)} relative border-4 ${
+              overallScore >= 75 ? 'border-green-400' : overallScore >= 60 ? 'border-yellow-400' : 'border-red-400'
+            }`}>
               <div className="text-center">
-                <div className={`text-5xl font-bold ${getScoreColor(overallScore)} mb-2`}>
-                  {overallScore}
+                {/* Primary: Risk-Based Status */}
+                <div className={`text-3xl font-bold mb-2 ${performanceLevel.color}`}>
+                  {performanceLevel.level}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">/ 100</div>
-              </div>
-              
-              <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-2 shadow-lg border border-gray-200 dark:border-gray-700">
-                <PerformanceIcon className={`w-6 h-6 ${performanceLevel.color}`} />
+                <PerformanceIcon className={`w-12 h-12 mx-auto mb-2 ${performanceLevel.color}`} />
+                
+                {/* Secondary: Numeric Index (smaller, less prominent) */}
+                <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">
+                  Index: {overallScore}/100
+                </div>
               </div>
             </div>
           </div>
           
           <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-            Overall Performance Score
+            Evaluator Confidence Assessment
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {performanceLevel.level} - {overallScore >= 80 ? 'Outstanding work!' : overallScore >= 60 ? 'Good progress!' : 'Keep practicing!'}
+          <p className={`text-lg font-medium mb-4 ${performanceLevel.color}`}>
+            {overallScore >= 75 ? 'Evaluator confidence maintained' : overallScore >= 60 ? 'Some evaluator concern detected' : 'Evaluator trust likely compromised'}
           </p>
         </Card>
 
@@ -476,7 +480,7 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
               How was your experience?
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Your feedback helps us improve our AI-powered speech analysis
+              Your feedback helps us improve our evaluator perception simulation
             </p>
             <Button
               onClick={() => setShowFeedbackModal(true)}

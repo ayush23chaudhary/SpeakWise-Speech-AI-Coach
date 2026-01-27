@@ -11,6 +11,10 @@ const speechRoutes = require("./routes/speech.routes");
 const practiceHubRoutes = require("./routes/practiceHub.routes");
 const feedbackRoutes = require("./routes/feedback.routes");
 const goalRoutes = require("./routes/goal.routes");
+const onboardingRoutes = require("./routes/onboarding.routes");
+const interviewRoutes = require("./routes/interview.routes");
+const journeyRoutes = require("./routes/journey.routes");
+const userRoutes = require("./routes/user.routes");
 const mongoose = require("mongoose");
 const passport = require("./config/passport"); // Import passport AFTER dotenv
 const AchievementService = require("./services/achievement.service");
@@ -47,11 +51,13 @@ if (process.env.GOOGLE_CREDENTIALS_BASE64) {
 }
 
 // Connect to MongoDB
-connectDB();
-
-// Seed achievements on startup
-AchievementService.seedAchievements().catch(err => {
-    console.error('❌ Error seeding achievements:', err);
+connectDB().then(() => {
+  // Seed achievements AFTER MongoDB connection is fully established
+  setTimeout(() => {
+    AchievementService.seedAchievements()
+      .then(() => console.log('✅ Achievements seeded successfully'))
+      .catch(err => console.error('❌ Error seeding achievements:', err));
+  }, 1000); // Wait 1 second for connection to stabilize
 });
 
 // CORS configuration
@@ -64,16 +70,12 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log('🌐 CORS check - Origin:', origin);
-    
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) {
-      console.log('✅ CORS allowed - No origin (same-origin or non-browser)');
       return callback(null, true);
     }
     
     if (allowedOrigins.indexOf(origin) !== -1) {
-      console.log('✅ CORS allowed for origin:', origin);
       callback(null, true);
     } else {
       console.log('❌ CORS blocked origin:', origin);
@@ -120,6 +122,10 @@ app.use("/api/speech", speechRoutes);
 app.use("/api/practice-hub", practiceHubRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/goals", goalRoutes);
+app.use("/api/onboarding", onboardingRoutes);
+app.use("/api/interview", interviewRoutes);
+app.use("/api/journey", journeyRoutes);
+app.use("/api/user", userRoutes);
 
 // Root route
 app.get("/", (req, res) => {

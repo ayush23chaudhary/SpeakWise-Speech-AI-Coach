@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import useAuthStore from './store/authStore';
 import AuthPage from './components/auth/AuthPage';
 import OAuthCallback from './components/auth/OAuthCallback';
+import OnboardingWrapper from './components/auth/OnboardingWrapper';
 import MainApp from './components/layout/MainApp';
 import GuestMainApp from './components/layout/GuestMainApp';
 import GuestMode from './components/auth/GuestMode';
@@ -71,24 +72,28 @@ function App() {
             element={!isAuthenticated ? <AuthPage /> : <Navigate to="/dashboard" replace />} 
           />
           
-          {/* Dashboard Route - Protected */}
+          {/* Dashboard Route - Protected with Onboarding */}
           <Route 
             path="/dashboard/*" 
             element={
               isAuthenticated ? (
-                <MainApp />
+                <OnboardingWrapper>
+                  <MainApp />
+                </OnboardingWrapper>
               ) : (
                 <Navigate to="/login" replace />
               )
             } 
           />
 
-          {/* Profile Route - Protected */}
+          {/* Profile Route - Protected with Onboarding */}
           <Route 
             path="/profile" 
             element={
               isAuthenticated ? (
-                <EnhancedProfilePage />
+                <OnboardingWrapper>
+                  <EnhancedProfilePage />
+                </OnboardingWrapper>
               ) : (
                 <Navigate to="/login" replace />
               )

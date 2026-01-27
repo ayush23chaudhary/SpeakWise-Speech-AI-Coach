@@ -17,7 +17,7 @@ const GuestMode = ({ onLogin, onRegister }) => {
           </h2>
           
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Experience AI-powered speech analysis. You can try our features as a guest or create an account to save your progress.
+            Simulate evaluator perception in high-stakes contexts. Try our evaluator confidence analysis as a guest or create an account to track your communication trajectory.
           </p>
           
           <div className="space-y-3">
@@ -67,8 +67,8 @@ const GuestMode = ({ onLogin, onRegister }) => {
             </h3>
             <ul className="text-xs text-green-700 dark:text-green-300 space-y-1">
               <li>• Save analysis results</li>
-              <li>• Track progress over time</li>
-              <li>• Access history</li>
+              <li>• Track evaluator perception trends</li>
+              <li>• Access communication trajectory</li>
             </ul>
           </div>
         </Card>

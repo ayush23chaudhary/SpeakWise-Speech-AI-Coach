@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import api from '../../../utils/api';
 import toast from 'react-hot-toast';
+import OnboardingSettings from '../OnboardingSettings';
 
 const ProfileSettings = ({ user, updateUser }) => {
   const [activeSection, setActiveSection] = useState('personal');
@@ -131,6 +132,7 @@ const ProfileSettings = ({ user, updateUser }) => {
 
   const sections = [
     { id: 'personal', label: 'Personal Info', icon: '👤' },
+    { id: 'communication', label: 'Communication', icon: '🎯' },
     { id: 'preferences', label: 'Preferences', icon: '⚙️' },
     { id: 'privacy', label: 'Privacy', icon: '🔒' },
     { id: 'social', label: 'Social Links', icon: '🔗' }
@@ -288,6 +290,13 @@ const ProfileSettings = ({ user, updateUser }) => {
             >
               {loading ? 'Saving...' : 'Save Changes'}
             </button>
+          </div>
+        )}
+
+        {/* Communication Preferences Section */}
+        {activeSection === 'communication' && (
+          <div className="lg:col-span-3">
+            <OnboardingSettings />
           </div>
         )}
 

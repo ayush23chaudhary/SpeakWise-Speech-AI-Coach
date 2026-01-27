@@ -1,53 +1,68 @@
-# SpeakWise – AI-Powered Speech Coaching Platform 🎤
+# SpeakWise – AI Evaluator Perception Coach 🎤
 
-SpeakWise is a full‑stack AI speech coaching platform that helps users practice speaking, get objective feedback, and track their improvement over time.  
-It combines browser‑based audio recording, speech analysis, AI‑generated feedback, and a gamified Practice Hub with streaks and achievements.
+SpeakWise simulates how interviewers, investors, and examiners perceive your speech under high-stakes pressure.  
+It identifies trust-breaking moments, hesitation clusters, and engagement risks—translating speech patterns into decision-impact signals through context-specific evaluator perception analysis.
 
 > Live Frontend: https://speak-wise-speech-ai-coach.vercel.app/  
 > Backend API: https://speakwise-backend-yuh6.onrender.com/
 
 ---
 
-## 🌟 Key Features
+## 🌟 Core Philosophy
 
-### 1. Performance Studio
-- Record speech directly in the browser using the **MediaRecorder API**.
-- Backend analyzes:
-  - Clarity
-  - Fluency
-  - Pace (words per minute)
-  - Filler words
-  - Overall score
-- View a detailed analysis with transcript, scores, and AI‑generated feedback.
+**SpeakWise does NOT:**
+- Improve speech generally
+- Teach pronunciation
+- Show neutral analytics
 
-### 2. Practice Hub
-- Curated exercises:
-  - Tongue twisters
-  - News article reading
-  - Pacing and pause control
-  - Storytelling, confidence drills, etc.
-- Daily challenges & AI‑recommended activities based on your weak areas.
-- In‑modal assessment:
-  - Record → Analyze → See results → Click **Complete** to update progress.
+**SpeakWise DOES:**
+- Simulate evaluator perception
+- Detect trust loss, hesitation, and disengagement
+- Translate speech patterns into decision-impact signals
+- Give opinionated, explainable judgments
 
-### 3. Progress & Gamification
+---
+
+## 🎯 Key Features
+
+### 1. Record Response (Evaluation Contexts)
+- Select evaluation mode:
+  - **Interview Answer** (pause-sensitive, high pressure)
+  - **Pitch/Presentation** (engagement-focused, energy critical)
+  - **Viva/Oral Exam** (confidence-driven, content over delivery)
+- Record speech directly in browser
+- Backend calculates:
+  - **Evaluator Confidence Index** (0-100)
+  - Perception risk signals (pause risk, hesitation severity, confidence stability, engagement risk)
+  - Critical moments timeline (trust-breaking pauses, confidence drops, hesitation clusters)
+  - Opinionated evaluator judgments
+
+### 2. Scenario Training (Practice Hub)
+- Context-specific scenarios mirroring real evaluations:
+  - Interview pressure simulations
+  - Investor pitch scenarios
+  - Oral exam question formats
+- Daily challenges targeting communication risk patterns
+- In-scenario assessment with evaluator perception feedback
+
+### 3. Communication Trajectory
 - **UserProgress** tracked in MongoDB:
-  - Completed exercises
-  - Daily streaks
-  - Skill levels (pronunciation, fluency, pacing, confidence, vocabulary)
-  - Achievements & milestones
-- Visual Progress Tracker to see improvement over time.
+  - Evaluator confidence scores over time
+  - Risk pattern evolution
+  - Critical moment frequency trends
+  - Context-specific performance (Interview vs. Pitch vs. Viva)
+- Visual trajectory to see perception stability improvement
 
 ### 4. Authentication & Security
-- JWT‑based authentication for secure login.
-- Protected routes for speech analysis, practice, and stats.
-- Automatic logout on token expiration.
+- JWT‑based authentication for secure login
+- Protected routes for evaluations and trajectory tracking
+- Automatic logout on token expiration
 
 ### 5. Production Deployment
-- **Frontend:** React + Vite on **Vercel**.
-- **Backend:** Node.js + Express on **Render**.
-- **Database:** MongoDB Atlas (cloud-hosted).
-- Environment‑based configuration using `VITE_API_URL` and server env vars.
+- **Frontend:** React + Vite on **Vercel**
+- **Backend:** Node.js + Express on **Render**
+- **Database:** MongoDB Atlas (cloud-hosted)
+- Environment‑based configuration using `VITE_API_URL` and server env vars
 
 ---
 

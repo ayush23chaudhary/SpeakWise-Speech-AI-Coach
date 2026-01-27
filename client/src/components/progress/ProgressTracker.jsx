@@ -8,21 +8,40 @@ import {
   Tooltip, 
   ResponsiveContainer,
   BarChart,
-  Bar
+  Bar,
+  Area,
+  AreaChart
 } from 'recharts';
-import { TrendingUp, Calendar, Filter, Eye } from 'lucide-react';
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  Calendar, 
+  Target, 
+  Zap,
+  Award,
+  Activity,
+  ArrowUpRight,
+  ArrowDownRight,
+  Minus
+} from 'lucide-react';
 import api from '../../utils/api';
 
 const ProgressTracker = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState('overallScore');
-  const [selectedReport, setSelectedReport] = useState(null);
   const [timeRange, setTimeRange] = useState('all');
+  const [trends, setTrends] = useState(null);
 
   useEffect(() => {
     fetchReports();
   }, []);
+
+  useEffect(() => {
+    if (reports.length > 0) {
+      calculateTrends();
+    }
+  }, [reports, timeRange]);
 
   const fetchReports = async () => {
     try {
@@ -94,6 +113,86 @@ const ProgressTracker = () => {
     return filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
   };
 
+  /**
+   * Calculate trend analytics - NO RAW TABLES
+   * Shows: Hesitation reduction %, Confidence stability improvement, etc.
+   */
+  const calculateTrends = () => {
+    const filteredReports = filterReportsByTimeRange(reports);
+    if (filteredReports.length < 2) {
+      setTrends(null);
+      return;
+    }
+
+    // Split into first half and second half for comparison
+    const midpoint = Math.floor(filteredReports.length / 2);
+    const firstHalf = filteredReports.slice(0, midpoint);
+    const secondHalf = filteredReports.slice(midpoint);
+
+    const avgMetric = (reports, key) => {
+      const sum = reports.reduce((acc, r) => {
+        if (key === 'hesitation') {
+          // Calculate hesitation from filler words
+          const fillerCount = r.fillerWords 
+            ? Object.values(r.fillerWords).reduce((sum, count) => sum + count, 0)
+            : 0;
+          return acc + fillerCount;
+        } else if (key === 'pauseFrequency') {
+          return acc + (r.riskSignals?.longPauseIndex || 0);
+        }
+        return acc + (r.metrics?.[key] || r[key] || 0);
+      }, 0);
+      return sum / reports.length;
+    };
+
+    // Calculate improvements
+    const hesitationFirst = avgMetric(firstHalf, 'hesitation');
+    const hesitationSecond = avgMetric(secondHalf, 'hesitation');
+    const hesitationReduction = hesitationFirst > 0 
+      ? ((hesitationFirst - hesitationSecond) / hesitationFirst * 100)
+      : 0;
+
+    const confidenceFirst = avgMetric(firstHalf, 'confidence');
+    const confidenceSecond = avgMetric(secondHalf, 'confidence');
+    const confidenceImprovement = confidenceSecond - confidenceFirst;
+
+    const fluencyFirst = avgMetric(firstHalf, 'fluency');
+    const fluencySecond = avgMetric(secondHalf, 'fluency');
+    const fluencyImprovement = fluencySecond - fluencyFirst;
+
+    const pauseFirst = avgMetric(firstHalf, 'pauseFrequency');
+    const pauseSecond = avgMetric(secondHalf, 'pauseFrequency');
+    const pauseReduction = pauseFirst > 0
+      ? ((pauseFirst - pauseSecond) / pauseFirst * 100)
+      : 0;
+
+    const overallFirst = avgMetric(firstHalf, 'overallScore');
+    const overallSecond = avgMetric(secondHalf, 'overallScore');
+    const overallImprovement = overallSecond - overallFirst;
+
+    setTrends({
+      hesitationReduction,
+      confidenceImprovement,
+      fluencyImprovement,
+      pauseReduction,
+      overallImprovement,
+      totalSessions: filteredReports.length,
+      recentAverage: overallSecond,
+      bestScore: Math.max(...filteredReports.map(r => r.overallScore)),
+      consistency: calculateConsistency(secondHalf)
+    });
+  };
+
+  const calculateConsistency = (recentReports) => {
+    if (recentReports.length < 2) return 0;
+    const scores = recentReports.map(r => r.overallScore);
+    const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const variance = scores.reduce((acc, score) => acc + Math.pow(score - mean, 2), 0) / scores.length;
+    const stdDev = Math.sqrt(variance);
+    // Lower std dev = higher consistency (convert to 0-100 scale, inverted)
+    return Math.max(0, 100 - stdDev * 2);
+  };
+
   const prepareChartData = () => {
     const filteredReports = filterReportsByTimeRange(reports);
     
@@ -106,8 +205,31 @@ const ProgressTracker = () => {
       confidence: report.metrics?.confidence || 0,
       fluency: report.metrics?.fluency || 0,
       pace: report.metrics?.pace || 0,
-      tone: report.metrics?.tone || 0
+      tone: report.metrics?.tone || 0,
+      // Risk signals
+      trustLevel: 100 - (report.riskSignals?.longPauseIndex || 0),
+      engagement: 100 - (report.riskSignals?.hesitationIndex || 0)
     }));
+  };
+
+  const getTrendIcon = (value) => {
+    if (value > 2) return <ArrowUpRight className="w-5 h-5 text-green-600" />;
+    if (value < -2) return <ArrowDownRight className="w-5 h-5 text-red-600" />;
+    return <Minus className="w-5 h-5 text-gray-400" />;
+  };
+
+  const getTrendColor = (value) => {
+    if (value > 2) return 'text-green-600 dark:text-green-400';
+    if (value < -2) return 'text-red-600 dark:text-red-400';
+    return 'text-gray-600 dark:text-gray-400';
+  };
+
+  const getTrendLabel = (value) => {
+    if (value > 10) return 'Strong improvement';
+    if (value > 2) return 'Improving';
+    if (value < -10) return 'Needs attention';
+    if (value < -2) return 'Declining';
+    return 'Stable';
   };
 
   const calculateProgressStats = () => {
@@ -127,26 +249,13 @@ const ProgressTracker = () => {
     };
   };
 
-  const viewReport = async (reportId) => {
-    try {
-      const response = await api.get(`/speech/report/${reportId}`);
-      setSelectedReport(response.data.report);
-    } catch (error) {
-      console.error('Error fetching report:', error);
-    }
-  };
-
-  const closeReportModal = () => {
-    setSelectedReport(null);
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
         <div className="max-w-6xl mx-auto">
           <div className="card text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">Loading your progress...</p>
+            <p className="text-gray-600 dark:text-gray-400">Loading your communication trajectory...</p>
           </div>
         </div>
       </div>
@@ -162,10 +271,10 @@ const ProgressTracker = () => {
               <TrendingUp className="w-12 h-12 text-gray-400" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              No Progress Data Yet
+              No Communication Trajectory Yet
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Complete your first speech analysis to start tracking your progress.
+              Complete your first evaluator perception analysis to start tracking your trajectory.
             </p>
           </div>
         </div>
@@ -174,7 +283,6 @@ const ProgressTracker = () => {
   }
 
   const chartData = prepareChartData();
-  const stats = calculateProgressStats();
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
@@ -182,227 +290,296 @@ const ProgressTracker = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Progress Tracker
+            Communication Trajectory
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            Track your speech improvement over time
+            Track your evaluator confidence evolution—not raw metrics, but perception trends
           </p>
         </div>
 
-        {/* Progress Stats */}
-        {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="card text-center">
-              <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                {stats.totalSessions}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Sessions</div>
-            </div>
-            <div className="card text-center">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {stats.averageScore}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Average Score</div>
-            </div>
-            <div className="card text-center">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {stats.bestScore}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Best Score</div>
-            </div>
-            <div className="card text-center">
-              <div className={`text-2xl font-bold ${stats.improvement >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                {stats.improvement >= 0 ? '+' : ''}{stats.improvement}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Improvement</div>
-            </div>
-          </div>
-        )}
-
-        {/* Controls */}
+        {/* Time Range Selector */}
         <div className="card">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center space-x-4">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Metric:
-              </label>
-              <select
-                value={selectedMetric}
-                onChange={(e) => setSelectedMetric(e.target.value)}
-                className="input-field w-auto"
-              >
-                <option value="overallScore">Overall Score</option>
-                <option value="clarity">Clarity</option>
-                <option value="confidence">Confidence</option>
-                <option value="fluency">Fluency</option>
-                <option value="pace">Pace</option>
-                <option value="tone">Tone</option>
-              </select>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Calendar className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Time Range:
-              </label>
-              <select
-                value={timeRange}
-                onChange={(e) => setTimeRange(e.target.value)}
-                className="input-field w-auto"
-              >
-                <option value="all">All Time</option>
-                <option value="quarter">Last 3 Months</option>
-                <option value="month">Last Month</option>
-                <option value="week">Last Week</option>
-              </select>
+              </span>
             </div>
+            <select
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value)}
+              className="input-field w-auto"
+            >
+              <option value="all">All Time</option>
+              <option value="quarter">Last 3 Months</option>
+              <option value="month">Last Month</option>
+              <option value="week">Last Week</option>
+            </select>
           </div>
         </div>
 
-        {/* Progress Chart */}
+        {/* Trend Analysis Cards - NO RAW TABLES */}
+        {trends && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Hesitation Reduction */}
+              <div className="card">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <Zap className="w-5 h-5 text-yellow-600" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Hesitation Pattern
+                    </span>
+                  </div>
+                  {getTrendIcon(trends.hesitationReduction)}
+                </div>
+                <div className={`text-2xl font-bold mb-1 ${getTrendColor(trends.hesitationReduction)}`}>
+                  {trends.hesitationReduction > 0 ? '-' : '+'}{Math.abs(trends.hesitationReduction).toFixed(0)}%
+                </div>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  {trends.hesitationReduction > 0 
+                    ? 'Hesitation reduced across sessions—evaluators notice fewer "um, uh" clusters'
+                    : trends.hesitationReduction < -5
+                    ? 'Hesitation increasing—signals uncertainty to evaluators'
+                    : 'Hesitation stable—maintain current preparation level'}
+                </p>
+              </div>
+
+              {/* Confidence Stability */}
+              <div className="card">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <Target className="w-5 h-5 text-blue-600" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Confidence Stability
+                    </span>
+                  </div>
+                  {getTrendIcon(trends.confidenceImprovement)}
+                </div>
+                <div className={`text-2xl font-bold mb-1 ${getTrendColor(trends.confidenceImprovement)}`}>
+                  {trends.confidenceImprovement > 0 ? '+' : ''}{trends.confidenceImprovement.toFixed(0)}
+                </div>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  {trends.confidenceImprovement > 2
+                    ? 'Vocal stability improving—examiners perceive growing expertise'
+                    : trends.confidenceImprovement < -2
+                    ? 'Confidence declining—vocal instability signals nervousness'
+                    : 'Confidence consistent—evaluators see steady competence'}
+                </p>
+              </div>
+
+              {/* Overall Trajectory */}
+              <div className="card">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <Activity className="w-5 h-5 text-green-600" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Overall Trajectory
+                    </span>
+                  </div>
+                  {getTrendIcon(trends.overallImprovement)}
+                </div>
+                <div className={`text-2xl font-bold mb-1 ${getTrendColor(trends.overallImprovement)}`}>
+                  {trends.overallImprovement > 0 ? '+' : ''}{trends.overallImprovement.toFixed(0)}
+                </div>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  {getTrendLabel(trends.overallImprovement)} - {trends.totalSessions} evaluations analyzed
+                </p>
+              </div>
+
+              {/* Performance Consistency */}
+              <div className="card">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <Award className="w-5 h-5 text-purple-600" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Consistency Score
+                    </span>
+                  </div>
+                  {trends.consistency >= 70 ? (
+                    <ArrowUpRight className="w-5 h-5 text-green-600" />
+                  ) : (
+                    <Minus className="w-5 h-5 text-gray-400" />
+                  )}
+                </div>
+                <div className={`text-2xl font-bold mb-1 ${
+                  trends.consistency >= 70 ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'
+                }`}>
+                  {trends.consistency.toFixed(0)}%
+                </div>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  {trends.consistency >= 80
+                    ? 'Highly consistent—evaluators can predict reliable performance'
+                    : trends.consistency >= 60
+                    ? 'Moderate consistency—performance varies session to session'
+                    : 'High variance—unpredictable outcomes undermine evaluator confidence'}
+                </p>
+              </div>
+            </div>
+
+            {/* Additional Trend Insights */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Pause Pattern Trend */}
+              <div className="card">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                    <TrendingDown className="w-5 h-5 mr-2 text-orange-600" />
+                    Pause Pattern Evolution
+                  </h3>
+                  <span className={`text-sm font-medium ${getTrendColor(trends.pauseReduction)}`}>
+                    {trends.pauseReduction > 0 ? '↓' : '↑'} {Math.abs(trends.pauseReduction).toFixed(0)}%
+                  </span>
+                </div>
+                <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+                  {trends.pauseReduction > 10
+                    ? '✅ Strong improvement: Long pauses reduced significantly—interviewers interpret as growing preparation mastery'
+                    : trends.pauseReduction > 0
+                    ? '⚡ Gradual improvement: Pause frequency declining—evaluators notice smoother flow'
+                    : trends.pauseReduction < -10
+                    ? '⚠️ Pause frequency increasing: Extended silences signal "thinking gaps" to evaluators'
+                    : '➖ Pause pattern stable: Maintain current rehearsal strategies'}
+                </p>
+                <div className="text-xs text-gray-600 dark:text-gray-400">
+                  In interview contexts, pauses over 2s typically interpreted as "I don't know" rather than "thoughtful consideration"
+                </div>
+              </div>
+
+              {/* Fluency Trajectory */}
+              <div className="card">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                    <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+                    Fluency Trajectory
+                  </h3>
+                  <span className={`text-sm font-medium ${getTrendColor(trends.fluencyImprovement)}`}>
+                    {trends.fluencyImprovement > 0 ? '↑' : '↓'} {Math.abs(trends.fluencyImprovement).toFixed(0)}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+                  {trends.fluencyImprovement > 5
+                    ? '✅ Speech flow improving: Fewer interruptions—examiners perceive subject mastery'
+                    : trends.fluencyImprovement > 0
+                    ? '⚡ Fluency gradually improving: Smoother delivery signals growing confidence to evaluators'
+                    : trends.fluencyImprovement < -5
+                    ? '⚠️ Fluency declining: Increased disruptions undermine evaluator trust'
+                    : '➖ Fluency stable: Current preparation level maintaining evaluator expectations'}
+                </p>
+                <div className="text-xs text-gray-600 dark:text-gray-400">
+                  Recent average: {trends.recentAverage.toFixed(0)}/100 • Best: {trends.bestScore}/100
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Trajectory Visualization - Area Chart for Confidence Evolution */}
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <TrendingUp className="w-5 h-5 mr-2 text-primary-600" />
-            {getMetricLabel(selectedMetric)} Progress
-          </h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                <Activity className="w-5 h-5 mr-2 text-primary-600" />
+                Evaluator Confidence Evolution
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Your trajectory across {chartData.length} evaluation sessions
+              </p>
+            </div>
+            <select
+              value={selectedMetric}
+              onChange={(e) => setSelectedMetric(e.target.value)}
+              className="input-field w-auto"
+            >
+              <option value="overallScore">Overall Index</option>
+              <option value="confidence">Confidence Stability</option>
+              <option value="fluency">Fluency Flow</option>
+              <option value="trustLevel">Evaluator Trust</option>
+              <option value="engagement">Engagement Signals</option>
+            </select>
+          </div>
+          <ResponsiveContainer width="100%" height={350}>
+            <AreaChart data={chartData}>
+              <defs>
+                <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={getMetricColor(selectedMetric)} stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor={getMetricColor(selectedMetric)} stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
               <XAxis 
                 dataKey="index" 
-                tickFormatter={(value) => `Session ${value}`}
+                tickFormatter={(value) => `S${value}`}
+                stroke="#888"
               />
-              <YAxis domain={[0, 100]} />
+              <YAxis domain={[0, 100]} stroke="#888" />
               <Tooltip 
                 labelFormatter={(value, payload) => {
                   if (payload && payload[0]) {
-                    return `Session ${value} - ${payload[0].payload.date}`;
+                    return `Session ${value} • ${payload[0].payload.date}`;
                   }
                   return `Session ${value}`;
                 }}
-                formatter={(value) => [value, getMetricLabel(selectedMetric)]}
+                formatter={(value) => [value.toFixed(0), getMetricLabel(selectedMetric)]}
+                contentStyle={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: '#fff'
+                }}
               />
-              <Line 
+              <Area 
                 type="monotone" 
                 dataKey={selectedMetric} 
                 stroke={getMetricColor(selectedMetric)}
                 strokeWidth={3}
-                dot={{ fill: getMetricColor(selectedMetric), strokeWidth: 2, r: 4 }}
+                fillOpacity={1} 
+                fill="url(#colorMetric)"
               />
-            </LineChart>
+            </AreaChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Recent Sessions */}
-        <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <Calendar className="w-5 h-5 mr-2 text-primary-600" />
-            Recent Sessions
-          </h3>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Date
-                  </th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Time
-                  </th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Score
-                  </th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {reports.slice(0, 10).map((report) => (
-                  <tr key={report._id} className="border-b border-gray-100 dark:border-gray-800">
-                    <td className="py-3 px-4 text-sm text-gray-900 dark:text-white">
-                      {formatDate(report.createdAt)}
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
-                      {formatTime(report.createdAt)}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                        report.overallScore >= 80 
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                          : report.overallScore >= 60
-                          ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
-                          : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
-                      }`}>
-                        {report.overallScore}/100
-                      </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      <button
-                        onClick={() => viewReport(report._id)}
-                        className="btn-secondary text-xs flex items-center"
-                      >
-                        <Eye className="w-4 h-4 mr-1" />
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Report Modal */}
-        {selectedReport && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    Analysis Report
-                  </h3>
-                  <button
-                    onClick={closeReportModal}
-                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                  >
-                    ✕
-                  </button>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">
-                      {selectedReport.overallScore}/100
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      Overall Performance Score
-                    </p>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                      <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                        {selectedReport.pace?.wordsPerMinute || 0} WPM
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">Speaking Pace</div>
-                    </div>
-                    <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                      <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                        {selectedReport.fillerWords 
-                          ? Object.values(selectedReport.fillerWords).reduce((sum, count) => sum + count, 0)
-                          : 0
-                        }
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">Filler Words</div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Transcript</h4>
-                    <p className="text-gray-700 dark:text-gray-300 text-sm bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-                      {selectedReport.transcript}
-                    </p>
-                  </div>
+        {/* Insight: What Evaluators See */}
+        {trends && (
+          <div className="card bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-l-4 border-blue-600">
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0 mt-1">
+                <Award className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  Evaluator Perception Summary
+                </h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                  {trends.overallImprovement > 10
+                    ? `Strong upward trajectory detected. Evaluators likely perceive ${trends.totalSessions >= 5 ? 'consistent improvement and preparation commitment' : 'early positive signals'}. Your hesitation reduction of ${Math.abs(trends.hesitationReduction).toFixed(0)}% suggests growing subject mastery.`
+                    : trends.overallImprovement > 0
+                    ? `Gradual improvement trajectory. Evaluators see ${trends.consistency >= 70 ? 'reliable' : 'variable'} performance. Focus on consistency to strengthen evaluator confidence.`
+                    : trends.overallImprovement < -5
+                    ? `⚠️ Declining trajectory detected. Evaluators may interpret this as preparation gaps or confidence erosion. Recent sessions show ${trends.confidenceImprovement < 0 ? 'vocal instability' : 'inconsistent patterns'}.`
+                    : `Stable performance trajectory. Evaluators see predictable outcomes. ${trends.consistency >= 70 ? 'High consistency strengthens trust' : 'Increase consistency to boost evaluator confidence'}.`}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {trends.hesitationReduction > 10 && (
+                    <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded-full">
+                      ✓ Hesitation mastery
+                    </span>
+                  )}
+                  {trends.confidenceImprovement > 5 && (
+                    <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded-full">
+                      ✓ Confidence strengthening
+                    </span>
+                  )}
+                  {trends.consistency >= 80 && (
+                    <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded-full">
+                      ✓ High consistency
+                    </span>
+                  )}
+                  {trends.pauseReduction > 10 && (
+                    <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs rounded-full">
+                      ✓ Pause control improving
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

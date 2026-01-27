@@ -113,30 +113,34 @@ const AnalysisDashboard = ({ analysisData }) => {
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Analysis Dashboard
+            Evaluation Summary
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            Your latest speech analysis results
+            Your latest evaluator perception analysis
           </p>
         </div>
 
         {/* Overall Score */}
         <div className="card text-center">
           <div className="flex items-center justify-center mb-4">
-            <div className={`w-32 h-32 rounded-full flex items-center justify-center ${getScoreBgColor(overallScore)}`}>
+            <div className={`w-40 h-40 rounded-full flex items-center justify-center ${getScoreBgColor(overallScore)} border-4 ${
+              overallScore >= 75 ? 'border-green-400' : overallScore >= 60 ? 'border-yellow-400' : 'border-red-400'
+            }`}>
               <div className="text-center">
-                <div className={`text-4xl font-bold ${getScoreColor(overallScore)}`}>
-                  {overallScore}
+                {/* Primary: Risk-Based Status */}
+                <div className={`text-2xl font-bold ${getScoreColor(overallScore)} mb-2`}>
+                  {overallScore >= 75 ? 'Stable' : overallScore >= 60 ? 'Moderate Risk' : 'High Risk'}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">/ 100</div>
+                {/* Secondary: Numeric Index */}
+                <div className="text-sm text-gray-500 dark:text-gray-500">Index: {overallScore}/100</div>
               </div>
             </div>
           </div>
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            Overall Performance Score
+            Evaluator Confidence Assessment
           </h3>
           <p className="text-gray-600 dark:text-gray-400">
-            {overallScore >= 80 ? 'Excellent!' : overallScore >= 60 ? 'Good work!' : 'Keep practicing!'}
+            {overallScore >= 75 ? 'Evaluator confidence maintained' : overallScore >= 60 ? 'Some evaluator concern detected' : 'Evaluator trust likely compromised'}
           </p>
         </div>
 

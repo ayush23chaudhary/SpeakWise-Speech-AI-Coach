@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const AnalysisReport = require("../models/AnalysisReport.model");
 const User = require("../models/User.model");
 const auth = require("../middleware/auth");
-const { analyzeSpeech } = require("../controllers/speech.controller");
+const { analyzeSpeech, compareSecondChance } = require("../controllers/speech.controller");
 
 const router = express.Router();
 
@@ -134,6 +134,9 @@ router.get("/", (req, res) => {
 
 // Analyze speech - Uses Google Speech-to-Text API
 router.post("/analyze", upload.single("audio"), analyzeSpeech);
+
+// Second-Chance Mode: Compare before/after attempts
+router.post("/second-chance/compare", auth, compareSecondChance);
 
 // Get analysis history
 router.get("/history", auth, async (req, res) => {

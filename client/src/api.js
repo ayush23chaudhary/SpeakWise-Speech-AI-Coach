@@ -12,9 +12,10 @@ const SERVER_BASE = `${API_BASE_URL}/api`;
 //   mode: import.meta.env.MODE
 // });
 
-export const analyzeAudio = async (audioBlob, token) => {
+export const analyzeAudio = async (audioBlob, token, evaluationMode = 'interview') => {
   const formData = new FormData();
   formData.append('audio', audioBlob, 'speech-audio.webm');
+  formData.append('evaluationMode', evaluationMode); // Add evaluation mode
 
   const config = {
     headers: {
@@ -27,7 +28,7 @@ export const analyzeAudio = async (audioBlob, token) => {
   const url = `${SERVER_BASE}/speech/analyze`;
   const response = await axios.post(url, formData, config);
   
-  console.log(' API Response:', response.data);
+  console.log('✅ API Response:', response.data);
   
   // Backend returns { success, message, data: {...analysisData} }
   // We need to extract the data property which contains the actual analysis

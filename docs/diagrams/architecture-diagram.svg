@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="640" viewBox="0 0 1200 640" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <style>
+    .title { font: 700 20px/1.2 'Inter', sans-serif; fill: #0f172a; }
+    .label { font: 600 13px/1.2 'Inter', sans-serif; fill: #0f172a; }
+    .small { font: 500 11px/1.2 'Inter', sans-serif; fill: #0f172a; }
+    .box { fill: #ffffff; stroke: #e6e9ef; stroke-width: 1.5; rx: 10; }
+    .box-azure { fill: #f1f8ff; stroke: #cfe6ff; }
+    .box-green { fill: #f2fbf4; stroke: #c8f2d1; }
+    .arrow { stroke: #9ca3af; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    .connector { stroke: #c7cdd6; stroke-width: 1.2; fill: none; }
+    .note { font: 500 12px/1.2 'Inter', sans-serif; fill: #374151; }
+  </style>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8" fill="#9ca3af" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="36" y="40" class="title">SpeakWise — Architecture (high level)</text>
+  <text x="36" y="62" class="small">Simple diagram showing how the web app, API, services and DB interact</text>
+
+  <!-- User -->
+  <g transform="translate(40,110)">
+    <rect class="box" x="0" y="0" width="200" height="80" rx="12" />
+    <text x="16" y="28" class="label">User (Browser / Mobile)</text>
+    <text x="16" y="48" class="small">React UI (Vite)</text>
+  </g>
+
+  <!-- Frontend -->
+  <g transform="translate(300,40)">
+    <rect class="box box-azure" x="0" y="0" width="380" height="220" rx="14" />
+    <text x="20" y="28" class="label">Frontend (client/)</text>
+    <text x="20" y="52" class="small">Key areas:</text>
+    <text x="36" y="72" class="small">• Layout / Navbar / Dashboard (NewDashboardHome)</text>
+    <text x="36" y="92" class="small">• Recording Studio (PerformanceStudio)</text>
+    <text x="36" y="112" class="small">• Practice Hub / Journey / Interview UI</text>
+    <text x="36" y="132" class="small">• store (authStore, themeStore), api.js</text>
+    <rect x="20" y="150" width="340" height="48" rx="8" fill="#ffffff" stroke="#e6e9ef" />
+    <text x="36" y="180" class="small">UI: charts, toasts, local/sessionStorage routing</text>
+  </g>
+
+  <!-- API / Server -->
+  <g transform="translate(300,280)">
+    <rect class="box" x="0" y="0" width="560" height="220" rx="14" />
+    <text x="20" y="28" class="label">Backend (server/)</text>
+    <text x="20" y="52" class="small">Entry: Express app (server/index.js)</text>
+    <text x="20" y="72" class="small">Routes: /api/user, /api/journey, /api/speech, /api/interview</text>
+    <text x="20" y="92" class="small">Controllers: user.controller, journey.controller, speech.controller</text>
+    <text x="20" y="112" class="small">Services: AI wrappers (Gemini/Google), business logic</text>
+    <text x="20" y="132" class="small">Middleware: auth, validation, error handling</text>
+    <rect x="360" y="18" width="180" height="120" rx="8" fill="#f7f7fb" stroke="#e6e9ef" />
+    <text x="374" y="44" class="small">Models</text>
+    <text x="374" y="64" class="small">• User (journeyProgress)</text>
+    <text x="374" y="82" class="small">• UserProgress (sessions)</text>
+  </g>
+
+  <!-- Services & DB -->
+  <g transform="translate(900,320)">
+    <rect class="box box-green" x="0" y="0" width="240" height="160" rx="12" />
+    <text x="16" y="28" class="label">Services & Data</text>
+    <text x="16" y="52" class="small">• AI Analysis (Gemini / Google Speech)</text>
+    <text x="16" y="72" class="small">• Practice generation, streaks, badges</text>
+    <text x="16" y="92" class="small">• Background jobs (optional)</text>
+    <rect x="16" y="106" width="208" height="34" rx="8" fill="#fff" stroke="#e6e9ef" />
+    <text x="36" y="128" class="small">MongoDB (User, UserProgress)</text>
+  </g>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M240 150 L300 130" />
+  <path class="arrow" d="M680 150 L740 130" />
+  <path class="arrow" d="M740 250 L900 320" />
+
+  <!-- connecting arrows with labels -->
+  <path class="arrow" d="M220 160 L300 160" />
+  <text x="260" y="150" class="note">HTTP / WebSocket</text>
+
+  <path class="connector" d="M680 160 L900 160" />
+  <text x="800" y="148" class="note">JSON responses / REST</text>
+
+  <!-- Footer note -->
+  <text x="36" y="610" class="small">Notes: Frontend saves temporary journeyTask (sessionStorage) → Studio completes task → POST /api/journey/complete-task → Backend updates User.journeyProgress and UserProgress.</text>
+
+</svg>

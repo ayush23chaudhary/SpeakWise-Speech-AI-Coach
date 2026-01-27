@@ -45,6 +45,7 @@ const handleRegister = async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                onboarding: user.onboarding || { completed: false }
             },
         });
     } catch (error) {
@@ -122,6 +123,7 @@ const currentUser = async (req, res) => {
             location: req.user.location,
             bio: req.user.bio,
             provider: req.user.provider,
+            onboarding: req.user.onboarding || { completed: false },
             createdAt: req.user.createdAt,
             updatedAt: req.user.updatedAt
         },

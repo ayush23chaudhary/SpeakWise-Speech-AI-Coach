@@ -1,31 +1,37 @@
 import React from 'react';
-import { Mic, BarChart3, TrendingUp, Target } from 'lucide-react';
+import { Mic, BarChart3, TrendingUp, Target, Home } from 'lucide-react';
 
 const TabNavigation = ({ activeTab, setActiveTab }) => {
   const tabs = [
     {
+      id: 'home',
+      label: 'Home',
+      icon: Home,
+      description: 'Dashboard overview and AI Interview Mode'
+    },
+    {
       id: 'studio',
-      label: 'Performance Studio',
+      label: 'Record Response',
       icon: Mic,
-      description: 'Record and practice your speech'
+      description: 'Record your response for evaluator perception analysis'
     },
     {
       id: 'analysis',
-      label: 'Analysis Dashboard',
+      label: 'Evaluation Summary',
       icon: BarChart3,
-      description: 'View your latest analysis results'
+      description: 'View evaluator perception analysis and risk signals'
     },
     {
       id: 'progress',
-      label: 'Progress Tracker',
+      label: 'Communication Trajectory',
       icon: TrendingUp,
-      description: 'Track your improvement over time'
+      description: 'Track how evaluator perception improves over time'
     },
     {
       id: 'practice',
-      label: 'Practice Hub',
+      label: 'Scenario Training',
       icon: Target,
-      description: 'Personalized exercises and challenges'
+      description: 'Practice for specific high-stakes scenarios'
     }
   ];
 
