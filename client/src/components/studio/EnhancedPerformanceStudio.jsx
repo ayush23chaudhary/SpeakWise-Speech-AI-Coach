@@ -117,7 +117,7 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] dark:from-gray-900 dark:to-gray-800 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center">
@@ -128,7 +128,7 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
             Record your speech and get AI-powered analysis
           </p>
           {recordingCount > 0 && (
-            <p className="text-sm text-primary-600 dark:text-primary-400 mt-2">
+            <p className="text-sm text-[#1FB6A6] dark:text-primary-400 mt-2">
               Session #{recordingCount}
             </p>
           )}
@@ -168,7 +168,7 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
                   {/* Rotating gradient ring */}
                   {isRecording && (
                     <div 
-                      className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 opacity-60"
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-[#1FB6A6] via-[#1FB6A6] to-[#17A293] opacity-60"
                       style={{
                         animation: 'rotate-gradient 3s linear infinite',
                         filter: 'blur(10px)'
@@ -179,7 +179,7 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
                   {/* Outer glow ring */}
                   <div 
                     className={`absolute inset-0 rounded-full transition-all duration-150 ${
-                      isRecording ? 'bg-gradient-to-r from-primary-400 to-primary-600' : 'bg-gray-200 dark:bg-gray-700'
+                      isRecording ? 'bg-gradient-to-r from-[#1FB6A6] to-[#17A293]' : 'bg-gray-200 dark:bg-gray-700'
                     }`}
                     style={{
                       transform: `scale(${1 + getVolumeIntensity() * 0.4})`,
@@ -190,7 +190,7 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
                   >
                     {/* Inner circle */}
                     <div className="absolute inset-8 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center">
-                      <Mic className={`w-20 h-20 ${isRecording ? 'text-primary-600' : 'text-gray-400'}`} />
+                      <Mic className={`w-20 h-20 ${isRecording ? 'text-[#1FB6A6]' : 'text-gray-400'}`} />
                     </div>
                     
                     {/* Volume indicator */}
@@ -211,7 +211,7 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
               <div className="mb-6">
                 {isRecording && (
                   <div className="space-y-2">
-                    <div className="text-2xl font-mono text-primary-600 dark:text-primary-400">
+                    <div className="text-2xl font-mono text-[#1FB6A6] dark:text-primary-400">
                       {getFormattedDuration()}
                     </div>
                     <div className="flex items-center justify-center space-x-2">
@@ -223,7 +223,7 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div 
-                        className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                        className="bg-[#1FB6A6] h-2 rounded-full transition-all duration-300"
                         style={{ width: `${Math.min((duration / RECORDING_CONFIG.maxDuration) * 100, 100)}%` }}
                       />
                     </div>
@@ -360,7 +360,7 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
                 <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                   {RECORDING_TIPS.map((tip, index) => (
                     <li key={index} className="flex items-start">
-                      <span className="text-primary-600 dark:text-primary-400 mr-2">•</span>
+                      <span className="text-[#1FB6A6] dark:text-primary-400 mr-2">•</span>
                       {tip}
                     </li>
                   ))}
@@ -390,7 +390,7 @@ const EnhancedPerformanceStudio = ({ onAnalysisComplete }) => {
                   <span className="text-gray-600 dark:text-gray-400">Status:</span>
                   <span className={`font-medium ${
                     isRecording ? 'text-green-600 dark:text-green-400' : 
-                    audioBlob ? 'text-blue-600 dark:text-blue-400' : 
+                    audioBlob ? 'text-[#1E2A5A] dark:text-blue-400' : 
                     'text-gray-600 dark:text-gray-400'
                   }`}>
                     {isRecording ? 'Recording' : audioBlob ? 'Ready' : 'Idle'}

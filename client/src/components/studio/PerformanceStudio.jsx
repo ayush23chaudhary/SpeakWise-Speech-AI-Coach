@@ -443,7 +443,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] dark:from-gray-900 dark:to-gray-800 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -497,7 +497,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
               {/* Rotating gradient ring */}
               {isRecording && (
                 <div 
-                  className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 opacity-60"
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-[#1FB6A6] via-[#1FB6A6] to-[#17A293] opacity-60"
                   style={{
                     animation: 'rotate-gradient 3s linear infinite',
                     filter: 'blur(8px)'
@@ -508,7 +508,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
               <div 
                 className={`absolute inset-0 rounded-full transition-all duration-150 ${
                   isRecording 
-                    ? 'bg-gradient-to-r from-primary-400 to-primary-600 shadow-2xl' 
+                    ? 'bg-gradient-to-r from-[#1FB6A6] to-[#17A293] shadow-2xl' 
                     : 'bg-gray-200 dark:bg-gray-700'
                 }`}
                 style={{
@@ -542,7 +542,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
                     {/* Pitch range indicator */}
                     <div className="relative h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                       <div 
-                        className="absolute h-full bg-primary-500 dark:bg-primary-400 transition-all duration-500 ease-out rounded-full"
+                        className="absolute h-full bg-[#F8FAFF]0 dark:bg-primary-400 transition-all duration-500 ease-out rounded-full"
                         style={{ 
                           width: `${Math.min((pitch / 500) * 100, 100)}%`
                         }}
@@ -713,7 +713,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
             <li>• Find a quiet environment with minimal background noise</li>
             <li>• Speak clearly and at a comfortable pace</li>
             <li>• Maintain a consistent distance from your microphone</li>
-            <li>• <span className="font-medium text-primary-600 dark:text-primary-400">Record 15-20 seconds for best and fastest results</span> (optimized for server efficiency)</li>
+            <li>• <span className="font-medium text-[#1FB6A6] dark:text-primary-400">Record 15-20 seconds for best and fastest results</span> (optimized for server efficiency)</li>
             <li>• Practice speaking for 30-60 seconds for comprehensive analysis</li>
           </ul>
         </div>
@@ -730,7 +730,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
                   </div>
                   <button
                     onClick={() => navigate('/profile?tab=goals')}
-                    className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+                    className="text-xs text-[#1FB6A6] dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
                   >
                     View
                   </button>
@@ -761,7 +761,7 @@ const PerformanceStudio = ({ onAnalysisComplete }) => {
                             className={`absolute h-full rounded-full transition-all duration-500 ${
                               isNearCompletion 
                                 ? 'bg-amber-500' 
-                                : 'bg-primary-500'
+                                : 'bg-[#F8FAFF]0'
                             }`}
                             style={{ width: `${progress}%` }}
                           />

@@ -231,14 +231,14 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
 
   const getCategoryColor = (category) => {
     const colors = {
-      'pronunciation': 'bg-purple-500',
-      'fluency': 'bg-blue-500',
+      'pronunciation': 'bg-[#EEF2FF]0',
+      'fluency': 'bg-[#F8FAFF]0',
       'pacing': 'bg-cyan-500',
       'confidence': 'bg-yellow-500',
       'vocabulary': 'bg-green-500',
       'filler-words': 'bg-red-500',
       'tone': 'bg-pink-500',
-      'articulation': 'bg-indigo-500'
+      'articulation': 'bg-[#EEF2FF]0'
     };
     return colors[category] || 'bg-gray-500';
   };
@@ -277,8 +277,8 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
             <div className="space-y-2">
               {exercise.instructions?.map((instruction) => (
                 <div key={instruction.step} className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
-                    <span className="text-sm font-semibold text-purple-600 dark:text-purple-300">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#6C63FF]/10 dark:bg-[#2A3A7A] rounded-full flex items-center justify-center">
+                    <span className="text-sm font-semibold text-[#6C63FF] dark:text-[#6C63FF]/30">
                       {instruction.step}
                     </span>
                   </div>
@@ -291,7 +291,7 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
 
         {/* Practice Text */}
         {exercise.practiceText && !analysisResult && (
-          <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+          <div className="mb-6 p-4 bg-[#EEF2FF] dark:bg-[#2A3A7A]/20 rounded-lg border border-[#6C63FF]/20 dark:border-[#4A42D8]">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Practice Text:</h3>
             <p className="text-gray-800 dark:text-gray-200 text-lg leading-relaxed italic">
               "{exercise.practiceText}"
@@ -309,10 +309,10 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
               {exercise.examples.map((example, index) => (
                 <div
                   key={index}
-                  className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-200 dark:border-purple-800 hover:shadow-md transition-shadow"
+                  className="p-4 bg-gradient-to-r from-[#EEF2FF] to-pink-50 dark:from-[#2A3A7A]/20 dark:to-pink-900/20 rounded-lg border border-[#6C63FF]/20 dark:border-[#4A42D8] hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <span className="inline-block px-3 py-1 bg-purple-600 text-white text-xs font-semibold rounded-full">
+                    <span className="inline-block px-3 py-1 bg-[#6C63FF] text-white text-xs font-semibold rounded-full">
                       {example.type}
                     </span>
                     {example.difficulty && (
@@ -336,7 +336,7 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
                 </div>
               ))}
             </div>
-            <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+            <div className="mt-3 p-3 bg-[#F8FAFF] dark:bg-blue-900/20 rounded-lg border border-[#EEF2FF] dark:border-blue-800">
               <p className="text-sm text-blue-800 dark:text-blue-200">
                 💡 <strong>Tip:</strong> Choose an example that matches your comfort level and practice it before recording!
               </p>
@@ -445,7 +445,7 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
             {/* Overall Score */}
             <div className="text-center">
               <div className="inline-block">
-                <div className="text-6xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <div className="text-6xl font-bold bg-gradient-to-r from-[#6C63FF] to-pink-600 bg-clip-text text-transparent">
                   {analysisResult.overallScore}
                 </div>
                 <div className="text-gray-500 dark:text-gray-400 text-sm">Overall Score</div>
@@ -489,7 +489,7 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
                 <div className="space-y-2">
                   {analysisResult.recommendations.map((rec, index) => (
                     <div key={index} className="flex items-start space-x-2">
-                      <span className="text-purple-600">•</span>
+                      <span className="text-[#6C63FF]">•</span>
                       <p className="text-gray-700 dark:text-gray-300 text-sm">{rec}</p>
                     </div>
                   ))}
@@ -528,7 +528,7 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
 
         {/* Target Metrics */}
         {exercise.targetMetrics && !analysisResult && (
-          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+          <div className="mt-6 p-4 bg-[#F8FAFF] dark:bg-blue-900/20 rounded-lg border border-[#EEF2FF] dark:border-blue-800">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Goals:</h3>
             <div className="space-y-1 text-sm text-gray-700 dark:text-gray-300">
               {exercise.targetMetrics.minClarity && (

@@ -21,7 +21,7 @@ const ConfirmationModal = ({
       case 'error':
         return <XCircle className="w-12 h-12 text-red-500" />;
       case 'info':
-        return <Info className="w-12 h-12 text-blue-500" />;
+        return <Info className="w-12 h-12 text-[#1FB6A6]" />;
       default:
         return <AlertTriangle className="w-12 h-12 text-yellow-500" />;
     }

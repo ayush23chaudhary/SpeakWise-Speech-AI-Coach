@@ -327,7 +327,7 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] dark:from-gray-900 dark:to-gray-800 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center">
@@ -339,7 +339,7 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
           </p>
           
           {/* Guest Mode Notice */}
-          <div className="mt-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-100 to-purple-100 dark:from-yellow-900/20 dark:to-purple-900/20 border border-yellow-300 dark:border-yellow-600 text-yellow-900 dark:text-yellow-100 rounded-lg text-sm font-medium shadow-sm">
+          <div className="mt-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-100 to-[#6C63FF]/10 dark:from-yellow-900/20 dark:to-[#2A3A7A]/20 border border-yellow-300 dark:border-yellow-600 text-yellow-900 dark:text-yellow-100 rounded-lg text-sm font-medium shadow-sm">
             <Zap className="w-4 h-4 mr-2 text-yellow-500" />
             <span className="font-semibold">Demo Mode:</span>
             <span className="ml-1">Full AI analysis • Results not saved • No signup required</span>
@@ -380,7 +380,7 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
                   {/* Rotating gradient ring */}
                   {isRecording && (
                     <div 
-                      className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 opacity-60"
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-[#1FB6A6] via-[#1FB6A6] to-[#17A293] opacity-60"
                       style={{
                         animation: 'rotate-gradient 3s linear infinite',
                         filter: 'blur(8px)'
@@ -391,7 +391,7 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
                   <div 
                     className={`absolute inset-0 rounded-full transition-all duration-150 ${
                       isRecording 
-                        ? 'bg-gradient-to-r from-primary-400 to-primary-600 shadow-2xl' 
+                        ? 'bg-gradient-to-r from-[#1FB6A6] to-[#17A293] shadow-2xl' 
                         : 'bg-gray-200 dark:bg-gray-700'
                     }`}
                     style={{
@@ -425,7 +425,7 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
                     {/* Pitch range indicator */}
                     <div className="relative h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                       <div 
-                        className="absolute h-full bg-primary-500 dark:bg-primary-400 transition-all duration-500 ease-out rounded-full"
+                        className="absolute h-full bg-[#F8FAFF]0 dark:bg-primary-400 transition-all duration-500 ease-out rounded-full"
                         style={{ 
                           width: `${Math.min((pitch / 500) * 100, 100)}%`
                         }}
@@ -485,7 +485,7 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
               <div className="mb-6">
                 {isRecording && (
                   <div className="space-y-2">
-                    <div className="text-2xl font-mono text-primary-600 dark:text-primary-400">
+                    <div className="text-2xl font-mono text-[#1FB6A6] dark:text-primary-400">
                       {formatTime(duration)}
                     </div>
                     <div className="flex items-center justify-center space-x-2">
@@ -600,7 +600,7 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 {RECORDING_TIPS.slice(0, 5).map((tip, index) => (
                   <li key={index} className="flex items-start">
-                    <span className="text-primary-600 dark:text-primary-400 mr-2">•</span>
+                    <span className="text-[#1FB6A6] dark:text-primary-400 mr-2">•</span>
                     {tip}
                   </li>
                 ))}
@@ -659,7 +659,7 @@ const GuestPerformanceStudio = ({ onAnalysisComplete }) => {
                   <span className="text-gray-600 dark:text-gray-400">Status:</span>
                   <span className={`font-medium ${
                     isRecording ? 'text-green-600 dark:text-green-400' : 
-                    audioBlob ? 'text-blue-600 dark:text-blue-400' : 
+                    audioBlob ? 'text-[#1E2A5A] dark:text-blue-400' : 
                     'text-gray-600 dark:text-gray-400'
                   }`}>
                     {isRecording ? 'Recording' : audioBlob ? 'Ready' : 'Idle'}

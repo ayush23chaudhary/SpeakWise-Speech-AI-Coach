@@ -24,7 +24,7 @@ const Input = forwardRef(({
   const stateClasses = error 
     ? 'border-red-300 dark:border-red-600 focus:ring-red-500' 
     : isFocused 
-    ? 'border-primary-300 dark:border-primary-600' 
+    ? 'border-primary-300 dark:border-[#1FB6A6]' 
     : 'border-gray-300 dark:border-gray-600';
 
   const iconClasses = iconPosition === 'left' 

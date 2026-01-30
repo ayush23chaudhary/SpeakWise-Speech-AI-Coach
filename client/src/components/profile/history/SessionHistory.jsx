@@ -41,14 +41,14 @@ const SessionHistory = () => {
 
   const getScoreColor = (score) => {
     if (score >= 90) return 'text-green-600';
-    if (score >= 70) return 'text-blue-600';
+    if (score >= 70) return 'text-[#1E2A5A]';
     if (score >= 50) return 'text-yellow-600';
     return 'text-red-600';
   };
 
   const getScoreBadge = (score) => {
     if (score >= 90) return 'bg-green-100 text-green-700';
-    if (score >= 70) return 'bg-blue-100 text-blue-700';
+    if (score >= 70) return 'bg-[#EEF2FF] text-[#2A3A7A]';
     if (score >= 50) return 'bg-yellow-100 text-yellow-700';
     return 'bg-red-100 text-red-700';
   };
@@ -75,7 +75,7 @@ const SessionHistory = () => {
               />
               <button
                 onClick={handleSearch}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A]"
               >
                 Search
               </button>
@@ -220,7 +220,7 @@ const SessionDetailModal = ({ session, onClose }) => {
           {/* Score and Date */}
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-4xl font-bold text-blue-600">{session.overallScore}</div>
+              <div className="text-4xl font-bold text-[#1E2A5A]">{session.overallScore}</div>
               <div className="text-sm text-gray-500">Overall Score</div>
             </div>
             <div className="text-right text-sm text-gray-500">
@@ -246,7 +246,7 @@ const SessionDetailModal = ({ session, onClose }) => {
                 {Object.entries(session.metrics).map(([key, value]) => (
                   value && (
                     <div key={key} className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-                      <div className="text-2xl font-bold text-blue-600">{value}</div>
+                      <div className="text-2xl font-bold text-[#1E2A5A]">{value}</div>
                       <div className="text-sm text-gray-600 dark:text-gray-400 capitalize">
                         {key.replace(/([A-Z])/g, ' $1').trim()}
                       </div>
@@ -263,7 +263,7 @@ const SessionDetailModal = ({ session, onClose }) => {
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Speaking Pace</h4>
               <div className="flex items-center space-x-4">
                 <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">{session.pace.wordsPerMinute}</div>
+                  <div className="text-2xl font-bold text-[#1E2A5A]">{session.pace.wordsPerMinute}</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Words/Min</div>
                 </div>
                 <div className={`px-3 py-1 rounded-lg ${
@@ -318,7 +318,7 @@ const SessionDetailModal = ({ session, onClose }) => {
         <div className="p-6 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={onClose}
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="w-full px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A]"
           >
             Close
           </button>

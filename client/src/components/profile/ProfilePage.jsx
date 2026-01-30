@@ -121,7 +121,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] dark:from-gray-900 dark:to-gray-800 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -140,7 +140,7 @@ const ProfilePage = () => {
               <div className="flex flex-col items-center">
                 {/* Profile Picture */}
                 <div className="relative mb-4">
-                  <div className="w-32 h-32 rounded-full overflow-hidden bg-gradient-to-br from-primary-500 to-blue-600 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                  <div className="w-32 h-32 rounded-full overflow-hidden bg-gradient-to-br from-[#F8FAFF]0 to-[#2A3A7A] flex items-center justify-center text-white text-4xl font-bold shadow-lg">
                     {imagePreview ? (
                       <img
                         src={imagePreview}
@@ -153,7 +153,7 @@ const ProfilePage = () => {
                   </div>
                   
                   {isEditing && (
-                    <label className="absolute bottom-0 right-0 bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-full cursor-pointer shadow-lg transition-colors">
+                    <label className="absolute bottom-0 right-0 bg-[#1FB6A6] hover:bg-primary-700 text-white p-2 rounded-full cursor-pointer shadow-lg transition-colors">
                       <Camera className="w-5 h-5" />
                       <input
                         type="file"
@@ -188,7 +188,7 @@ const ProfilePage = () => {
 
             {/* Stats Cards */}
             <div className="mt-6 space-y-4">
-              <Card className="p-4 bg-gradient-to-br from-primary-500 to-blue-600 text-white">
+              <Card className="p-4 bg-gradient-to-br from-[#F8FAFF]0 to-[#2A3A7A] text-white">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm opacity-90">Practice Sessions</p>
@@ -208,7 +208,7 @@ const ProfilePage = () => {
                 </div>
               </Card>
 
-              <Card className="p-4 bg-gradient-to-br from-purple-500 to-pink-600 text-white">
+              <Card className="p-4 bg-gradient-to-br from-[#EEF2FF]0 to-pink-600 text-white">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm opacity-90">Improvement Rate</p>

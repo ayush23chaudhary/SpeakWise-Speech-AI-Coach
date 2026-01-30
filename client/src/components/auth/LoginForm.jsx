@@ -47,7 +47,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
       {/* Back to Landing Page Button */}
       <button
         onClick={() => navigate('/')}
-        className="flex items-center text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 mb-4 transition-colors"
+        className="flex items-center text-gray-600 dark:text-gray-400 hover:text-[#1FB6A6] dark:hover:text-primary-400 mb-4 transition-colors"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to Home
@@ -55,7 +55,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
 
       <div className="text-center mb-6">
         <div className="mx-auto w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mb-4">
-          <LogIn className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+          <LogIn className="w-8 h-8 text-[#1FB6A6] dark:text-primary-400" />
         </div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome Back</h2>
         <p className="text-gray-600 dark:text-gray-400 mt-2">Sign in to your SpeakWise account</p>
@@ -187,7 +187,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
           Don't have an account?{' '}
           <button
             onClick={onSwitchToRegister}
-            className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
+            className="text-[#1FB6A6] dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
           >
             Sign up here
           </button>

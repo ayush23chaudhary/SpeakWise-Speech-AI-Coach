@@ -42,7 +42,7 @@ const DashboardHome = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] dark:from-gray-900 dark:to-gray-800 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Header */}
         <div className="mb-8">
@@ -59,7 +59,7 @@ const DashboardHome = () => {
           {/* AI Interview Mode Card - Highlighted */}
           <Link 
             to="/dashboard/interview"
-            className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 p-6 text-white col-span-full md:col-span-2"
+            className="bg-gradient-to-br from-[#1E2A5A] to-[#1E2A5A] rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 p-6 text-white col-span-full md:col-span-2"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3">
@@ -108,9 +108,9 @@ const DashboardHome = () => {
               className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6"
             >
               <div className="flex items-center justify-between mb-4">
-                <Award className="w-8 h-8 text-purple-600" />
+                <Award className="w-8 h-8 text-[#6C63FF]" />
                 {recentInterview.status === 'completed' && (
-                  <div className="text-2xl font-bold text-purple-600">
+                  <div className="text-2xl font-bold text-[#6C63FF]">
                     {(recentInterview.overallScore || 
                       recentInterview.overallPerformance?.overallScore || 
                       recentInterview.overallPerformance?.averageScore || 
@@ -130,7 +130,7 @@ const DashboardHome = () => {
                 {new Date(recentInterview.createdAt).toLocaleDateString()}
               </div>
               
-              <div className="mt-4 flex items-center text-blue-600 dark:text-blue-400 text-sm font-medium">
+              <div className="mt-4 flex items-center text-[#1E2A5A] dark:text-blue-400 text-sm font-medium">
                 {recentInterview.status === 'completed' ? 'View Report' : 'Continue Interview'}
                 <ChevronRight className="w-4 h-4 ml-1" />
               </div>
@@ -149,7 +149,7 @@ const DashboardHome = () => {
             <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
               Track your progress and review all past interviews
             </p>
-            <div className="flex items-center text-blue-600 dark:text-blue-400 text-sm font-medium">
+            <div className="flex items-center text-[#1E2A5A] dark:text-blue-400 text-sm font-medium">
               View History
               <ChevronRight className="w-4 h-4 ml-1" />
             </div>
@@ -162,9 +162,9 @@ const DashboardHome = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link
               to="/dashboard/interview"
-              className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+              className="flex items-center gap-3 p-4 bg-[#F8FAFF] dark:bg-blue-900/20 rounded-lg hover:bg-[#EEF2FF] dark:hover:bg-blue-900/30 transition-colors"
             >
-              <Briefcase className="w-5 h-5 text-blue-600" />
+              <Briefcase className="w-5 h-5 text-[#1E2A5A]" />
               <span className="text-sm font-medium text-gray-800 dark:text-white">
                 Start New Interview
               </span>
@@ -172,9 +172,9 @@ const DashboardHome = () => {
             
             <Link
               to="/dashboard/interview/history"
-              className="flex items-center gap-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+              className="flex items-center gap-3 p-4 bg-[#EEF2FF] dark:bg-[#2A3A7A]/20 rounded-lg hover:bg-[#6C63FF]/10 dark:hover:bg-[#2A3A7A]/30 transition-colors"
             >
-              <TrendingUp className="w-5 h-5 text-purple-600" />
+              <TrendingUp className="w-5 h-5 text-[#6C63FF]" />
               <span className="text-sm font-medium text-gray-800 dark:text-white">
                 View History
               </span>

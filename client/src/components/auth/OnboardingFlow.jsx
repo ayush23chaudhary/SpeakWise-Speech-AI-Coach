@@ -98,11 +98,11 @@ const OnboardingFlow = ({ onComplete }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#F8FAFF] dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-6">
       <div className="max-w-3xl w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-block p-3 bg-primary-600 rounded-full mb-4">
+          <div className="inline-block p-3 bg-[#1FB6A6] rounded-full mb-4">
             <Target className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -117,13 +117,13 @@ const OnboardingFlow = ({ onComplete }) => {
         <div className="flex items-center justify-center mb-8">
           <div className="flex items-center space-x-2">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
-              step >= 1 ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-600'
+              step >= 1 ? 'bg-[#1FB6A6] text-white' : 'bg-gray-200 text-gray-600'
             }`}>
               1
             </div>
-            <div className={`w-16 h-1 ${step >= 2 ? 'bg-primary-600' : 'bg-gray-200'}`} />
+            <div className={`w-16 h-1 ${step >= 2 ? 'bg-[#1FB6A6]' : 'bg-gray-200'}`} />
             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
-              step >= 2 ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-600'
+              step >= 2 ? 'bg-[#1FB6A6] text-white' : 'bg-gray-200 text-gray-600'
             }`}>
               2
             </div>
@@ -153,14 +153,14 @@ const OnboardingFlow = ({ onComplete }) => {
                       }}
                       className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
                         userPurpose === option.value
-                          ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                          ? 'border-[#1FB6A6] bg-[#F8FAFF] dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'
                       }`}
                     >
                       <div className="flex items-start space-x-3">
                         <div className={`flex-shrink-0 p-2 rounded-lg ${
                           userPurpose === option.value
-                            ? 'bg-primary-600 text-white'
+                            ? 'bg-[#1FB6A6] text-white'
                             : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
                         }`}>
                           <Icon className="w-5 h-5" />
@@ -228,14 +228,14 @@ const OnboardingFlow = ({ onComplete }) => {
                       }}
                       className={`p-4 rounded-lg border-2 text-left transition-all ${
                         stressTrigger === option.value
-                          ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                          ? 'border-[#1FB6A6] bg-[#F8FAFF] dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'
                       }`}
                     >
                       <div className="flex items-start space-x-3">
                         <div className={`flex-shrink-0 p-2 rounded-lg ${
                           stressTrigger === option.value
-                            ? 'bg-primary-600 text-white'
+                            ? 'bg-[#1FB6A6] text-white'
                             : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
                         }`}>
                           <Icon className="w-5 h-5" />

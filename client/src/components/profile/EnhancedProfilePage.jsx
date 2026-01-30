@@ -148,7 +148,7 @@ const EnhancedProfilePage = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-[#1E2A5A] mx-auto"></div>
           <p className="mt-4 text-sm sm:text-base text-gray-600 dark:text-gray-400">Loading your profile...</p>
         </div>
       </div>
@@ -158,7 +158,7 @@ const EnhancedProfilePage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Profile Header with Enhanced Visual Effects */}
-      <div className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white overflow-hidden">
+      <div className="relative bg-gradient-to-br from-[#1FB6A6] via-primary-700 to-primary-800 text-white overflow-hidden">
         {/* Animated Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
@@ -298,7 +298,7 @@ const EnhancedProfilePage = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center space-x-1 sm:space-x-2 py-3 sm:py-4 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'border-primary-600 text-primary-600 dark:text-primary-400'
+                    ? 'border-[#1FB6A6] text-[#1FB6A6] dark:text-primary-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -452,7 +452,7 @@ const AnalyticsTab = ({ stats }) => {
                 <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">
                   {peak.hour}:00 - {peak.hour + 1}:00
                 </span>
-                <span className="text-sm sm:text-base text-blue-600 dark:text-blue-400 font-semibold">
+                <span className="text-sm sm:text-base text-[#1E2A5A] dark:text-blue-400 font-semibold">
                   {peak.count} sessions
                 </span>
               </div>
@@ -472,7 +472,7 @@ const AchievementsTab = ({ onCheckBadges }) => {
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Your Achievements</h2>
         <button
           onClick={onCheckBadges}
-          className="flex items-center space-x-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base w-full sm:w-auto justify-center"
+          className="flex items-center space-x-2 px-4 py-2 bg-[#1FB6A6] hover:bg-primary-700 text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base w-full sm:w-auto justify-center"
         >
           <span>🏆</span>
           <span>Check for New Badges</span>
@@ -501,10 +501,10 @@ const SettingsTab = ({ user, updateUser }) => {
 // Stat Card Component
 const StatCard = ({ icon, label, value, color }) => {
   const colorClasses = {
-    blue: 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-800',
+    blue: 'bg-[#F8FAFF] dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-800',
     yellow: 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
     green: 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
-    purple: 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800'
+    purple: 'bg-[#EEF2FF] dark:bg-[#2A3A7A]/20 text-[#5A52E8] dark:text-[#6C63FF]/30 border-[#6C63FF]/20 dark:border-[#4A42D8]'
   };
 
   return (

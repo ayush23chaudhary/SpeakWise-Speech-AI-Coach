@@ -177,10 +177,10 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
         </div>
 
         {/* Save Prompt */}
-        <Card className="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20 border-primary-200 dark:border-primary-800">
+        <Card className="bg-gradient-to-r from-[#F8FAFF] to-[#F8FAFF] dark:from-primary-900/20 dark:to-blue-900/20 border-primary-200 dark:border-primary-800">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <Save className="w-6 h-6 text-primary-600 dark:text-primary-400 mr-3" />
+              <Save className="w-6 h-6 text-[#1FB6A6] dark:text-primary-400 mr-3" />
               <div>
                 <h3 className="text-lg font-semibold text-primary-800 dark:text-primary-200">
                   Want to track your communication trajectory?
@@ -245,7 +245,7 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
           {/* Pace Gauge */}
           <Card>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-              <Target className="w-5 h-5 mr-2 text-primary-600" />
+              <Target className="w-5 h-5 mr-2 text-[#1FB6A6]" />
               Speaking Pace
             </h3>
             <div className="text-center">
@@ -267,7 +267,7 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
           {/* Filler Words Chart */}
           <Card>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-              <Zap className="w-5 h-5 mr-2 text-primary-600" />
+              <Zap className="w-5 h-5 mr-2 text-[#1FB6A6]" />
               Filler Words Analysis
             </h3>
             <ResponsiveContainer width="100%" height={200}>
@@ -319,7 +319,7 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
         {/* Interactive Transcript */}
         <Card>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <MessageSquare className="w-5 h-5 mr-2 text-primary-600" />
+            <MessageSquare className="w-5 h-5 mr-2 text-[#1FB6A6]" />
             Interactive Transcript
           </h3>
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
@@ -429,14 +429,14 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
           </div>
 
           {/* Recommendations */}
-          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-purple-950/30 border-2 border-blue-200 dark:border-blue-800/50 shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#F8FAFF] via-[#EEF2FF] to-[#EEF2FF] dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-purple-950/30 border-2 border-[#EEF2FF] dark:border-blue-800/50 shadow-lg hover:shadow-xl transition-all duration-300">
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-400/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
             
             <div className="relative p-5">
               <div className="flex items-center mb-4">
                 <div className="relative">
                   <div className="absolute inset-0 bg-blue-400 rounded-xl blur-lg opacity-50 animate-pulse"></div>
-                  <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                  <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-[#F8FAFF]0 to-[#1E2A5A] flex items-center justify-center shadow-lg">
                     <Lightbulb className="w-5 h-5 text-white" />
                   </div>
                 </div>
@@ -444,7 +444,7 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                     💡 Actions
                   </h3>
-                  <p className="text-xs text-blue-700 dark:text-blue-400">Next steps</p>
+                  <p className="text-xs text-[#2A3A7A] dark:text-blue-400">Next steps</p>
                 </div>
               </div>
               
@@ -452,10 +452,10 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
                 {recommendations.map((recommendation, index) => (
                   <div
                     key={index}
-                    className="group p-3 rounded-lg bg-white dark:bg-gray-800/80 border border-blue-200 dark:border-blue-800/50 hover:border-blue-400 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
+                    className="group p-3 rounded-lg bg-white dark:bg-gray-800/80 border border-[#EEF2FF] dark:border-blue-800/50 hover:border-blue-400 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
                   >
                     <div className="flex items-start">
-                      <div className="relative w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform flex-shrink-0 mt-0.5">
+                      <div className="relative w-7 h-7 rounded-lg bg-gradient-to-br from-[#F8FAFF]0 to-[#1E2A5A] flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform flex-shrink-0 mt-0.5">
                         <div className="absolute inset-0 bg-blue-400 rounded-lg blur-md opacity-0 group-hover:opacity-40 transition-opacity"></div>
                         <span className="relative text-xs font-bold text-white">
                           {index + 1}
@@ -474,7 +474,7 @@ const GuestAnalysisDashboard = ({ analysisData }) => {
 
         {/* Feedback Section */}
         {!feedbackSubmitted && (
-          <Card className="text-center bg-gradient-to-br from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 border-2 border-primary-200 dark:border-primary-700">
+          <Card className="text-center bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] dark:from-primary-900/20 dark:to-[#2A3A7A]/20 border-2 border-primary-200 dark:border-primary-700">
             <Star className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               How was your experience?

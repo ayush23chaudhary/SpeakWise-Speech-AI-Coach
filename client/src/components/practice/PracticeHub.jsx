@@ -69,14 +69,14 @@ const PracticeHub = () => {
 
   const getCategoryColor = (category) => {
     const colors = {
-      'pronunciation': 'bg-purple-500',
-      'fluency': 'bg-blue-500',
+      'pronunciation': 'bg-[#EEF2FF]0',
+      'fluency': 'bg-[#F8FAFF]0',
       'pacing': 'bg-cyan-500',
       'confidence': 'bg-yellow-500',
       'vocabulary': 'bg-green-500',
       'filler-words': 'bg-red-500',
       'tone': 'bg-pink-500',
-      'articulation': 'bg-indigo-500'
+      'articulation': 'bg-[#EEF2FF]0'
     };
     return colors[category] || 'bg-gray-500';
   };
@@ -123,8 +123,8 @@ const PracticeHub = () => {
         </Card>
 
         <Card className="flex items-center space-x-4">
-          <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
-            <BookOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+          <div className="p-3 bg-[#EEF2FF] dark:bg-blue-900 rounded-lg">
+            <BookOpen className="w-6 h-6 text-[#1E2A5A] dark:text-blue-400" />
           </div>
           <div>
             <p className="text-sm text-gray-500 dark:text-gray-400">Exercises Done</p>
@@ -135,8 +135,8 @@ const PracticeHub = () => {
         </Card>
 
         <Card className="flex items-center space-x-4">
-          <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
-            <Trophy className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+          <div className="p-3 bg-[#6C63FF]/10 dark:bg-[#2A3A7A] rounded-lg">
+            <Trophy className="w-6 h-6 text-[#6C63FF] dark:text-[#6C63FF]" />
           </div>
           <div>
             <p className="text-sm text-gray-500 dark:text-gray-400">Achievements</p>
@@ -160,7 +160,7 @@ const PracticeHub = () => {
       </div>
 
       {dailyChallenge && (
-        <Card className="mb-8 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+        <Card className="mb-8 bg-gradient-to-r from-[#EEF2FF]0 to-pink-500 text-white">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center space-x-2 mb-2">
@@ -168,7 +168,7 @@ const PracticeHub = () => {
                 <h2 className="text-xl font-bold">Today's Challenge</h2>
               </div>
               <h3 className="text-2xl font-bold mb-2">{dailyChallenge.title}</h3>
-              <p className="text-purple-100 mb-4">{dailyChallenge.description}</p>
+              <p className="text-[#6C63FF]/10 mb-4">{dailyChallenge.description}</p>
               <div className="flex items-center space-x-4 text-sm">
                 <span className="flex items-center space-x-1">
                   <Clock className="w-4 h-4" />
@@ -177,13 +177,13 @@ const PracticeHub = () => {
                 <span className="px-3 py-1 bg-white/20 rounded-full">
                   {dailyChallenge.difficulty}
                 </span>
-                <span className="text-purple-100">⏰ {dailyChallenge.expiresIn}</span>
+                <span className="text-[#6C63FF]/10">⏰ {dailyChallenge.expiresIn}</span>
               </div>
             </div>
             <Button 
               variant="secondary"
               onClick={() => handleStartExercise(dailyChallenge)}
-              className="bg-white text-purple-600 hover:bg-purple-50"
+              className="bg-white text-[#6C63FF] hover:bg-[#EEF2FF]"
             >
               <Play className="w-4 h-4 mr-2" />
               Start Challenge
@@ -198,7 +198,7 @@ const PracticeHub = () => {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-                  <Target className="w-6 h-6 mr-2 text-purple-600" />
+                  <Target className="w-6 h-6 mr-2 text-[#6C63FF]" />
                   Recommended for You
                 </h2>
               </div>
@@ -276,7 +276,7 @@ const PracticeHub = () => {
                     {recommendations.exercises.map((exercise) => (
                       <div 
                         key={exercise._id}
-                        className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-purple-500 dark:hover:border-purple-500 transition-colors cursor-pointer"
+                        className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#EEF2FF]0 dark:hover:border-[#EEF2FF]0 transition-colors cursor-pointer"
                         onClick={() => handleStartExercise(exercise)}
                       >
                         <div className="flex items-start justify-between mb-2">
@@ -328,7 +328,7 @@ const PracticeHub = () => {
                     </div>
                     <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-[#EEF2FF]0 to-pink-500 transition-all duration-500"
                         style={{ width: `${level}%` }}
                       />
                     </div>
@@ -367,7 +367,7 @@ const PracticeHub = () => {
           )}
 
           {recommendations?.improvementPlan?.thirtyDayChallenge && (
-            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
+            <Card className="bg-gradient-to-br from-[#EEF2FF] to-pink-50 dark:from-[#2A3A7A]/20 dark:to-pink-900/20">
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
                 <Award className="w-5 h-5 mr-2" />
                 30-Day Challenge
@@ -381,7 +381,7 @@ const PracticeHub = () => {
                     key={index}
                     className="flex items-start space-x-2 text-sm"
                   >
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center font-bold text-purple-600 dark:text-purple-300">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#6C63FF]/10 dark:bg-[#4A42D8] flex items-center justify-center font-bold text-[#6C63FF] dark:text-[#6C63FF]/30">
                       {milestone.day}
                     </div>
                     <div className="flex-1">

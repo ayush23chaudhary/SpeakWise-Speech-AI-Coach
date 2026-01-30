@@ -11,7 +11,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#1E2A5A] to-[#2A3A7A] rounded-lg flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-lg">S</span>
               </div>
               <div>
@@ -55,22 +55,22 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
               <li>
-                <a href="#studio" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <a href="#studio" className="hover:text-[#1FB6A6] dark:hover:text-primary-400 transition-colors">
                   Performance Studio
                 </a>
               </li>
               <li>
-                <a href="#analysis" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <a href="#analysis" className="hover:text-[#1FB6A6] dark:hover:text-primary-400 transition-colors">
                   AI Analysis
                 </a>
               </li>
               <li>
-                <a href="#progress" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <a href="#progress" className="hover:text-[#1FB6A6] dark:hover:text-primary-400 transition-colors">
                   Progress Tracking
                 </a>
               </li>
               <li>
-                <a href="#tips" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <a href="#tips" className="hover:text-[#1FB6A6] dark:hover:text-primary-400 transition-colors">
                   Speech Tips
                 </a>
               </li>
@@ -84,22 +84,22 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
               <li>
-                <a href="/help" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <a href="/help" className="hover:text-[#1FB6A6] dark:hover:text-primary-400 transition-colors">
                   Help Center
                 </a>
               </li>
               <li>
-                <a href="/contact" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <a href="/contact" className="hover:text-[#1FB6A6] dark:hover:text-primary-400 transition-colors">
                   Contact Us
                 </a>
               </li>
               <li>
-                <a href="/privacy" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <a href="/privacy" className="hover:text-[#1FB6A6] dark:hover:text-primary-400 transition-colors">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="/terms" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <a href="/terms" className="hover:text-[#1FB6A6] dark:hover:text-primary-400 transition-colors">
                   Terms of Service
                 </a>
               </li>

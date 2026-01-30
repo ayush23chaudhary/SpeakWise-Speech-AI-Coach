@@ -164,7 +164,7 @@ const JourneyMode = () => {
       level: 3,
       title: 'Confidence Expert',
       icon: '🚀',
-      color: 'from-blue-600 to-blue-700',
+      color: 'from-[#1E2A5A] to-[#2A3A7A]',
       description: 'Speak with authority and structure',
       skills: [
         { name: 'Storytelling', completed: progress['storytelling'] || false },
@@ -202,7 +202,7 @@ const JourneyMode = () => {
       level: 4,
       title: 'Goal Master',
       icon: '🏆',
-      color: 'from-indigo-600 to-indigo-700',
+      color: 'from-[#1E2A5A] to-[#2A3A7A]',
       description: 'Specialized training for your objectives',
       skills: [
         { name: 'Goal-Specific Skills', completed: progress['goal_specific'] || false },
@@ -257,7 +257,7 @@ const JourneyMode = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1E2A5A] mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Loading your journey...</p>
         </div>
       </div>
@@ -272,7 +272,7 @@ const JourneyMode = () => {
         <div className="mb-8">
           <button
             onClick={() => navigate('/dashboard')}
-            className="text-blue-600 dark:text-blue-400 hover:underline mb-4 flex items-center gap-1"
+            className="text-[#1E2A5A] dark:text-blue-400 hover:underline mb-4 flex items-center gap-1"
           >
             ← Back to Dashboard
           </button>
@@ -334,7 +334,7 @@ const JourneyMode = () => {
             {/* Today's Tasks */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Target className="w-6 h-6 text-blue-600" />
+                <Target className="w-6 h-6 text-[#1E2A5A]" />
                 Today's Tasks
               </h3>
               
@@ -356,12 +356,12 @@ const JourneyMode = () => {
                         <div className={`rounded-lg p-3 ${
                           isCompleted
                             ? 'bg-green-100 dark:bg-green-900/30'
-                            : 'bg-blue-100 dark:bg-blue-900/30'
+                            : 'bg-[#EEF2FF] dark:bg-blue-900/30'
                         }`}>
                           {isCompleted ? (
                             <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
                           ) : (
-                            <TaskIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                            <TaskIcon className="w-6 h-6 text-[#1E2A5A] dark:text-blue-400" />
                           )}
                         </div>
                         
@@ -398,7 +398,7 @@ const JourneyMode = () => {
                         ) : (
                           <button
                             onClick={() => handleStartTask(task)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                            className="bg-[#1E2A5A] hover:bg-[#2A3A7A] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
                           >
                             Start
                             <ChevronRight className="w-4 h-4" />
@@ -436,9 +436,9 @@ const JourneyMode = () => {
 
             {/* AI Copilot Recommendation */}
             {currentTask && (
-              <div className="bg-indigo-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl p-6 border border-indigo-200 dark:border-indigo-800">
+              <div className="bg-[#EEF2FF] dark:from-[#1E2A5A]/20 dark:to-[#2A3A7A]/20 rounded-xl p-6 border border-[#1E2A5A]/20 dark:border-[#1E2A5A]">
                 <div className="flex items-start gap-4">
-                  <div className="bg-indigo-600 rounded-lg p-3 text-white">
+                  <div className="bg-[#1E2A5A] rounded-lg p-3 text-white">
                     <Sparkles className="w-6 h-6" />
                   </div>
                   <div className="flex-1">
@@ -450,7 +450,7 @@ const JourneyMode = () => {
                     </p>
                     <button
                       onClick={() => handleStartTask(currentTask)}
-                      className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+                      className="text-sm font-medium text-[#1E2A5A] dark:text-[#2A3A7A] hover:underline"
                     >
                       Start Recommended Task →
                     </button>
@@ -480,7 +480,7 @@ const JourneyMode = () => {
                       key={level.level}
                       className={`p-3 rounded-xl border-2 transition-all ${
                         isCurrent
-                          ? 'border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20'
+                          ? 'border-blue-500 bg-[#F8FAFF] dark:border-blue-400 dark:bg-blue-900/20'
                           : isUnlocked
                           ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20'
                           : 'border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50'
@@ -501,7 +501,7 @@ const JourneyMode = () => {
                           </div>
                         </div>
                         {isCurrent ? (
-                          <Play className="w-5 h-5 text-blue-600" />
+                          <Play className="w-5 h-5 text-[#1E2A5A]" />
                         ) : isUnlocked ? (
                           <CheckCircle className="w-5 h-5 text-green-600" />
                         ) : (
@@ -538,7 +538,7 @@ const JourneyMode = () => {
             </div>
 
             {/* Quick Tip */}
-            <div className="bg-blue-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
+            <div className="bg-[#F8FAFF] dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-6 border border-[#EEF2FF] dark:border-blue-800">
               <h4 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                 💡 Quick Tip
               </h4>

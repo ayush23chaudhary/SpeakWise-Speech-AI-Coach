@@ -5,11 +5,11 @@ import Card from '../common/Card';
 
 const GuestMode = ({ onLogin, onRegister }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <Card className="text-center">
           <div className="mx-auto w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mb-4">
-            <User className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+            <User className="w-8 h-8 text-[#1FB6A6] dark:text-primary-400" />
           </div>
           
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
@@ -50,11 +50,11 @@ const GuestMode = ({ onLogin, onRegister }) => {
             </div>
           </div>
           
-          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <div className="mt-6 p-4 bg-[#F8FAFF] dark:bg-blue-900/20 rounded-lg">
             <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">
               Guest Mode Benefits:
             </h3>
-            <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
+            <ul className="text-xs text-[#2A3A7A] dark:text-blue-300 space-y-1">
               <li>• Try speech recording and analysis</li>
               <li>• Experience all features</li>
               <li>• No account required</li>

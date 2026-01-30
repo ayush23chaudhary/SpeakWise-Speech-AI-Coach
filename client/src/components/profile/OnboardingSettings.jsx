@@ -119,7 +119,7 @@ const OnboardingSettings = () => {
     return (
       <div className="card">
         <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1FB6A6]"></div>
         </div>
       </div>
     );
@@ -131,7 +131,7 @@ const OnboardingSettings = () => {
       <div className="card">
         <div className="flex items-start space-x-3">
           <div className="flex-shrink-0 p-2 bg-primary-100 dark:bg-primary-900/20 rounded-lg">
-            <Target className="w-6 h-6 text-primary-600" />
+            <Target className="w-6 h-6 text-[#1FB6A6]" />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -159,14 +159,14 @@ const OnboardingSettings = () => {
                 onClick={() => setUserPurpose(option.value)}
                 className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
                   userPurpose === option.value
-                    ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                    ? 'border-[#1FB6A6] bg-[#F8FAFF] dark:bg-primary-900/20'
                     : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'
                 }`}
               >
                 <div className="flex items-start space-x-3">
                   <div className={`flex-shrink-0 p-2 rounded-lg ${
                     userPurpose === option.value
-                      ? 'bg-primary-600 text-white'
+                      ? 'bg-[#1FB6A6] text-white'
                       : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
                   }`}>
                     <Icon className="w-5 h-5" />
@@ -205,14 +205,14 @@ const OnboardingSettings = () => {
                 onClick={() => setStressTrigger(option.value)}
                 className={`p-4 rounded-lg border-2 text-left transition-all ${
                   stressTrigger === option.value
-                    ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                    ? 'border-[#1FB6A6] bg-[#F8FAFF] dark:bg-primary-900/20'
                     : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'
                 }`}
               >
                 <div className="flex items-start space-x-3">
                   <div className={`flex-shrink-0 p-2 rounded-lg ${
                     stressTrigger === option.value
-                      ? 'bg-primary-600 text-white'
+                      ? 'bg-[#1FB6A6] text-white'
                       : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
                   }`}>
                     <Icon className="w-5 h-5" />

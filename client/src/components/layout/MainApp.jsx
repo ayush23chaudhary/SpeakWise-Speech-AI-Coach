@@ -12,6 +12,7 @@ import InterviewSession from '../interview/InterviewSession';
 import InterviewReport from '../interview/InterviewReport';
 import InterviewHistory from '../interview/InterviewHistory';
 import JourneyMode from '../journey/JourneyMode';
+import Community from '../community/Community';
 import useThemeStore from '../../store/themeStore';
 
 const MainApp = () => {
@@ -75,6 +76,9 @@ const MainApp = () => {
         <Routes>
           {/* Journey Route */}
           <Route path="/journey" element={<JourneyMode />} />
+          
+          {/* Community Route */}
+          <Route path="/community" element={<Community />} />
           
           {/* Interview Routes */}
           <Route path="/interview" element={<InterviewSetup />} />

@@ -149,7 +149,7 @@ const AnalysisDashboard = ({ analysisData }) => {
           {/* Pace Gauge */}
           <div className="card">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-              <Target className="w-5 h-5 mr-2 text-primary-600" />
+              <Target className="w-5 h-5 mr-2 text-[#1FB6A6]" />
               Speaking Pace
             </h3>
             <div className="text-center">
@@ -171,7 +171,7 @@ const AnalysisDashboard = ({ analysisData }) => {
           {/* Filler Words Chart */}
           <div className="card">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-              <Zap className="w-5 h-5 mr-2 text-primary-600" />
+              <Zap className="w-5 h-5 mr-2 text-[#1FB6A6]" />
               Filler Words
             </h3>
             <ResponsiveContainer width="100%" height={200}>
@@ -215,7 +215,7 @@ const AnalysisDashboard = ({ analysisData }) => {
         {/* Interactive Transcript */}
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <Volume2 className="w-5 h-5 mr-2 text-primary-600" />
+            <Volume2 className="w-5 h-5 mr-2 text-[#1FB6A6]" />
             Interactive Transcript
           </h3>
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
@@ -336,16 +336,16 @@ const AnalysisDashboard = ({ analysisData }) => {
         </div>
 
         {/* Recommendations */}
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-purple-950/30 border-2 border-blue-200 dark:border-blue-800/50 shadow-lg hover:shadow-xl transition-all duration-300">
+        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#F8FAFF] via-[#EEF2FF] to-[#EEF2FF] dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-purple-950/30 border-2 border-[#EEF2FF] dark:border-blue-800/50 shadow-lg hover:shadow-xl transition-all duration-300">
           {/* Decorative background pattern */}
           <div className="absolute top-0 right-0 w-40 h-40 bg-blue-400/10 rounded-full -mr-20 -mt-20 blur-2xl"></div>
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-400/10 rounded-full -ml-16 -mb-16 blur-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#6C63FF]/10 rounded-full -ml-16 -mb-16 blur-2xl"></div>
           
           <div className="relative p-6">
             <div className="flex items-center mb-5">
               <div className="relative">
                 <div className="absolute inset-0 bg-blue-400 rounded-xl blur-lg opacity-50 animate-pulse"></div>
-                <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-[#F8FAFF]0 to-[#1E2A5A] flex items-center justify-center shadow-lg">
                   <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
@@ -355,7 +355,7 @@ const AnalysisDashboard = ({ analysisData }) => {
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                   💡 Action Steps
                 </h3>
-                <p className="text-xs text-blue-700 dark:text-blue-400 font-medium">
+                <p className="text-xs text-[#2A3A7A] dark:text-blue-400 font-medium">
                   Practical ways to improve
                 </p>
               </div>
@@ -365,12 +365,12 @@ const AnalysisDashboard = ({ analysisData }) => {
               {recommendations.map((recommendation, index) => (
                 <div
                   key={index}
-                  className="group relative p-4 rounded-xl bg-white dark:bg-gray-800/80 border border-blue-200 dark:border-blue-800/50 hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
+                  className="group relative p-4 rounded-xl bg-white dark:bg-gray-800/80 border border-[#EEF2FF] dark:border-blue-800/50 hover:border-blue-400 dark:hover:border-[#1E2A5A] hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
                 >
                   <div className="flex items-start">
                     <div className="relative flex-shrink-0 mt-0.5">
                       <div className="absolute inset-0 bg-blue-400 rounded-lg blur-md opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                      <div className="relative w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:scale-110 transition-transform duration-200">
+                      <div className="relative w-8 h-8 rounded-lg bg-gradient-to-br from-[#F8FAFF]0 to-[#1E2A5A] flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:scale-110 transition-transform duration-200">
                         <span className="text-sm font-bold text-white">
                           {index + 1}
                         </span>

@@ -17,11 +17,11 @@ const ProgressBar = ({
   };
 
   const colorClasses = {
-    primary: 'bg-primary-600',
+    primary: 'bg-[#1FB6A6]',
     success: 'bg-green-600',
     warning: 'bg-yellow-600',
     danger: 'bg-red-600',
-    info: 'bg-blue-600'
+    info: 'bg-[#1E2A5A]'
   };
 
   const animatedClass = animated ? 'animate-pulse' : '';

@@ -125,7 +125,7 @@ const InterviewHistory = () => {
   const getStatusBadge = (status) => {
     const badges = {
       'completed': 'bg-green-100 text-green-800',
-      'in_progress': 'bg-blue-100 text-blue-800',
+      'in_progress': 'bg-[#EEF2FF] text-blue-800',
       'generating': 'bg-yellow-100 text-yellow-800',
       'paused': 'bg-orange-100 text-orange-800'
     };
@@ -134,7 +134,7 @@ const InterviewHistory = () => {
 
   const getScoreColor = (score) => {
     if (score >= 85) return 'text-green-600 bg-green-50';
-    if (score >= 75) return 'text-blue-600 bg-blue-50';
+    if (score >= 75) return 'text-[#1E2A5A] bg-[#F8FAFF]';
     if (score >= 60) return 'text-yellow-600 bg-yellow-50';
     if (score >= 45) return 'text-orange-600 bg-orange-50';
     return 'text-red-600 bg-red-50';
@@ -148,9 +148,9 @@ const InterviewHistory = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#1E2A5A] mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading your interview history...</p>
         </div>
       </div>
@@ -158,7 +158,7 @@ const InterviewHistory = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -166,7 +166,7 @@ const InterviewHistory = () => {
             <h1 className="text-3xl font-bold text-gray-800">Interview History</h1>
             <button
               onClick={() => navigate('/dashboard/interview')}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors shadow-md"
+              className="flex items-center gap-2 px-4 py-2 bg-[#1FB6A6] hover:bg-primary-700 text-white rounded-lg transition-colors shadow-md"
             >
               <PlusCircle className="w-4 h-4" />
               <span className="hidden sm:inline">New Interview</span>
@@ -183,7 +183,7 @@ const InterviewHistory = () => {
                 <p className="text-gray-600 text-sm mb-1">Total Interviews</p>
                 <p className="text-3xl font-bold text-gray-800">{stats.total}</p>
               </div>
-              <FileText className="w-12 h-12 text-blue-500 opacity-20" />
+              <FileText className="w-12 h-12 text-[#1FB6A6] opacity-20" />
             </div>
           </div>
 
@@ -203,7 +203,7 @@ const InterviewHistory = () => {
                 <p className="text-gray-600 text-sm mb-1">Completed</p>
                 <p className="text-3xl font-bold text-gray-800">{stats.completed}</p>
               </div>
-              <Award className="w-12 h-12 text-purple-500 opacity-20" />
+              <Award className="w-12 h-12 text-[#EEF2FF]0 opacity-20" />
             </div>
           </div>
         </div>
@@ -272,7 +272,7 @@ const InterviewHistory = () => {
             </p>
             <Link
               to="/dashboard/interview"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] transition-colors"
             >
               <PlusCircle className="w-5 h-5" />
               Start New Interview
@@ -329,19 +329,19 @@ const InterviewHistory = () => {
                     <div className="grid grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                       <div className="text-center">
                         <p className="text-sm text-gray-600 mb-1">Speech</p>
-                        <p className="text-lg font-bold text-purple-600">
+                        <p className="text-lg font-bold text-[#6C63FF]">
                           {(interview.overallPerformance?.averageSpeechScore || 0).toFixed(0)}
                         </p>
                       </div>
                       <div className="text-center">
                         <p className="text-sm text-gray-600 mb-1">Content</p>
-                        <p className="text-lg font-bold text-indigo-600">
+                        <p className="text-lg font-bold text-[#1E2A5A]">
                           {(interview.overallPerformance?.averageContentScore || 0).toFixed(0)}
                         </p>
                       </div>
                       <div className="text-center">
                         <p className="text-sm text-gray-600 mb-1">Answered</p>
-                        <p className="text-lg font-bold text-blue-600">
+                        <p className="text-lg font-bold text-[#1E2A5A]">
                           {interview.answeredQuestions || 0}/{interview.totalQuestions || interview.questions?.length || 0}
                         </p>
                       </div>
@@ -353,7 +353,7 @@ const InterviewHistory = () => {
                     {interview.status === 'completed' ? (
                       <Link
                         to={`/dashboard/interview/${interview._id}/report`}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] transition-colors"
                       >
                         <Eye className="w-4 h-4" />
                         View Report
@@ -368,7 +368,7 @@ const InterviewHistory = () => {
                     ) : (
                       <Link
                         to={`/dashboard/interview/${interview._id}`}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] transition-colors"
                       >
                         <Eye className="w-4 h-4" />
                         View Details
@@ -405,7 +405,7 @@ const InterviewHistory = () => {
         <div className="mt-8 text-center">
           <Link
             to="/dashboard/interview"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] transition-colors font-medium"
           >
             <PlusCircle className="w-5 h-5" />
             Start New Interview

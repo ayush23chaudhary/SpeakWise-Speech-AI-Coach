@@ -38,8 +38,8 @@ const AchievementGrid = () => {
 
   const rarityColors = {
     common: 'from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700',
-    rare: 'from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600',
-    epic: 'from-purple-400 to-purple-500 dark:from-purple-500 dark:to-purple-600',
+    rare: 'from-blue-400 to-[#F8FAFF]0 dark:from-[#F8FAFF]0 dark:to-[#2A3A7A]',
+    epic: 'from-[#6C63FF] to-[#EEF2FF]0 dark:from-[#EEF2FF]0 dark:to-[#6C63FF]',
     legendary: 'from-amber-400 to-amber-500 dark:from-amber-500 dark:to-amber-600'
   };
 
@@ -52,7 +52,7 @@ const AchievementGrid = () => {
       {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">{earnedCount}/{achievements.length}</div>
+          <div className="text-3xl font-bold text-[#1FB6A6] dark:text-primary-400">{earnedCount}/{achievements.length}</div>
           <div className="text-gray-600 dark:text-gray-400">Achievements Unlocked</div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -75,7 +75,7 @@ const AchievementGrid = () => {
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded-lg capitalize transition-all duration-200 ${
               filter === f
-                ? 'bg-primary-600 text-white shadow-sm'
+                ? 'bg-[#1FB6A6] text-white shadow-sm'
                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
             }`}
           >
@@ -128,7 +128,7 @@ const AchievementGrid = () => {
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div
-                      className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-[#1FB6A6] h-2 rounded-full transition-all duration-300"
                       style={{ width: `${achievement.progress}%` }}
                     ></div>
                   </div>
@@ -139,8 +139,8 @@ const AchievementGrid = () => {
               <div className="flex items-center justify-between text-sm">
                 <span className={`px-2 py-1 rounded text-xs font-medium ${
                   achievement.rarity === 'common' ? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300' :
-                  achievement.rarity === 'rare' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' :
-                  achievement.rarity === 'epic' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300' :
+                  achievement.rarity === 'rare' ? 'bg-[#EEF2FF] dark:bg-blue-900/30 text-[#2A3A7A] dark:text-blue-300' :
+                  achievement.rarity === 'epic' ? 'bg-[#6C63FF]/10 dark:bg-[#2A3A7A]/30 text-[#5A52E8] dark:text-[#6C63FF]/30' :
                   'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
                 }`}>
                   {achievement.rarity}

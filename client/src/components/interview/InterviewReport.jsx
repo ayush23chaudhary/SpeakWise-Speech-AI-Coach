@@ -93,7 +93,7 @@ const InterviewReport = () => {
   const getRecommendationColor = (recommendation) => {
     const colors = {
       'strong_yes': 'bg-green-100 text-green-800 border-green-300',
-      'yes': 'bg-blue-100 text-blue-800 border-blue-300',
+      'yes': 'bg-[#EEF2FF] text-blue-800 border-blue-300',
       'maybe': 'bg-yellow-100 text-yellow-800 border-yellow-300',
       'no': 'bg-orange-100 text-orange-800 border-orange-300',
       'strong_no': 'bg-red-100 text-red-800 border-red-300'
@@ -114,7 +114,7 @@ const InterviewReport = () => {
 
   const getScoreColor = (score) => {
     if (score >= 85) return 'text-green-600';
-    if (score >= 75) return 'text-blue-600';
+    if (score >= 75) return 'text-[#1E2A5A]';
     if (score >= 60) return 'text-yellow-600';
     if (score >= 45) return 'text-orange-600';
     return 'text-red-600';
@@ -136,9 +136,9 @@ const InterviewReport = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#1E2A5A] mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading your interview report...</p>
         </div>
       </div>
@@ -148,14 +148,14 @@ const InterviewReport = () => {
   // Show generating state while AI creates comprehensive report
   if (generating) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] flex items-center justify-center p-4">
         <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#1E2A5A] mx-auto mb-4"></div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Generating Your Report</h2>
           <p className="text-gray-600 mb-4">
             Our AI is analyzing your complete interview performance and creating a comprehensive report with actionable feedback...
           </p>
-          <div className="bg-blue-50 rounded-lg p-4 text-left text-sm text-gray-700">
+          <div className="bg-[#F8FAFF] rounded-lg p-4 text-left text-sm text-gray-700">
             <p className="mb-2">✨ Analyzing all {session?.totalQuestions || 'your'} answers</p>
             <p className="mb-2">📊 Evaluating content quality and delivery</p>
             <p className="mb-2">💡 Creating "Say This Instead" suggestions</p>
@@ -171,14 +171,14 @@ const InterviewReport = () => {
 
   if (error || !session || !report) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] flex items-center justify-center p-4">
         <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
           <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Report Not Available</h2>
           <p className="text-gray-600 mb-6">{error || 'Unable to load your interview report.'}</p>
           <button
             onClick={() => navigate('/dashboard/interview/history')}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-6 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] transition-colors"
           >
             View All Interviews
           </button>
@@ -260,7 +260,7 @@ const InterviewReport = () => {
   const weaknesses = getWeaknessesArray();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8FAFF] to-[#EEF2FF] py-8 px-4">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
@@ -316,7 +316,7 @@ const InterviewReport = () => {
                 <div 
                   className={`h-2 rounded-full transition-all duration-500 ${
                     overallScore >= 80 ? 'bg-green-600' : 
-                    overallScore >= 60 ? 'bg-blue-600' : 
+                    overallScore >= 60 ? 'bg-[#1E2A5A]' : 
                     'bg-amber-500'
                   }`}
                   style={{ width: `${overallScore}%` }}
@@ -384,7 +384,7 @@ const InterviewReport = () => {
                 <div className="bg-gray-50 rounded-lg p-4 leading-relaxed">
                   <p className="text-gray-700 whitespace-pre-line">{report.executiveSummary}</p>
                 </div>
-                <div className="mt-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-600">
+                <div className="mt-4 p-3 bg-[#F8FAFF] rounded-lg border-l-4 border-[#1E2A5A]">
                   <p className="text-sm text-gray-700">
                     <strong>My assessment:</strong>{' '}
                     {overallScore >= 80 ? "You demonstrated strong capabilities. With this level of preparation, you're ready for your target interviews." : 
@@ -479,7 +479,7 @@ const InterviewReport = () => {
                   const example = exampleMatch ? exampleMatch[1] : null;
                   
                   return (
-                    <div key={index} className="border-l-4 border-gray-300 pl-4 hover:border-blue-600 transition-colors">
+                    <div key={index} className="border-l-4 border-gray-300 pl-4 hover:border-[#1E2A5A] transition-colors">
                       <div className="flex items-start gap-3">
                         <div className="p-2 bg-gray-100 rounded-lg mt-1">
                           <Icon className="w-5 h-5 text-gray-600" />
@@ -496,13 +496,13 @@ const InterviewReport = () => {
                             {mainText}
                           </p>
                           {example && (
-                            <div className="bg-blue-50 rounded-lg p-3 mt-2 border-l-2 border-blue-400">
+                            <div className="bg-[#F8FAFF] rounded-lg p-3 mt-2 border-l-2 border-blue-400">
                               <p className="text-xs text-gray-600 mb-1 font-semibold">Example:</p>
                               <p className="text-sm text-gray-700 italic">"{example}"</p>
                             </div>
                           )}
                           {!example && index === 0 && (
-                            <div className="bg-blue-50 rounded-lg p-3 mt-2 border-l-2 border-blue-400">
+                            <div className="bg-[#F8FAFF] rounded-lg p-3 mt-2 border-l-2 border-blue-400">
                               <p className="text-xs text-gray-600 mb-1 font-semibold">How to do this:</p>
                               <p className="text-sm text-gray-700">Set aside 30 minutes today. Focus on one specific area from your weaknesses. Practice answering related questions out loud and record yourself.</p>
                             </div>
@@ -542,7 +542,7 @@ const InterviewReport = () => {
                       <div className="flex items-center gap-4">
                         <div className={`w-14 h-14 rounded-lg flex items-center justify-center font-semibold text-white text-lg shadow-sm ${
                           questionScore >= 80 ? 'bg-green-600' :
-                          questionScore >= 60 ? 'bg-blue-600' :
+                          questionScore >= 60 ? 'bg-[#1E2A5A]' :
                           questionScore >= 40 ? 'bg-amber-500' : 
                           'bg-red-500'
                         }`}>
@@ -567,7 +567,7 @@ const InterviewReport = () => {
                       <div className="px-6 py-4 space-y-4 bg-white">
                         <div>
                           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Question</p>
-                          <p className="text-gray-700 bg-blue-50 p-3 rounded-lg">{q.question}</p>
+                          <p className="text-gray-700 bg-[#F8FAFF] p-3 rounded-lg">{q.question}</p>
                         </div>
                         
                         {q.userAnswer?.transcript && (
@@ -671,7 +671,7 @@ const InterviewReport = () => {
                         </div>
                         
                         {q.userAnswer?.feedback && (
-                          <div className="bg-blue-50 rounded-lg p-4 border-l-2 border-blue-500">
+                          <div className="bg-[#F8FAFF] rounded-lg p-4 border-l-2 border-blue-500">
                             <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">My Feedback</p>
                             <p className="text-sm text-gray-700 leading-relaxed">{q.userAnswer.feedback}</p>
                           </div>
@@ -726,7 +726,7 @@ const InterviewReport = () => {
                   );
                 })}
               </div>
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <div className="mt-4 p-3 bg-[#F8FAFF] rounded-lg">
                 <p className="text-xs text-gray-700">
                   <strong>Where to start:</strong> I recommend beginning with resource #1, as it directly addresses your primary development area.
                 </p>
@@ -770,7 +770,7 @@ const InterviewReport = () => {
         <div className="flex gap-4 justify-center">
           <Link
             to="/dashboard/interview"
-            className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="px-8 py-3 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] transition-colors font-medium"
           >
             Start New Interview
           </Link>

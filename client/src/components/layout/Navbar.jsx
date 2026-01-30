@@ -61,7 +61,7 @@ const Navbar = () => {
             onClick={handleLogoClick}
             className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
           >
-            <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#1E2A5A] to-[#2A3A7A] rounded-lg flex items-center justify-center shadow-lg">
               <Mic className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -89,7 +89,7 @@ const Navbar = () => {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 dark:from-primary-600 dark:to-primary-700 dark:hover:from-primary-700 dark:hover:to-primary-800 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 border border-primary-400 dark:border-primary-600 group"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#F8FAFF]0 to-[#17A293] hover:from-[#1FB6A6] hover:to-[#17A293] dark:from-[#1FB6A6] dark:to-[#17A293] dark:hover:from-[#17A293] dark:hover:to-primary-800 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 border border-primary-400 dark:border-[#1FB6A6] group"
               >
                 {/* Profile Picture or Initials with Ring Effect */}
                 <div className="relative">
@@ -107,7 +107,7 @@ const Navbar = () => {
                     )}
                   </div>
                   {/* Pulsing indicator */}
-                  <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-primary-600 animate-pulse"></div>
+                  <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-[#1FB6A6] animate-pulse"></div>
                 </div>
                 
                 {/* First Name */}
@@ -122,7 +122,7 @@ const Navbar = () => {
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 z-50 overflow-hidden">
                   {/* User Info Section */}
-                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20">
+                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-[#F8FAFF] to-[#F8FAFF] dark:from-primary-900/20 dark:to-blue-900/20">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">
                       {user?.name}
                     </p>
@@ -134,7 +134,7 @@ const Navbar = () => {
                   {/* Menu Items */}
                   <button
                     onClick={handleProfileClick}
-                    className="w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 dark:from-primary-600 dark:to-primary-700 dark:hover:from-primary-700 dark:hover:to-primary-800 transition-all duration-200 group border-b border-primary-400 dark:border-primary-600"
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium text-white bg-gradient-to-r from-[#F8FAFF]0 to-[#17A293] hover:from-[#1FB6A6] hover:to-[#17A293] dark:from-[#1FB6A6] dark:to-[#17A293] dark:hover:from-[#17A293] dark:hover:to-primary-800 transition-all duration-200 group border-b border-primary-400 dark:border-[#1FB6A6]"
                   >
                     <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/20 group-hover:bg-white/30 transition-all">
                       <User className="w-4 h-4" />

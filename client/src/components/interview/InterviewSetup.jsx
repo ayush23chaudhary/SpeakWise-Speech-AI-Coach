@@ -123,7 +123,7 @@ const InterviewSetup = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="p-3 bg-primary-100 dark:bg-primary-900/20 rounded-xl">
-              <Briefcase className="w-8 h-8 text-primary-600" />
+              <Briefcase className="w-8 h-8 text-[#1FB6A6]" />
             </div>
             <div className="flex-1">
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -137,7 +137,7 @@ const InterviewSetup = () => {
           <div className="flex gap-2">
             <button
               onClick={() => navigate('/dashboard')}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-[#1FB6A6] hover:bg-primary-700 text-white rounded-lg transition-colors"
             >
               <Home className="w-4 h-4" />
               <span className="hidden sm:inline">Back to Home</span>
@@ -159,14 +159,14 @@ const InterviewSetup = () => {
           <React.Fragment key={s}>
             <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${
               step >= s 
-                ? 'bg-primary-600 text-white' 
+                ? 'bg-[#1FB6A6] text-white' 
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
             }`}>
               {s}
             </div>
             {s < 3 && (
               <div className={`w-16 h-1 ${
-                step > s ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
+                step > s ? 'bg-[#1FB6A6]' : 'bg-gray-200 dark:bg-gray-700'
               }`} />
             )}
           </React.Fragment>
@@ -189,14 +189,14 @@ const InterviewSetup = () => {
                   onClick={() => setFormData({ ...formData, interviewType: type.value })}
                   className={`p-4 rounded-lg border-2 text-left transition-all ${
                     formData.interviewType === type.value
-                      ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                      ? 'border-[#1FB6A6] bg-[#F8FAFF] dark:bg-primary-900/20'
                       : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'
                   }`}
                 >
                   <div className="flex items-start space-x-3">
                     <div className={`p-2 rounded-lg ${
                       formData.interviewType === type.value
-                        ? 'bg-primary-600 text-white'
+                        ? 'bg-[#1FB6A6] text-white'
                         : 'bg-gray-100 dark:bg-gray-800 text-gray-600'
                     }`}>
                       <Icon className="w-5 h-5" />
@@ -317,7 +317,7 @@ const InterviewSetup = () => {
                   onClick={() => setFormData({ ...formData, experienceLevel: level.value })}
                   className={`p-3 rounded-lg border-2 text-sm transition-all ${
                     formData.experienceLevel === level.value
-                      ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20 text-primary-900 dark:text-primary-100'
+                      ? 'border-[#1FB6A6] bg-[#F8FAFF] dark:bg-primary-900/20 text-primary-900 dark:text-primary-100'
                       : 'border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-primary-300'
                   }`}
                 >
@@ -339,7 +339,7 @@ const InterviewSetup = () => {
                   onClick={() => setFormData({ ...formData, difficulty: diff.value })}
                   className={`p-3 rounded-lg border-2 transition-all ${
                     formData.difficulty === diff.value
-                      ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                      ? 'border-[#1FB6A6] bg-[#F8FAFF] dark:bg-primary-900/20'
                       : 'border-gray-200 dark:border-gray-700 hover:border-primary-300'
                   }`}
                 >
@@ -368,7 +368,7 @@ const InterviewSetup = () => {
                 onChange={(e) => setFormData({ ...formData, numberOfQuestions: parseInt(e.target.value) })}
                 className="flex-1"
               />
-              <span className="text-2xl font-bold text-primary-600 w-16 text-center">
+              <span className="text-2xl font-bold text-[#1FB6A6] w-16 text-center">
                 {formData.numberOfQuestions}
               </span>
             </div>
@@ -377,9 +377,9 @@ const InterviewSetup = () => {
             </p>
           </div>
 
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+          <div className="bg-[#F8FAFF] dark:bg-blue-900/20 border border-[#EEF2FF] dark:border-blue-800 rounded-lg p-4">
             <div className="flex items-start space-x-3">
-              <Sparkles className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <Sparkles className="w-5 h-5 text-[#1E2A5A] flex-shrink-0 mt-0.5" />
               <div>
                 <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">
                   AI-Powered Analysis

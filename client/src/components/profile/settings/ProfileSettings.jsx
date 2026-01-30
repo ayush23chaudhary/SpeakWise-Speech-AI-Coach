@@ -149,7 +149,7 @@ const ProfileSettings = ({ user, updateUser }) => {
               onClick={() => setActiveSection(section.id)}
               className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
                 activeSection === section.id
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-[#1E2A5A] text-white'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
@@ -179,7 +179,7 @@ const ProfileSettings = ({ user, updateUser }) => {
                     className="h-20 w-20 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="h-20 w-20 rounded-full bg-blue-100 flex items-center justify-center text-2xl">
+                  <div className="h-20 w-20 rounded-full bg-[#EEF2FF] flex items-center justify-center text-2xl">
                     {personalInfo.name?.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -286,7 +286,7 @@ const ProfileSettings = ({ user, updateUser }) => {
             <button
               onClick={savePersonalInfo}
               disabled={loading}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="w-full px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] disabled:opacity-50"
             >
               {loading ? 'Saving...' : 'Save Changes'}
             </button>
@@ -365,7 +365,7 @@ const ProfileSettings = ({ user, updateUser }) => {
                     onClick={() => toggleFocusArea(area)}
                     className={`px-3 py-2 rounded-lg capitalize transition-colors ${
                       preferences.focusAreas.includes(area)
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-[#1E2A5A] text-white'
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                     }`}
                   >
@@ -383,7 +383,7 @@ const ProfileSettings = ({ user, updateUser }) => {
               <button
                 onClick={() => setPreferences({ ...preferences, notificationsEnabled: !preferences.notificationsEnabled })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  preferences.notificationsEnabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                  preferences.notificationsEnabled ? 'bg-[#1E2A5A]' : 'bg-gray-200 dark:bg-gray-700'
                 }`}
               >
                 <span
@@ -410,7 +410,7 @@ const ProfileSettings = ({ user, updateUser }) => {
             <button
               onClick={savePreferences}
               disabled={loading}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="w-full px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] disabled:opacity-50"
             >
               {loading ? 'Saving...' : 'Save Preferences'}
             </button>
@@ -449,7 +449,7 @@ const ProfileSettings = ({ user, updateUser }) => {
               <button
                 onClick={() => setPrivacySettings({ ...privacySettings, showStats: !privacySettings.showStats })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  privacySettings.showStats ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                  privacySettings.showStats ? 'bg-[#1E2A5A]' : 'bg-gray-200 dark:bg-gray-700'
                 }`}
               >
                 <span
@@ -471,7 +471,7 @@ const ProfileSettings = ({ user, updateUser }) => {
               <button
                 onClick={() => setPrivacySettings({ ...privacySettings, showBadges: !privacySettings.showBadges })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  privacySettings.showBadges ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                  privacySettings.showBadges ? 'bg-[#1E2A5A]' : 'bg-gray-200 dark:bg-gray-700'
                 }`}
               >
                 <span
@@ -485,7 +485,7 @@ const ProfileSettings = ({ user, updateUser }) => {
             <button
               onClick={savePrivacySettings}
               disabled={loading}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="w-full px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] disabled:opacity-50"
             >
               {loading ? 'Saving...' : 'Save Privacy Settings'}
             </button>
@@ -541,7 +541,7 @@ const ProfileSettings = ({ user, updateUser }) => {
             <button
               onClick={saveSocialLinks}
               disabled={loading}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="w-full px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] disabled:opacity-50"
             >
               {loading ? 'Saving...' : 'Save Social Links'}
             </button>

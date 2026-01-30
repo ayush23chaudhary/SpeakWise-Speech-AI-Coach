@@ -16,7 +16,9 @@ import {
   Calendar,
   BarChart3,
   AlertCircle,
-  TrendingDown
+  TrendingDown,
+  Users,
+  BookOpen
 } from 'lucide-react';
 import api from '../../utils/api';
 import useAuthStore from '../../store/authStore';
@@ -53,8 +55,9 @@ const NewDashboardHome = ({ setActiveTab }) => {
   const fetchDashboardData = async () => {
     try {
       // Fetch user stats, journey progress, and speech history
-      const [progressRes, interviewRes, speechRes] = await Promise.all([
+      const [progressRes, journeyRes, interviewRes, speechRes] = await Promise.all([
         api.get('/user/progress'),
+        api.get('/journey/progress'),
         api.get('/interview/history'),
         api.get('/speech/history')
       ]);
@@ -81,20 +84,33 @@ const NewDashboardHome = ({ setActiveTab }) => {
 
       setWeaknesses(topWeaknesses);
 
-      // Format progress data for chart
-      const chartData = speechReports.slice(0, 10).reverse().map(report => ({
-        date: new Date(report.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        score: report.overallScore || 0
+      // Format progress data for chart - combine interviews and speech reports
+      const allSessions = [
+        ...completed.map(i => ({
+          date: new Date(i.createdAt),
+          score: i.overallScore || 0
+        })),
+        ...speechReports.map(r => ({
+          date: new Date(r.createdAt),
+          score: r.overallScore || 0
+        }))
+      ]
+      .sort((a, b) => a.date - b.date)
+      .slice(-10)
+      .map(s => ({
+        date: s.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        score: s.score
       }));
 
-      setProgressData(chartData);
+      setProgressData(allSessions);
+
+      // Use journey progress for accurate average score from completed tasks
+      const avgScore = journeyRes.data?.avgScore || 0;
 
       setStats({
         streak: user?.currentStreak || 0,
         totalSessions: interviews.length + speechReports.length,
-        avgScore: completed.length > 0
-          ? completed.reduce((sum, i) => sum + (i.overallScore || 0), 0) / completed.length
-          : 0,
+        avgScore: avgScore, // Use the correct average from journey tasks
         level: progressRes.data?.level || 1,
         progress: progressRes.data?.progress || 0
       });
@@ -177,8 +193,8 @@ const NewDashboardHome = ({ setActiveTab }) => {
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="flex items-center gap-3">
-                <div className="bg-blue-100 dark:bg-blue-900/30 rounded-lg p-2">
-                  <BarChart3 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <div className="bg-[#EEF2FF] dark:bg-blue-900/30 rounded-lg p-2">
+                  <BarChart3 className="w-5 h-5 text-[#1E2A5A] dark:text-blue-400" />
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -191,8 +207,8 @@ const NewDashboardHome = ({ setActiveTab }) => {
 
             <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="flex items-center gap-3">
-                <div className="bg-purple-100 dark:bg-purple-900/30 rounded-lg p-2">
-                  <Target className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                <div className="bg-[#6C63FF]/10 dark:bg-[#2A3A7A]/30 rounded-lg p-2">
+                  <Target className="w-5 h-5 text-[#6C63FF] dark:text-[#6C63FF]" />
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -314,7 +330,7 @@ const NewDashboardHome = ({ setActiveTab }) => {
                             Level {lvl.level}: {lvl.title}
                           </h4>
                           {stats.level === lvl.level && (
-                            <span className="text-xs bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 px-2 py-0.5 rounded-full font-medium">
+                            <span className="text-xs bg-[#EEF2FF] text-[#1E2A5A] dark:bg-blue-900/30 dark:text-blue-400 px-2 py-0.5 rounded-full font-medium">
                               Current
                             </span>
                           )}
@@ -322,7 +338,7 @@ const NewDashboardHome = ({ setActiveTab }) => {
                         <p className="text-sm text-gray-600 dark:text-gray-400">{lvl.description}</p>
                       </div>
                       {stats.level === lvl.level && (
-                        <ChevronRight className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        <ChevronRight className="w-5 h-5 text-[#1E2A5A] dark:text-blue-400" />
                       )}
                     </div>
                   </div>
@@ -336,7 +352,7 @@ const NewDashboardHome = ({ setActiveTab }) => {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-blue-600" />
+                      <TrendingUp className="w-5 h-5 text-[#1E2A5A]" />
                       Your Progress Trajectory
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
@@ -345,7 +361,7 @@ const NewDashboardHome = ({ setActiveTab }) => {
                   </div>
                   <button
                     onClick={() => setActiveTab('progress')}
-                    className="flex items-center gap-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                    className="flex items-center gap-1 px-4 py-2 bg-[#1E2A5A] hover:bg-[#2A3A7A] text-white text-sm font-medium rounded-lg transition-colors"
                   >
                     Detailed Analysis
                     <ChevronRight className="w-4 h-4" />
@@ -412,7 +428,7 @@ const NewDashboardHome = ({ setActiveTab }) => {
                 {/* Daily Practice - Navigate to Scenario Training */}
                 <button
                   onClick={() => setActiveTab('practice')}
-                  className="w-full p-4 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:from-indigo-500 hover:to-indigo-600 transition-all shadow-md"
+                  className="w-full p-4 rounded-lg bg-gradient-to-r from-[#1E2A5A] to-[#2A3A7A] text-white hover:from-[#EEF2FF]0 hover:to-[#1E2A5A] transition-all shadow-md"
                 >
                   <div className="flex items-center gap-3">
                     <MessageCircle className="w-6 h-6" />
@@ -495,6 +511,38 @@ const NewDashboardHome = ({ setActiveTab }) => {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Community Hub - New Section */}
+            <div className="bg-gradient-to-br from-[#EEF2FF] to-[#F8FAFF] dark:from-[#2A3A7A]/20 dark:to-blue-900/20 rounded-2xl shadow-lg p-6 border border-[#6C63FF]/20 dark:border-[#4A42D8]">
+              <div className="flex items-center gap-2 mb-3">
+                <Users className="w-5 h-5 text-[#6C63FF] dark:text-[#6C63FF]" />
+                <h3 className="font-bold text-gray-900 dark:text-white">Community Hub</h3>
+              </div>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
+                Learn from expert articles, tips, and techniques
+              </p>
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                  <BookOpen className="w-4 h-4 text-[#1E2A5A] dark:text-blue-400" />
+                  <span>6 Expert Articles</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                  <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  <span>Proven Techniques</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                  <MessageCircle className="w-4 h-4 text-[#6C63FF] dark:text-[#6C63FF]" />
+                  <span>Community Tips</span>
+                </div>
+              </div>
+              <Link
+                to="/dashboard/community"
+                className="block w-full px-4 py-3 bg-gradient-to-r from-[#6C63FF] to-[#2A3A7A] hover:from-[#5A52E8] hover:to-[#2A3A7A] text-white text-center font-medium rounded-lg transition-all shadow-md"
+              >
+                Explore Community
+                <ChevronRight className="inline w-4 h-4 ml-1" />
+              </Link>
             </div>
           </div>
         </div>

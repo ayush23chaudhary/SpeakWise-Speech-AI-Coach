@@ -91,7 +91,7 @@ const GoalTracker = () => {
   const getPriorityColor = (priority) => {
     const colors = {
       low: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
-      medium: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+      medium: 'bg-[#EEF2FF] text-[#2A3A7A] dark:bg-blue-900 dark:text-blue-300',
       high: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
     };
     return colors[priority] || colors.medium;
@@ -113,7 +113,7 @@ const GoalTracker = () => {
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] transition-colors"
         >
           + New Goal
         </button>
@@ -128,7 +128,7 @@ const GoalTracker = () => {
             <p className="text-gray-600 dark:text-gray-400">No active goals yet</p>
             <button
               onClick={() => setShowModal(true)}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="mt-4 px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A]"
             >
               Create Your First Goal
             </button>
@@ -283,7 +283,7 @@ const GoalTracker = () => {
               <button
                 onClick={createGoal}
                 disabled={!newGoal.title || !newGoal.targetDate}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 bg-[#1E2A5A] text-white rounded-lg hover:bg-[#2A3A7A] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Create Goal
               </button>
@@ -315,7 +315,7 @@ const GoalCard = ({ goal, onDelete }) => {
   const getPriorityColor = (priority) => {
     const colors = {
       low: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
-      medium: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+      medium: 'bg-[#EEF2FF] text-[#2A3A7A] dark:bg-blue-900 dark:text-blue-300',
       high: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
     };
     return colors[priority] || colors.medium;
@@ -352,7 +352,7 @@ const GoalCard = ({ goal, onDelete }) => {
         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
           <div
             className={`h-3 rounded-full transition-all ${
-              isCompleted ? 'bg-green-500' : 'bg-blue-600'
+              isCompleted ? 'bg-green-500' : 'bg-[#1E2A5A]'
             }`}
             style={{ width: `${Math.min(progress, 100)}%` }}
           ></div>

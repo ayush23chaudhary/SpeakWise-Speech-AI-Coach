@@ -9,7 +9,7 @@ const DetailedMetricsOverview = ({ metrics }) => {
       icon: MessageCircle,
       description: 'How clearly you articulated your words',
       color: 'primary',
-      gradient: 'from-primary-400 to-primary-500',
+      gradient: 'from-[#1FB6A6] to-[#F8FAFF]0',
       bgLight: 'bg-gray-50',
       bgDark: 'dark:bg-gray-800/50',
       textColor: 'text-gray-700 dark:text-gray-200',
@@ -21,7 +21,7 @@ const DetailedMetricsOverview = ({ metrics }) => {
       icon: Award,
       description: 'Your speaking confidence and assertiveness',
       color: 'primary',
-      gradient: 'from-primary-400 to-primary-500',
+      gradient: 'from-[#1FB6A6] to-[#F8FAFF]0',
       bgLight: 'bg-gray-50',
       bgDark: 'dark:bg-gray-800/50',
       textColor: 'text-gray-700 dark:text-gray-200',
@@ -33,7 +33,7 @@ const DetailedMetricsOverview = ({ metrics }) => {
       icon: Zap,
       description: 'Smoothness and flow of your speech',
       color: 'primary',
-      gradient: 'from-primary-400 to-primary-500',
+      gradient: 'from-[#1FB6A6] to-[#F8FAFF]0',
       bgLight: 'bg-gray-50',
       bgDark: 'dark:bg-gray-800/50',
       textColor: 'text-gray-700 dark:text-gray-200',
@@ -45,7 +45,7 @@ const DetailedMetricsOverview = ({ metrics }) => {
       icon: Target,
       description: 'Your speaking speed and rhythm',
       color: 'primary',
-      gradient: 'from-primary-400 to-primary-500',
+      gradient: 'from-[#1FB6A6] to-[#F8FAFF]0',
       bgLight: 'bg-gray-50',
       bgDark: 'dark:bg-gray-800/50',
       textColor: 'text-gray-700 dark:text-gray-200',
@@ -57,7 +57,7 @@ const DetailedMetricsOverview = ({ metrics }) => {
       icon: Volume2,
       description: 'Quality and variation in your voice',
       color: 'primary',
-      gradient: 'from-primary-400 to-primary-500',
+      gradient: 'from-[#1FB6A6] to-[#F8FAFF]0',
       bgLight: 'bg-gray-50',
       bgDark: 'dark:bg-gray-800/50',
       textColor: 'text-gray-700 dark:text-gray-200',
@@ -66,8 +66,8 @@ const DetailedMetricsOverview = ({ metrics }) => {
   ];
 
   const getScoreLabel = (score) => {
-    if (score >= 90) return { label: 'Excellent', icon: TrendingUp, color: 'text-primary-600 dark:text-primary-400' };
-    if (score >= 80) return { label: 'Very Good', icon: TrendingUp, color: 'text-primary-600 dark:text-primary-400' };
+    if (score >= 90) return { label: 'Excellent', icon: TrendingUp, color: 'text-[#1FB6A6] dark:text-primary-400' };
+    if (score >= 80) return { label: 'Very Good', icon: TrendingUp, color: 'text-[#1FB6A6] dark:text-primary-400' };
     if (score >= 70) return { label: 'Good', icon: TrendingUp, color: 'text-gray-600 dark:text-gray-400' };
     if (score >= 60) return { label: 'Fair', icon: Minus, color: 'text-gray-600 dark:text-gray-400' };
     if (score >= 50) return { label: 'Needs Work', icon: TrendingDown, color: 'text-gray-500 dark:text-gray-500' };
@@ -75,7 +75,7 @@ const DetailedMetricsOverview = ({ metrics }) => {
   };
 
   const getProgressBarColor = (score) => {
-    if (score >= 80) return 'bg-gradient-to-r from-primary-400 to-primary-500';
+    if (score >= 80) return 'bg-gradient-to-r from-[#1FB6A6] to-[#F8FAFF]0';
     if (score >= 60) return 'bg-gradient-to-r from-gray-400 to-gray-500';
     return 'bg-gradient-to-r from-gray-400 to-gray-500';
   };
@@ -85,7 +85,7 @@ const DetailedMetricsOverview = ({ metrics }) => {
       {/* Header */}
       <div className="text-center mb-6">
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center justify-center">
-          <Award className="w-7 h-7 mr-2 text-primary-600 dark:text-primary-400" />
+          <Award className="w-7 h-7 mr-2 text-[#1FB6A6] dark:text-primary-400" />
           Performance Metrics Overview
         </h3>
         <p className="text-gray-600 dark:text-gray-400">
@@ -171,7 +171,7 @@ const DetailedMetricsOverview = ({ metrics }) => {
             </p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">
+            <div className="text-3xl font-bold text-[#1FB6A6] dark:text-primary-400">
               {Math.round(
                 metricsData.reduce((sum, m) => sum + m.score, 0) / metricsData.length
               )}

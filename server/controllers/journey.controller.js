@@ -182,16 +182,30 @@ exports.completeTask = async (req, res) => {
     const completedCount = user.journeyProgress.completedTasks.length;
     const avgScore = user.journeyProgress.completedTasks.reduce((sum, t) => sum + (t.score || 0), 0) / completedCount || 0;
     
+    // Count unique tasks completed per level
+    const level1Tasks = ['intro', 'read-aloud', 'repeat'];
+    const level2Tasks = ['describe-picture', 'topic-talk', 'sentence-reform'];
+    const level3Tasks = ['story-time', 'opinion', 'structure'];
+    
+    const completedLevel1 = user.journeyProgress.completedTasks.filter(t => level1Tasks.includes(t.taskId)).length;
+    const completedLevel2 = user.journeyProgress.completedTasks.filter(t => level2Tasks.includes(t.taskId)).length;
+    const completedLevel3 = user.journeyProgress.completedTasks.filter(t => level3Tasks.includes(t.taskId)).length;
+    
     let shouldLevelUp = false;
     let newLevel = user.journeyProgress.currentLevel;
 
-    if (user.journeyProgress.currentLevel === 1 && completedCount >= 5 && avgScore >= 65) {
+    // Level 1 to 2: Complete all 3 Foundation tasks with avg score >= 65
+    if (user.journeyProgress.currentLevel === 1 && completedLevel1 >= 3 && avgScore >= 65) {
       shouldLevelUp = true;
       newLevel = 2;
-    } else if (user.journeyProgress.currentLevel === 2 && completedCount >= 10 && avgScore >= 75) {
+    } 
+    // Level 2 to 3: Complete all 3 Clarity tasks with avg score >= 70
+    else if (user.journeyProgress.currentLevel === 2 && completedLevel2 >= 3 && avgScore >= 70) {
       shouldLevelUp = true;
       newLevel = 3;
-    } else if (user.journeyProgress.currentLevel === 3 && completedCount >= 15 && avgScore >= 85) {
+    } 
+    // Level 3 to 4: Complete all 3 Confidence tasks with avg score >= 75
+    else if (user.journeyProgress.currentLevel === 3 && completedLevel3 >= 3 && avgScore >= 75) {
       shouldLevelUp = true;
       newLevel = 4;
     }
@@ -258,18 +272,17 @@ exports.updateLevel = async (req, res) => {
 // Helper functions
 
 function calculateLevelProgress(sessionsCount, avgScore, currentLevel) {
-  // Define requirements for each level
+  // Define requirements for each level (3 tasks per level)
   const requirements = {
-    1: { sessions: 5, score: 65 },
-    2: { sessions: 10, score: 75 },
-    3: { sessions: 15, score: 85 },
+    1: { sessions: 3, score: 65 },
+    2: { sessions: 3, score: 70 },
+    3: { sessions: 3, score: 75 },
     4: { sessions: 999, score: 100 } // Max level
   };
   
   if (currentLevel >= 4) return 100;
   
-  const nextReq = requirements[currentLevel + 1] || requirements[4];
-  const currentReq = requirements[currentLevel];
+  const nextReq = requirements[currentLevel] || requirements[1];
   
   // Calculate progress based on both sessions and score
   const sessionProgress = Math.min(100, (sessionsCount / nextReq.sessions) * 100);
@@ -281,9 +294,9 @@ function calculateLevelProgress(sessionsCount, avgScore, currentLevel) {
 
 function getNextMilestone(level, sessions, avgScore) {
   const milestones = {
-    1: { sessions: 5, score: 65, description: 'Complete 5 sessions with 65+ avg score to reach Level 2' },
-    2: { sessions: 10, score: 75, description: 'Complete 10 sessions with 75+ avg score to reach Level 3' },
-    3: { sessions: 15, score: 85, description: 'Complete 15 sessions with 85+ avg score to reach Level 4' },
+    1: { sessions: 3, score: 65, description: 'Complete all 3 Foundation tasks with 65+ avg score to reach Level 2' },
+    2: { sessions: 3, score: 70, description: 'Complete all 3 Clarity tasks with 70+ avg score to reach Level 3' },
+    3: { sessions: 3, score: 75, description: 'Complete all 3 Confidence tasks with 75+ avg score to reach Level 4' },
     4: { sessions: 999, score: 100, description: 'You\'ve reached the maximum level! Keep practicing to maintain mastery.' }
   };
   

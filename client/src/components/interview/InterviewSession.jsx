@@ -393,7 +393,7 @@ const InterviewSession = () => {
       <div className="max-w-4xl mx-auto">
         <div className="card">
           <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="w-12 h-12 text-primary-600 animate-spin mb-4" />
+            <Loader2 className="w-12 h-12 text-[#1FB6A6] animate-spin mb-4" />
             <p className="text-gray-600 dark:text-gray-400 mb-2">
               {session?.status === 'generating' 
                 ? '🤖 AI is generating personalized questions...' 
@@ -528,7 +528,7 @@ const InterviewSession = () => {
         <div className="card">
           <div className="text-center py-12">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-100 dark:bg-primary-900/20 rounded-full mb-6">
-              <Volume2 className="w-10 h-10 text-primary-600 animate-pulse" />
+              <Volume2 className="w-10 h-10 text-[#1FB6A6] animate-pulse" />
             </div>
             
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
@@ -540,32 +540,32 @@ const InterviewSession = () => {
               <div className="max-w-2xl mx-auto mb-6">
                 <div className="flex items-center justify-center space-x-2 mb-4">
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
-                    <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                    <div className="w-2 h-2 bg-[#F8FAFF]0 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-[#F8FAFF]0 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-[#F8FAFF]0 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
                   </div>
-                  <span className="text-sm text-primary-600 dark:text-primary-400 font-medium">
+                  <span className="text-sm text-[#1FB6A6] dark:text-primary-400 font-medium">
                     AI Speaking...
                   </span>
                 </div>
                 
                 <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
                   {displayText}
-                  <span className="inline-block w-1 h-6 bg-primary-500 ml-1 animate-pulse"></span>
+                  <span className="inline-block w-1 h-6 bg-[#F8FAFF]0 ml-1 animate-pulse"></span>
                 </p>
               </div>
             )}
             
             {!displayText && (
               <div className="flex items-center justify-center space-x-3 mb-6">
-                <Loader2 className="w-6 h-6 text-primary-600 animate-spin" />
+                <Loader2 className="w-6 h-6 text-[#1FB6A6] animate-spin" />
                 <span className="text-gray-600 dark:text-gray-400">
                   Preparing your interview...
                 </span>
               </div>
             )}
             
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 max-w-xl mx-auto">
+            <div className="bg-[#F8FAFF] dark:bg-blue-900/20 border border-[#EEF2FF] dark:border-blue-800 rounded-lg p-4 max-w-xl mx-auto">
               <p className="text-sm text-blue-800 dark:text-blue-200">
                 🎧 <strong>Tip:</strong> Make sure your audio is on and your microphone is ready
               </p>
@@ -595,16 +595,16 @@ const InterviewSession = () => {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto mb-8">
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-1">Type</p>
+              <div className="bg-[#F8FAFF] dark:bg-blue-900/20 rounded-lg p-4">
+                <p className="text-sm text-[#1E2A5A] dark:text-blue-400 font-medium mb-1">Type</p>
                 <p className="text-lg font-bold text-blue-900 dark:text-blue-100">
                   {session.interviewType.replace(/_/g, ' ')}
                 </p>
               </div>
               
-              <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4">
-                <p className="text-sm text-purple-600 dark:text-purple-400 font-medium mb-1">Level</p>
-                <p className="text-lg font-bold text-purple-900 dark:text-purple-100 capitalize">
+              <div className="bg-[#EEF2FF] dark:bg-[#2A3A7A]/20 rounded-lg p-4">
+                <p className="text-sm text-[#6C63FF] dark:text-[#6C63FF] font-medium mb-1">Level</p>
+                <p className="text-lg font-bold text-[#2A3A7A] dark:text-[#6C63FF]/10 capitalize">
                   {session.experienceLevel}
                 </p>
               </div>
@@ -666,7 +666,7 @@ const InterviewSession = () => {
               )}
             </p>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6 text-left max-w-2xl mx-auto">
+            <div className="bg-[#F8FAFF] dark:bg-blue-900/20 border border-[#EEF2FF] dark:border-blue-800 rounded-lg p-4 mb-6 text-left max-w-2xl mx-auto">
               <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
                 📋 Interview Details
               </h3>
@@ -722,7 +722,7 @@ const InterviewSession = () => {
               </p>
               <div className="w-64 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mt-2">
                 <div 
-                  className="h-full bg-primary-600 rounded-full transition-all duration-300"
+                  className="h-full bg-[#1FB6A6] rounded-full transition-all duration-300"
                   style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
                 />
               </div>
@@ -740,7 +740,7 @@ const InterviewSession = () => {
         {/* Question Card */}
         <div className="card">
           <div className="mb-4 flex items-center justify-between">
-            <span className="inline-block px-3 py-1 bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-200 rounded-full text-xs font-medium">
+            <span className="inline-block px-3 py-1 bg-[#6C63FF]/10 dark:bg-[#2A3A7A]/20 text-[#4A42D8] dark:text-[#6C63FF]/20 rounded-full text-xs font-medium">
               {currentQuestion.category.replace(/_/g, ' ')}
             </span>
             
@@ -760,7 +760,7 @@ const InterviewSession = () => {
             >
               {voiceEnabled ? (
                 <>
-                  <Volume2 className="w-4 h-4 text-primary-600" />
+                  <Volume2 className="w-4 h-4 text-[#1FB6A6]" />
                   <span className="text-xs text-gray-700 dark:text-gray-300">Voice On</span>
                 </>
               ) : (
@@ -788,17 +788,17 @@ const InterviewSession = () => {
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2 mb-2">
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
-                      <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                      <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                      <div className="w-2 h-2 bg-[#F8FAFF]0 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-[#F8FAFF]0 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-[#F8FAFF]0 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
                     </div>
-                    <span className="text-xs text-primary-600 dark:text-primary-400 font-medium">
+                    <span className="text-xs text-[#1FB6A6] dark:text-primary-400 font-medium">
                       AI Speaking...
                     </span>
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white leading-relaxed">
                     {displayText}
-                    <span className="inline-block w-1 h-6 bg-primary-500 ml-1 animate-pulse"></span>
+                    <span className="inline-block w-1 h-6 bg-[#F8FAFF]0 ml-1 animate-pulse"></span>
                   </h2>
                 </div>
               ) : (
@@ -820,11 +820,11 @@ const InterviewSession = () => {
                 title="Play question"
               >
                 {isAudioLoading ? (
-                  <Loader2 className="w-5 h-5 text-primary-600 animate-spin" />
+                  <Loader2 className="w-5 h-5 text-[#1FB6A6] animate-spin" />
                 ) : isAudioPlaying ? (
-                  <Pause className="w-5 h-5 text-primary-600" />
+                  <Pause className="w-5 h-5 text-[#1FB6A6]" />
                 ) : (
-                  <Play className="w-5 h-5 text-primary-600" />
+                  <Play className="w-5 h-5 text-[#1FB6A6]" />
                 )}
               </button>
             )}
@@ -950,7 +950,7 @@ const InterviewSession = () => {
         {analyzing && (
           <div className="card">
             <div className="flex items-center space-x-4">
-              <Loader2 className="w-6 h-6 text-primary-600 animate-spin" />
+              <Loader2 className="w-6 h-6 text-[#1FB6A6] animate-spin" />
               <div>
                 <p className="font-medium text-gray-900 dark:text-white">
                   Analyzing your answer...
@@ -971,7 +971,7 @@ const InterviewSession = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Score Header */}
-        <div className="card bg-gradient-to-r from-primary-600 to-primary-700 text-white">
+        <div className="card bg-gradient-to-r from-[#1FB6A6] to-[#17A293] text-white">
           <div className="text-center py-6">
             <p className="text-sm opacity-90 mb-2">Question {questionNumber} Score</p>
             <div className="text-6xl font-bold mb-2">
@@ -1002,7 +1002,7 @@ const InterviewSession = () => {
                 </div>
                 <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-blue-500"
+                    className="h-full bg-[#F8FAFF]0"
                     style={{ width: `${currentFeedback.speechAnalysis.confidenceScore}%` }}
                   />
                 </div>
@@ -1028,7 +1028,7 @@ const InterviewSession = () => {
                 </div>
                 <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-purple-500"
+                    className="h-full bg-[#EEF2FF]0"
                     style={{ width: `${currentFeedback.speechAnalysis.pacingScore}%` }}
                   />
                 </div>
@@ -1055,7 +1055,7 @@ const InterviewSession = () => {
                 </div>
                 <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-blue-500"
+                    className="h-full bg-[#F8FAFF]0"
                     style={{ width: `${currentFeedback.contentAnalysis.relevanceScore}%` }}
                   />
                 </div>
@@ -1081,7 +1081,7 @@ const InterviewSession = () => {
                 </div>
                 <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-purple-500"
+                    className="h-full bg-[#EEF2FF]0"
                     style={{ width: `${currentFeedback.contentAnalysis.structureScore}%` }}
                   />
                 </div>
@@ -1145,7 +1145,7 @@ const InterviewSession = () => {
         </div>
 
         {/* Improvement Tips */}
-        <div className="card bg-blue-50 dark:bg-blue-900/20">
+        <div className="card bg-[#F8FAFF] dark:bg-blue-900/20">
           <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">
             💡 How to Improve This Answer
           </h4>

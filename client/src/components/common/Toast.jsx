@@ -35,7 +35,7 @@ const Toast = ({
       case 'warning':
         return <AlertCircle className="w-5 h-5 text-yellow-500" />;
       default:
-        return <Info className="w-5 h-5 text-blue-500" />;
+        return <Info className="w-5 h-5 text-[#1FB6A6]" />;
     }
   };
 
@@ -50,7 +50,7 @@ const Toast = ({
       case 'warning':
         return `${baseStyles} bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800`;
       default:
-        return `${baseStyles} bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800`;
+        return `${baseStyles} bg-[#F8FAFF] dark:bg-blue-900/20 border-[#EEF2FF] dark:border-blue-800`;
     }
   };
 

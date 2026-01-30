@@ -11,11 +11,11 @@ const GuestPrompt = ({
   className = ""
 }) => {
   return (
-    <Card className={`bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20 border-primary-200 dark:border-primary-800 ${className}`}>
+    <Card className={`bg-gradient-to-r from-[#F8FAFF] to-[#F8FAFF] dark:from-primary-900/20 dark:to-blue-900/20 border-primary-200 dark:border-primary-800 ${className}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mr-4">
-            <Save className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+            <Save className="w-6 h-6 text-[#1FB6A6] dark:text-primary-400" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-primary-800 dark:text-primary-200">
@@ -25,7 +25,7 @@ const GuestPrompt = ({
               {description}
             </p>
             {showProgress && (
-              <div className="mt-2 flex items-center text-xs text-primary-600 dark:text-primary-400">
+              <div className="mt-2 flex items-center text-xs text-[#1FB6A6] dark:text-primary-400">
                 <TrendingUp className="w-3 h-3 mr-1" />
                 Track your improvement over time
               </div>

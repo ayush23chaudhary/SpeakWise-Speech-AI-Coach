@@ -44,14 +44,14 @@ const EvaluationModeSelector = ({ selectedMode, onModeChange, className = '' }) 
               onClick={() => onModeChange(mode.id)}
               className={`p-4 rounded-lg border-2 transition-all text-left group hover:scale-105 ${
                 isSelected
-                  ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20 shadow-lg'
+                  ? 'border-[#1FB6A6] bg-[#F8FAFF] dark:bg-primary-900/20 shadow-lg'
                   : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 hover:shadow-md'
               }`}
             >
               <div className="flex items-start space-x-3 mb-3">
                 <div className={`p-2 rounded-lg ${
                   isSelected 
-                    ? 'bg-primary-600 text-white' 
+                    ? 'bg-[#1FB6A6] text-white' 
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/30'
                 }`}>
                   <Icon className="w-6 h-6" />
@@ -61,7 +61,7 @@ const EvaluationModeSelector = ({ selectedMode, onModeChange, className = '' }) 
                     {mode.label}
                   </h4>
                   {isSelected && (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-600 text-white">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#1FB6A6] text-white">
                       Selected
                     </span>
                   )}
@@ -75,7 +75,7 @@ const EvaluationModeSelector = ({ selectedMode, onModeChange, className = '' }) 
               <div className="flex items-center text-xs font-medium">
                 <span className={`${
                   isSelected 
-                    ? 'text-primary-600 dark:text-primary-400' 
+                    ? 'text-[#1FB6A6] dark:text-primary-400' 
                     : 'text-gray-500 dark:text-gray-500'
                 }`}>
                   {mode.riskFocus}

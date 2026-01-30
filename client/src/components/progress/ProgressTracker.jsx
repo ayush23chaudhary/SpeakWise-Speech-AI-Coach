@@ -254,7 +254,7 @@ const ProgressTracker = () => {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
         <div className="max-w-6xl mx-auto">
           <div className="card text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1FB6A6] mx-auto mb-4"></div>
             <p className="text-gray-600 dark:text-gray-400">Loading your communication trajectory...</p>
           </div>
         </div>
@@ -350,7 +350,7 @@ const ProgressTracker = () => {
               <div className="card">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-2">
-                    <Target className="w-5 h-5 text-blue-600" />
+                    <Target className="w-5 h-5 text-[#1E2A5A]" />
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Confidence Stability
                     </span>
@@ -392,7 +392,7 @@ const ProgressTracker = () => {
               <div className="card">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-2">
-                    <Award className="w-5 h-5 text-purple-600" />
+                    <Award className="w-5 h-5 text-[#6C63FF]" />
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                       Consistency Score
                     </span>
@@ -449,7 +449,7 @@ const ProgressTracker = () => {
               <div className="card">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                    <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+                    <TrendingUp className="w-5 h-5 mr-2 text-[#1E2A5A]" />
                     Fluency Trajectory
                   </h3>
                   <span className={`text-sm font-medium ${getTrendColor(trends.fluencyImprovement)}`}>
@@ -478,7 +478,7 @@ const ProgressTracker = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                <Activity className="w-5 h-5 mr-2 text-primary-600" />
+                <Activity className="w-5 h-5 mr-2 text-[#1FB6A6]" />
                 Evaluator Confidence Evolution
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
@@ -541,10 +541,10 @@ const ProgressTracker = () => {
 
         {/* Insight: What Evaluators See */}
         {trends && (
-          <div className="card bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-l-4 border-blue-600">
+          <div className="card bg-gradient-to-r from-[#F8FAFF] to-[#EEF2FF] dark:from-blue-900/20 dark:to-[#2A3A7A]/20 border-l-4 border-[#1E2A5A]">
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0 mt-1">
-                <Award className="w-6 h-6 text-blue-600" />
+                <Award className="w-6 h-6 text-[#1E2A5A]" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -566,12 +566,12 @@ const ProgressTracker = () => {
                     </span>
                   )}
                   {trends.confidenceImprovement > 5 && (
-                    <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded-full">
+                    <span className="px-3 py-1 bg-[#EEF2FF] dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded-full">
                       ✓ Confidence strengthening
                     </span>
                   )}
                   {trends.consistency >= 80 && (
-                    <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded-full">
+                    <span className="px-3 py-1 bg-[#6C63FF]/10 dark:bg-[#2A3A7A]/30 text-[#4A42D8] dark:text-[#6C63FF]/30 text-xs rounded-full">
                       ✓ High consistency
                     </span>
                   )}

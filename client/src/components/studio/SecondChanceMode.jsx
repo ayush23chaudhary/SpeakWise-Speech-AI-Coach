@@ -42,7 +42,7 @@ const SecondChanceMode = ({ firstAttemptReport, onSecondAttempt }) => {
       case 'success':
         return <CheckCircle className="w-5 h-5 text-green-600" />;
       case 'positive':
-        return <TrendingUp className="w-5 h-5 text-blue-600" />;
+        return <TrendingUp className="w-5 h-5 text-[#1E2A5A]" />;
       case 'warning':
         return <AlertCircle className="w-5 h-5 text-orange-600" />;
       case 'info':
@@ -57,7 +57,7 @@ const SecondChanceMode = ({ firstAttemptReport, onSecondAttempt }) => {
       case 'success':
         return 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
       case 'positive':
-        return 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800';
+        return 'bg-[#F8FAFF] dark:bg-blue-900/20 border-[#EEF2FF] dark:border-blue-800';
       case 'warning':
         return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800';
       case 'info':
@@ -85,7 +85,7 @@ const SecondChanceMode = ({ firstAttemptReport, onSecondAttempt }) => {
       <div className="card">
         <div className="flex items-start space-x-4">
           <div className="flex-shrink-0 mt-1">
-            <RefreshCw className="w-8 h-8 text-primary-600" />
+            <RefreshCw className="w-8 h-8 text-[#1FB6A6]" />
           </div>
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -111,11 +111,11 @@ const SecondChanceMode = ({ firstAttemptReport, onSecondAttempt }) => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="card bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20">
+      <div className="card bg-gradient-to-r from-[#F8FAFF] to-[#F8FAFF] dark:from-primary-900/20 dark:to-blue-900/20">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
-              <RefreshCw className="w-6 h-6 mr-2 text-primary-600" />
+              <RefreshCw className="w-6 h-6 mr-2 text-[#1FB6A6]" />
               Second-Chance Comparison
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -123,7 +123,7 @@ const SecondChanceMode = ({ firstAttemptReport, onSecondAttempt }) => {
             </p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">
+            <div className="text-3xl font-bold text-[#1FB6A6] dark:text-primary-400">
               {comparison.changes.overallImprovement > 0 ? '+' : ''}
               {comparison.changes.overallImprovement}
             </div>
@@ -198,7 +198,7 @@ const SecondChanceMode = ({ firstAttemptReport, onSecondAttempt }) => {
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">Score</span>
               <div className="flex items-center space-x-2">
-                <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+                <span className="text-2xl font-bold text-[#1FB6A6] dark:text-primary-400">
                   {comparison.after.score}
                 </span>
                 {comparison.changes.overallImprovement !== 0 && (
@@ -329,10 +329,10 @@ const SecondChanceMode = ({ firstAttemptReport, onSecondAttempt }) => {
       </div>
 
       {/* Human Benchmark Context */}
-      <div className="card bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border-l-4 border-purple-600">
+      <div className="card bg-gradient-to-r from-[#EEF2FF] to-[#F8FAFF] dark:from-[#2A3A7A]/20 dark:to-blue-900/20 border-l-4 border-[#6C63FF]">
         <div className="flex items-start space-x-4">
           <div className="flex-shrink-0 mt-1">
-            <Clock className="w-6 h-6 text-purple-600" />
+            <Clock className="w-6 h-6 text-[#6C63FF]" />
           </div>
           <div className="flex-1">
             <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
@@ -346,7 +346,7 @@ const SecondChanceMode = ({ firstAttemptReport, onSecondAttempt }) => {
                 <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
                   Max Pause
                 </div>
-                <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
+                <div className="text-lg font-bold text-[#6C63FF] dark:text-[#6C63FF]">
                   {comparison.humanBenchmark.thresholds.maxPause}
                 </div>
               </div>
@@ -354,7 +354,7 @@ const SecondChanceMode = ({ firstAttemptReport, onSecondAttempt }) => {
                 <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
                   Attention Span
                 </div>
-                <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
+                <div className="text-lg font-bold text-[#6C63FF] dark:text-[#6C63FF]">
                   {comparison.humanBenchmark.thresholds.attentionSpan}
                 </div>
               </div>
@@ -362,7 +362,7 @@ const SecondChanceMode = ({ firstAttemptReport, onSecondAttempt }) => {
                 <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
                   Hesitation Tolerance
                 </div>
-                <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
+                <div className="text-lg font-bold text-[#6C63FF] dark:text-[#6C63FF]">
                   {comparison.humanBenchmark.thresholds.hesitationTolerance}
                 </div>
               </div>
