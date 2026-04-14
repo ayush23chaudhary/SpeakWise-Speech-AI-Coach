@@ -1,0 +1,41 @@
+# SpeakWise Robots.txt - Optimized for SEO
+# Allow search engines to index public pages, block private/internal pages
+
+User-agent: *
+Allow: /
+Allow: /sitemap.xml
+
+# Block search engine crawling of logged-in/private pages
+Disallow: /dashboard
+Disallow: /journey
+Disallow: /practice
+Disallow: /profile
+Disallow: /auth
+Disallow: /login
+Disallow: /signup
+Disallow: /api
+
+# Block specific parameters that create duplicate content
+Disallow: /*?utm_source=
+Disallow: /*?utm_medium=
+Disallow: /*?utm_campaign=
+
+# Slow down aggressive crawlers
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+# Allow Google Bot full access
+User-agent: Googlebot
+Allow: /
+
+# Specify sitemap location
+Sitemap: https://speakwise.vercel.app/sitemap.xml
+
+# Crawl delay for other bots (in seconds)
+Crawl-delay: 1
