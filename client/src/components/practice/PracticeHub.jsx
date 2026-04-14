@@ -10,7 +10,11 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import Badge from '../common/Badge';
 import ExerciseModal from './ExerciseModal';
 import api from '../../utils/api';
-import { trackPracticeSessionStart } from '../../utils/analytics';
+import { 
+  trackPracticeSessionStart,
+  trackFunnelStep1_LoggedIn,
+  trackFunnelStep2_ClickedPractice
+} from '../../utils/analytics';
 
 const PracticeHub = () => {
   const [loading, setLoading] = useState(true);
@@ -23,6 +27,8 @@ const PracticeHub = () => {
 
   useEffect(() => {
     fetchPracticeHubData();
+    // Track Funnel Step 1: User Logged In (viewing practice hub)
+    trackFunnelStep1_LoggedIn();
   }, []);
 
   const fetchPracticeHubData = async () => {
@@ -49,6 +55,11 @@ const PracticeHub = () => {
   const handleStartExercise = (exercise) => {
     // Track practice session start
     trackPracticeSessionStart(exercise.type || exercise.category || 'general');
+    // Track Funnel Step 2: Clicked Practice / Exercise Started
+    trackFunnelStep2_ClickedPractice(
+      exercise.type || exercise.category || 'general',
+      exercise._id
+    );
     setSelectedExercise(exercise);
     setShowExerciseModal(true);
   };

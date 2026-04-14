@@ -100,6 +100,112 @@ export const trackCustomEvent = (eventName, eventData) => {
   console.log(`📈 Custom event tracked: ${eventName}`, eventData);
 };
 
+// ============================================
+// FUNNEL TRACKING: Practice Session Workflow
+// ============================================
+// Funnel: Logged In -> Clicked Practice -> Recorded Audio -> Viewed Results
+
+/**
+ * Step 1: User Logged In
+ * Fires when user successfully authenticates
+ */
+export const trackFunnelStep1_LoggedIn = () => {
+  ReactGA.event('funnel_step_1_logged_in', {
+    event_category: 'funnel',
+    event_label: 'practice_workflow',
+    step: 1,
+    value: 1
+  });
+  console.log('📊 Funnel Step 1: User Logged In');
+};
+
+/**
+ * Step 2: Clicked Practice / Exercise Started
+ * Fires when user clicks on a practice exercise
+ */
+export const trackFunnelStep2_ClickedPractice = (exerciseType, exerciseId) => {
+  ReactGA.event('funnel_step_2_clicked_practice', {
+    event_category: 'funnel',
+    event_label: 'practice_workflow',
+    step: 2,
+    exercise_type: exerciseType || 'general',
+    exercise_id: exerciseId || 'unknown',
+    value: 1
+  });
+  console.log('🎤 Funnel Step 2: User Clicked Practice', { exerciseType, exerciseId });
+};
+
+/**
+ * Step 3: Started Recording / Recorded Audio
+ * Fires when user actually starts recording their speech
+ */
+export const trackFunnelStep3_RecordedAudio = (exerciseType, exerciseId, recordingLength = 0) => {
+  ReactGA.event('funnel_step_3_recorded_audio', {
+    event_category: 'funnel',
+    event_label: 'practice_workflow',
+    step: 3,
+    exercise_type: exerciseType || 'general',
+    exercise_id: exerciseId || 'unknown',
+    recording_length_seconds: recordingLength,
+    value: 1
+  });
+  console.log('🎙️ Funnel Step 3: User Recorded Audio', { exerciseType, recordingLength });
+};
+
+/**
+ * Step 4: Viewed Results / AI Feedback Received
+ * Fires when user views the analysis/feedback results
+ */
+export const trackFunnelStep4_ViewedResults = (exerciseType, exerciseId, analysisScore = null) => {
+  ReactGA.event('funnel_step_4_viewed_results', {
+    event_category: 'funnel',
+    event_label: 'practice_workflow',
+    step: 4,
+    exercise_type: exerciseType || 'general',
+    exercise_id: exerciseId || 'unknown',
+    analysis_score: analysisScore || 0,
+    value: 1
+  });
+  console.log('✅ Funnel Step 4: User Viewed Results', { exerciseType, analysisScore });
+};
+
+/**
+ * Funnel Drop-off: User Abandoned During Practice
+ * Fires when user closes modal or navigates away during practice
+ */
+export const trackFunnelDropOff = (fromStep, exerciseType, reason = 'abandoned') => {
+  ReactGA.event('funnel_drop_off', {
+    event_category: 'funnel',
+    event_label: 'practice_workflow',
+    dropped_from_step: fromStep,
+    exercise_type: exerciseType || 'general',
+    drop_reason: reason, // 'microphone_error', 'analysis_failed', 'user_closed', 'network_error', 'abandoned'
+    value: 1
+  });
+  console.error('❌ Funnel Drop-off: User abandoned at step', fromStep, 'Reason:', reason);
+};
+
+/**
+ * Funnel Completion: Full Workflow Completed
+ * Fires when user successfully completes entire workflow
+ */
+export const trackFunnelCompletion = (exerciseType, exerciseId, totalTime, analysisScore) => {
+  ReactGA.event('funnel_complete', {
+    event_category: 'funnel',
+    event_label: 'practice_workflow',
+    exercise_type: exerciseType || 'general',
+    exercise_id: exerciseId || 'unknown',
+    total_time_seconds: totalTime,
+    analysis_score: analysisScore || 0,
+    value: 1
+  });
+  console.log('🎉 Funnel Completed! User fully engaged in practice workflow', {
+    exerciseType,
+    totalTime,
+    analysisScore
+  });
+};
+
 export default {
   initializeGA,
   trackPageView,
@@ -111,5 +217,11 @@ export default {
   trackAIFeedbackGenerated,
   trackFeatureUsed,
   trackError,
-  trackCustomEvent
+  trackCustomEvent,
+  trackFunnelStep1_LoggedIn,
+  trackFunnelStep2_ClickedPractice,
+  trackFunnelStep3_RecordedAudio,
+  trackFunnelStep4_ViewedResults,
+  trackFunnelDropOff,
+  trackFunnelCompletion
 };

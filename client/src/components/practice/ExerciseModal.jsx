@@ -5,7 +5,12 @@ import Card from '../common/Card';
 import Badge from '../common/Badge';
 import LoadingSpinner from '../common/LoadingSpinner';
 import api from '../../utils/api';
-import { trackPracticeSessionComplete } from '../../utils/analytics';
+import { 
+  trackPracticeSessionComplete,
+  trackFunnelStep3_RecordedAudio,
+  trackFunnelStep4_ViewedResults,
+  trackFunnelDropOff
+} from '../../utils/analytics';
 
 const ExerciseModal = ({ exercise, onClose, onComplete }) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -72,6 +77,12 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
       setIsRecording(true);
       setRecordingTime(0);
 
+      // Track Funnel Step 3: Recorded Audio - Record when recording starts
+      trackFunnelStep3_RecordedAudio(
+        exercise.type || exercise.category || 'general',
+        exercise._id
+      );
+
       // Start timer
       timerRef.current = setInterval(() => {
         setRecordingTime(prev => prev + 1);
@@ -79,6 +90,8 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
     } catch (error) {
       console.error('Error starting recording:', error);
       setError('Failed to access microphone. Please check permissions.');
+      // Track drop-off due to microphone error
+      trackFunnelDropOff(3, exercise.type || exercise.category || 'general', 'microphone_error');
     }
   };
 
@@ -133,15 +146,26 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
       if (response.data.success) {
         setAnalysisResult(response.data.data);
         
+        // Track Funnel Step 4: Viewed Results - User can now see AI feedback
+        trackFunnelStep4_ViewedResults(
+          exercise.type || exercise.category || 'general',
+          exercise._id,
+          response.data.data.metrics?.clarity || 0
+        );
+        
         // DON'T record completion here - let user review results first
         // They will click "Complete" button to save progress and close modal
       } else {
         setError('Analysis failed. Please try again.');
+        // Track drop-off due to analysis failure
+        trackFunnelDropOff(3, exercise.type || exercise.category || 'general', 'analysis_failed');
       }
     } catch (error) {
       console.error('❌ Error analyzing recording:', error);
       console.error('   - Error response:', error.response?.data);
       setError(error.response?.data?.message || 'Failed to analyze recording. Please try again.');
+      // Track drop-off due to network/analysis error
+      trackFunnelDropOff(3, exercise.type || exercise.category || 'general', 'network_error');
     } finally {
       setIsAnalyzing(false);
     }
@@ -247,6 +271,38 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
     return colors[category] || 'bg-gray-500';
   };
 
+  // Handle modal close and track funnel drop-off
+  const handleCloseModal = () => {
+    // Determine which step user is dropping off from
+    let dropOffStep = 2; // Default: dropped after clicking practice
+    let dropReason = 'user_closed';
+    
+    if (isRecording) {
+      dropOffStep = 3;
+      dropReason = 'user_closed_during_recording';
+    } else if (audioBlob && !analysisResult) {
+      dropOffStep = 3;
+      dropReason = 'closed_before_analysis';
+    } else if (analysisResult) {
+      dropOffStep = 4;
+      dropReason = 'closed_after_viewing_results';
+    } else if (error) {
+      dropOffStep = 3;
+      dropReason = 'closed_due_to_error';
+    }
+
+    // Only track drop-off if they didn't fully complete
+    if (!analysisResult || dropReason === 'closed_after_viewing_results') {
+      trackFunnelDropOff(
+        dropOffStep,
+        exercise.type || exercise.category || 'general',
+        dropReason
+      );
+    }
+    
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -267,7 +323,7 @@ const ExerciseModal = ({ exercise, onClose, onComplete }) => {
             <p className="text-gray-600 dark:text-gray-400">{exercise.description}</p>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleCloseModal}
             className="ml-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
           >
             <X className="w-6 h-6 text-gray-500" />
