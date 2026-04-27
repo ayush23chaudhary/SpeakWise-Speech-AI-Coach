@@ -194,3 +194,7 @@ app/dist/
 app/build/
 app/node_modules/ 
 server/client_secret*.json
+
+
+# Markdown files
+VERCEL_ANALYTICS.md

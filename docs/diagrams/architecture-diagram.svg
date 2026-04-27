@@ -4,7 +4,7 @@
     .title { font: 700 20px/1.2 'Inter', sans-serif; fill: #0f172a; }
     .label { font: 600 13px/1.2 'Inter', sans-serif; fill: #0f172a; }
     .small { font: 500 11px/1.2 'Inter', sans-serif; fill: #0f172a; }
-    .box { fill: #ffffff; stroke: #e6e9ef; stroke-width: 1.5; rx: 10; }
+    .box { fill: #ffffff; stroke: #e6e9ef; stroke-width: 1.5; }
     .box-azure { fill: #f1f8ff; stroke: #cfe6ff; }
     .box-green { fill: #f2fbf4; stroke: #c8f2d1; }
     .arrow { stroke: #9ca3af; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
