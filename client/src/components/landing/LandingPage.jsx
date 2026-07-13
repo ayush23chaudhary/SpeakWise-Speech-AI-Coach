@@ -370,11 +370,11 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section - Very light purple/blue gradient */}
-      <section id="features" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F8FAFF] via-[#F5F7FF] to-[#F0F4FF]">
+      <section id="features" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F8FAFF] via-[#F5F7FF] to-[#F0F4FF] overflow-hidden">
         {/* Subtle decorative elements */}
         <div className="absolute inset-0 overflow-hidden opacity-30">
-          <div className="absolute top-20 right-20 w-64 h-64 bg-[#6C63FF]/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 left-20 w-64 h-64 bg-[#1FB6A6]/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-20 right-20 w-64 h-64 bg-[#6C63FF] rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-blob"></div>
+          <div className="absolute bottom-20 left-20 w-64 h-64 bg-[#1FB6A6] rounded-full mix-blend-overlay filter blur-3xl opacity-15 animate-blob animation-delay-2000"></div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10">
@@ -413,11 +413,11 @@ const LandingPage = () => {
       </section>
 
       {/* Modes Section - Light lavender/violet tint */}
-      <section id="modes" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F0F4FF] via-[#EEF2FF] to-[#F8FAFF]">
+      <section id="modes" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F0F4FF] via-[#EEF2FF] to-[#F8FAFF] overflow-hidden">
         {/* Subtle decorative elements */}
         <div className="absolute inset-0 overflow-hidden opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#6C63FF]/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1E2A5A]/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#6C63FF] rounded-full mix-blend-overlay filter blur-3xl opacity-25 animate-blob"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1E2A5A] rounded-full mix-blend-overlay filter blur-3xl opacity-15 animate-blob animation-delay-2000"></div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10">
@@ -469,11 +469,11 @@ const LandingPage = () => {
       </section>
 
       {/* Benefits/Stats Section - Subtle off-white to pure white gradient */}
-      <section id="benefits" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F8FAFF] to-white">
+      <section id="benefits" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F8FAFF] to-white overflow-hidden">
         {/* Very subtle decorative elements */}
         <div className="absolute inset-0 overflow-hidden opacity-10">
-          <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-[#1FB6A6]/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/3 left-1/3 w-80 h-80 bg-[#6C63FF]/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-[#1FB6A6] rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-blob"></div>
+          <div className="absolute bottom-1/3 left-1/3 w-80 h-80 bg-[#6C63FF] rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10">
@@ -512,8 +512,14 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#F8FAFF]">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-[#F8FAFF] overflow-hidden">
+        {/* Subtle decorative elements */}
+        <div className="absolute inset-0 overflow-hidden opacity-20">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-[#1FB6A6] rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-blob"></div>
+          <div className="absolute bottom-10 right-10 w-72 h-72 bg-[#6C63FF] rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center space-x-2 px-4 py-2 bg-[#1FB6A6]/10 rounded-full mb-6">
             <MessageCircle className="w-4 h-4 text-[#1FB6A6]" />
             <span className="text-sm font-medium text-[#1FB6A6]">Start Your Journey Today</span>
