@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Mail, MapPin, Loader, CheckCircle, Send, MessageCircle } from 'lucide-react';
+import { Mail, MapPin, Loader, CheckCircle, Send } from 'lucide-react';
 import Button from '../common/Button';
 import Input from '../common/Input';
 import toast from 'react-hot-toast';
@@ -143,14 +143,6 @@ const ContactSection = () => {
     }
   };
 
-  /**
-   * Handle Google Business profile link
-   */
-  const handleGoogleBusiness = () => {
-    // Placeholder - replace with actual Google Business profile URL
-    toast.info('Google Business Profile link will be added soon');
-  };
-
   return (
     <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
       <div className="max-w-6xl mx-auto">
@@ -214,34 +206,8 @@ const ContactSection = () => {
                 </div>
               </div>
             </div>
-
-            {/* Google Business Card */}
-            <div className="bg-gradient-to-br from-[#FF6B6B]/10 to-[#EE5A52]/10 border border-[#FF6B6B]/20 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-[#FF6B6B] rounded-lg flex items-center justify-center">
-                    <MessageCircle className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                    Business Profile
-                  </h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleGoogleBusiness}
-                    className="text-[#FF6B6B] hover:text-[#EE5A52] p-0 text-left font-medium"
-                  >
-                    View us on Google
-                  </Button>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Check our business profile and reviews
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
+
 
           {/* Right Column - Contact Form */}
           <div className="lg:col-span-2">

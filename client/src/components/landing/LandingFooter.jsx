@@ -1,12 +1,8 @@
 import React from 'react';
 import { 
   Github, 
-  Twitter, 
   Mail, 
-  Linkedin, 
-  Instagram,
-  MapPin,
-  Phone
+  MapPin
 } from 'lucide-react';
 
 /**
@@ -20,62 +16,17 @@ const LandingFooter = () => {
     {
       icon: Github,
       label: 'GitHub',
-      href: 'https://github.com',
+      href: 'https://github.com/ayush23chaudhary/SpeakWise-Speech-AI-Coach',
       color: 'hover:text-gray-800 dark:hover:text-gray-200'
-    },
-    {
-      icon: Linkedin,
-      label: 'LinkedIn',
-      href: 'https://linkedin.com',
-      color: 'hover:text-blue-600 dark:hover:text-blue-400'
-    },
-    {
-      icon: Twitter,
-      label: 'Twitter',
-      href: 'https://twitter.com',
-      color: 'hover:text-blue-400'
-    },
-    {
-      icon: Instagram,
-      label: 'Instagram',
-      href: 'https://instagram.com',
-      color: 'hover:text-pink-600 dark:hover:text-pink-400'
     }
   ];
-
-  const footerLinks = {
-    Product: [
-      { label: 'Features', href: '#features' },
-      { label: 'Pricing', href: '#pricing' },
-      { label: 'FAQ', href: '#faq' },
-      { label: 'Changelog', href: '#changelog' }
-    ],
-    Company: [
-      { label: 'About', href: '#about' },
-      { label: 'Blog', href: '#blog' },
-      { label: 'Careers', href: '#careers' },
-      { label: 'Press', href: '#press' }
-    ],
-    Resources: [
-      { label: 'Documentation', href: '#docs' },
-      { label: 'API', href: '#api' },
-      { label: 'Community', href: '#community' },
-      { label: 'Support', href: '#support' }
-    ],
-    Legal: [
-      { label: 'Privacy Policy', href: '#privacy' },
-      { label: 'Terms of Service', href: '#terms' },
-      { label: 'Contact', href: '#contact' },
-      { label: 'Cookies', href: '#cookies' }
-    ]
-  };
 
   return (
     <footer className="bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-t border-gray-200 dark:border-gray-700">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Top Section - Brand & Contact Info */}
-        <div className="grid lg:grid-cols-2 gap-12 mb-16">
+        <div className="grid lg:grid-cols-2 gap-12">
           {/* Brand & Description */}
           <div>
             <div className="flex items-center space-x-3 mb-4">
@@ -151,51 +102,13 @@ const LandingFooter = () => {
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-gray-200 dark:border-gray-700 my-12"></div>
-
-        {/* Footer Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
-                {category}
-              </h4>
-              <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#1FB6A6] dark:hover:text-[#1FB6A6] transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
         {/* Bottom Section */}
-        <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-8 mt-12">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               © {currentYear} SpeakWise. All rights reserved.
             </p>
             
-            <div className="flex gap-6">
-              <a href="#privacy" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#1FB6A6] transition-colors">
-                Privacy
-              </a>
-              <a href="#terms" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#1FB6A6] transition-colors">
-                Terms
-              </a>
-              <a href="#cookies" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#1FB6A6] transition-colors">
-                Cookies
-              </a>
-            </div>
-
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Made with passion for better communication
             </p>
@@ -207,3 +120,4 @@ const LandingFooter = () => {
 };
 
 export default LandingFooter;
+
