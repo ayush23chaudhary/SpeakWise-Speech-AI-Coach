@@ -251,26 +251,26 @@ const LandingPage = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
             <div className="text-center lg:text-left space-y-8">
-              <div className="inline-flex items-center space-x-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+              <div className="inline-flex items-center space-x-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 animate-fade-in-up">
                 <Sparkles className="w-4 h-4 text-[#1FB6A6]" />
                 <span className="text-sm font-medium text-white">
                   AI-Powered Speech Coach
                 </span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight animate-fade-in-up animation-delay-100">
                 Master the Art of
                 <span className="block text-[#1FB6A6]">
                   Effective Communication
                 </span>
               </h1>
 
-              <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto lg:mx-0">
+              <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto lg:mx-0 animate-fade-in-up animation-delay-200">
                 Transform your speaking skills with AI-powered analysis, personalized feedback, and gamified learning. 
                 Practice interviews, track progress, and achieve your communication goals.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up animation-delay-300">
                 <Button
                   variant="primary"
                   size="lg"
@@ -291,7 +291,7 @@ const LandingPage = () => {
                 </Button>
               </div>
 
-              <div className="flex flex-wrap gap-6 justify-center lg:justify-start text-sm text-white/90">
+              <div className="flex flex-wrap gap-6 justify-center lg:justify-start text-sm text-white/90 animate-fade-in-up animation-delay-400">
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-5 h-5 text-[#1FB6A6]" />
                   <span>No credit card required</span>
@@ -308,7 +308,7 @@ const LandingPage = () => {
             </div>
 
             {/* Right Content - Demo Card */}
-            <div className="relative">
+            <div className="relative float">
               <div className="relative rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-8 shadow-2xl">
                 <div className="bg-white rounded-xl p-6 space-y-4">
                   <div className="flex items-center justify-between">
