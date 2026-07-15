@@ -9,35 +9,30 @@ import {
   Search,
   Filter,
   Clock,
-  Eye,
   Bookmark,
   ArrowLeft,
-  ExternalLink
+  ExternalLink,
+  Plus,
+  Check,
+  X,
+  Sparkles,
+  HelpCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import useAuthStore from '../../store/authStore';
 
-const Community = () => {
-  const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedArticle, setSelectedArticle] = useState(null);
-  const [bookmarkedArticles, setBookmarkedArticles] = useState([]);
-
-  // Seed articles with research-based content
-  const articles = [
-    {
-      id: 1,
-      title: "The Power of Pausing: Mastering Strategic Silence",
-      author: "Dr. Sarah Johnson",
-      category: "technique",
-      readTime: "5 min",
-      views: 2340,
-      likes: 156,
-      comments: 23,
-      date: "2026-01-25",
-      image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&q=80",
-      excerpt: "Learn how strategic pauses can transform your speaking presence and help you command attention in any conversation.",
-      content: `
+// Seed articles with research-based content (likes, views, and comments removed)
+const SEED_ARTICLES = [
+  {
+    id: 1,
+    title: "The Power of Pausing: Mastering Strategic Silence",
+    author: "Dr. Sarah Johnson",
+    category: "technique",
+    readTime: "5 min",
+    date: "2026-01-25",
+    image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&q=80",
+    excerpt: "Learn how strategic pauses can transform your speaking presence and help you command attention in any conversation.",
+    content: `
 ## The Art of Strategic Silence
 
 Research shows that effective speakers use pauses for three critical purposes:
@@ -59,26 +54,23 @@ Try the "3-Second Rule": After making an important point, count to three before 
 - Replace filler words with brief silences
 - Use pauses to signal transitions between topics
 - Practice with recordings to find your natural rhythm
-      `,
-      tags: ["pausing", "technique", "confidence"],
-      resources: [
-        { title: "TED Talk: The Power of Silence", url: "#" },
-        { title: "Research Paper: Pause Patterns in Effective Communication", url: "#" }
-      ]
-    },
-    {
-      id: 2,
-      title: "Eliminating Filler Words: A 30-Day Challenge",
-      author: "Michael Chen",
-      category: "practice",
-      readTime: "7 min",
-      views: 1890,
-      likes: 142,
-      comments: 31,
-      date: "2026-01-23",
-      image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80",
-      excerpt: "A structured approach to reducing 'um,' 'uh,' and 'like' from your speech in just 30 days.",
-      content: `
+    `,
+    tags: ["pausing", "technique", "confidence"],
+    resources: [
+      { title: "TED Talk: The Power of Silence", url: "#" },
+      { title: "Research Paper: Pause Patterns in Effective Communication", url: "#" }
+    ]
+  },
+  {
+    id: 2,
+    title: "Eliminating Filler Words: A 30-Day Challenge",
+    author: "Michael Chen",
+    category: "practice",
+    readTime: "7 min",
+    date: "2026-01-23",
+    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80",
+    excerpt: "A structured approach to reducing 'um,' 'uh,' and 'like' from your speech in just 30 days.",
+    content: `
 ## The Filler Word Phenomenon
 
 Studies show that the average person uses 15-20 filler words per minute. While some fillers are natural, excessive use can undermine your credibility.
@@ -120,26 +112,23 @@ Studies show that the average person uses 15-20 filler words per minute. While s
 - Week 2: Reduce by 30%
 - Week 3: Reduce by 60%
 - Week 4: Maintain 5-7 fillers/min or less
-      `,
-      tags: ["filler-words", "practice", "challenge"],
-      resources: [
-        { title: "Filler Word Tracker App", url: "#" },
-        { title: "Public Speaking Practice Groups", url: "#" }
-      ]
-    },
-    {
-      id: 3,
-      title: "Voice Modulation: The Secret to Captivating Storytelling",
-      author: "Emma Rodriguez",
-      category: "technique",
-      readTime: "6 min",
-      views: 2105,
-      likes: 189,
-      comments: 27,
-      date: "2026-01-20",
-      image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80",
-      excerpt: "Discover how varying your pitch, tone, and volume can make your stories unforgettable.",
-      content: `
+    `,
+    tags: ["filler-words", "practice", "challenge"],
+    resources: [
+      { title: "Filler Word Tracker App", url: "#" },
+      { title: "Public Speaking Practice Groups", url: "#" }
+    ]
+  },
+  {
+    id: 3,
+    title: "Voice Modulation: The Secret to Captivating Storytelling",
+    author: "Emma Rodriguez",
+    category: "technique",
+    readTime: "6 min",
+    date: "2026-01-20",
+    image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80",
+    excerpt: "Discover how varying your pitch, tone, and volume can make your stories unforgettable.",
+    content: `
 ## The Music of Speech
 
 Your voice is an instrument. Professional speakers use these techniques to keep audiences engaged:
@@ -182,26 +171,23 @@ Your voice is an instrument. Professional speakers use these techniques to keep 
 ✅ Practice with emotion-rich content
 ✅ Record and analyze your patterns
 ✅ Study great speakers (Martin Luther King Jr., Maya Angelou)
-      `,
-      tags: ["voice", "storytelling", "modulation"],
-      resources: [
-        { title: "Voice Training Exercises", url: "#" },
-        { title: "Famous Speeches Analyzed", url: "#" }
-      ]
-    },
-    {
-      id: 4,
-      title: "The Science of First Impressions: 7 Seconds to Impact",
-      author: "Dr. James Mitchell",
-      category: "psychology",
-      readTime: "8 min",
-      views: 3210,
-      likes: 245,
-      comments: 42,
-      date: "2026-01-18",
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
-      excerpt: "Understanding the psychology behind first impressions and how your voice shapes perception.",
-      content: `
+    `,
+    tags: ["voice", "storytelling", "modulation"],
+    resources: [
+      { title: "Voice Training Exercises", url: "#" },
+      { title: "Famous Speeches Analyzed", url: "#" }
+    ]
+  },
+  {
+    id: 4,
+    title: "The Science of First Impressions: 7 Seconds to Impact",
+    author: "Dr. James Mitchell",
+    category: "psychology",
+    readTime: "8 min",
+    date: "2026-01-18",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
+    excerpt: "Understanding the psychology behind first impressions and how your voice shapes perception.",
+    content: `
 ## The 7-Second Window
 
 Research by Princeton psychologists shows that we form lasting impressions in just 7 seconds. Your voice plays a crucial role.
@@ -264,26 +250,23 @@ If you start poorly:
 - Lower-pitched voices perceived as more authoritative (but don't force it!)
 - Moderate speaking speed (145-160 words/minute) rated most trustworthy
 - Vocal variety indicates intelligence and engagement
-      `,
-      tags: ["psychology", "first-impressions", "interviews"],
-      resources: [
-        { title: "Princeton First Impressions Study", url: "#" },
-        { title: "Vocal Psychology Research Database", url: "#" }
-      ]
-    },
-    {
-      id: 5,
-      title: "Breathing Techniques for Confident Public Speaking",
-      author: "Lisa Thompson",
-      category: "wellness",
-      readTime: "5 min",
-      views: 1567,
-      likes: 123,
-      comments: 18,
-      date: "2026-01-15",
-      image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80",
-      excerpt: "Master the breathing techniques that professional speakers use to stay calm and powerful.",
-      content: `
+    `,
+    tags: ["psychology", "first-impressions", "interviews"],
+    resources: [
+      { title: "Princeton First Impressions Study", url: "#" },
+      { title: "Vocal Psychology Research Database", url: "#" }
+    ]
+  },
+  {
+    id: 5,
+    title: "Breathing Techniques for Confident Public Speaking",
+    author: "Lisa Thompson",
+    category: "wellness",
+    readTime: "5 min",
+    date: "2026-01-15",
+    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80",
+    excerpt: "Master the breathing techniques that professional speakers use to stay calm and powerful.",
+    content: `
 ## The Foundation of Great Speaking: Breath
 
 Professional singers and speakers know: breath control is everything. Here's why and how.
@@ -383,26 +366,23 @@ Professional singers and speakers know: breath control is everything. Here's why
 - **Physical Exercise**: Improves lung capacity
 - **Posture Matters**: Stand/sit tall for optimal breathing
 - **Stay Hydrated**: Dry throat = poor breath control
-      `,
-      tags: ["breathing", "wellness", "anxiety-management"],
-      resources: [
-        { title: "Breathing Exercise Videos", url: "#" },
-        { title: "Guided Meditation for Speakers", url: "#" }
-      ]
-    },
-    {
-      id: 6,
-      title: "Storytelling Frameworks: Captivate Any Audience",
-      author: "Robert Williams",
-      category: "storytelling",
-      readTime: "9 min",
-      views: 2876,
-      likes: 201,
-      comments: 35,
-      date: "2026-01-12",
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80",
-      excerpt: "Five proven storytelling frameworks that work in interviews, presentations, and conversations.",
-      content: `
+    `,
+    tags: ["breathing", "wellness", "anxiety-management"],
+    resources: [
+      { title: "Breathing Exercise Videos", url: "#" },
+      { title: "Guided Meditation for Speakers", url: "#" }
+    ]
+  },
+  {
+    id: 6,
+    title: "Storytelling Frameworks: Captivate Any Audience",
+    author: "Robert Williams",
+    category: "storytelling",
+    readTime: "9 min",
+    date: "2026-01-12",
+    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80",
+    excerpt: "Five proven storytelling frameworks that work in interviews, presentations, and conversations.",
+    content: `
 ## Why Stories Win
 
 Data shows people remember stories 22 times more than facts alone. Here are the frameworks top speakers use.
@@ -565,14 +545,200 @@ Create your personal story collection:
 **The Twist**: Unexpected revelation changes perspective
 **The Metaphor**: Use symbolic comparison
 **The Parallel**: Connect to audience's experiences
-      `,
-      tags: ["storytelling", "frameworks", "presentation"],
-      resources: [
-        { title: "TED Talks Masterclass", url: "#" },
-        { title: "Story Structure Templates", url: "#" }
-      ]
+    `,
+    tags: ["storytelling", "frameworks", "presentation"],
+    resources: [
+      { title: "TED Talks Masterclass", url: "#" },
+      { title: "Story Structure Templates", url: "#" }
+    ]
+  },
+  {
+    id: 7,
+    title: "Body Language Mastery: Speaking Beyond Words",
+    author: "Elena Rostova",
+    category: "technique",
+    readTime: "6 min",
+    date: "2026-01-10",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80",
+    excerpt: "Understand how your posture, hand gestures, and eye contact speak volumes before you even say a word.",
+    content: `
+## The Silent Channel of Communication
+
+More than 50% of communication is non-verbal. Here is how you can command a room using body language.
+
+### 1. The Power Posture
+Before speaking, stand tall. Place your feet shoulder-width apart, roll your shoulders back, and keep your hands relaxed. This signals confidence to your audience and physically opens your lungs for better vocal support.
+
+### 2. Strategic Gestures
+Use open-palm gestures to build trust. Avoid crossing your arms (which signals defensiveness) or fidgeting (which signals anxiety). Match your gestures to the scale of your message—larger gestures for big themes, and smaller gestures for precise details.
+
+### 3. Purposeful Movement
+Avoid pacing aimlessly. Instead, move dynamically to transition between points. For example, speak from one side of the stage for the setup, and walk to the center to deliver the solution.
+
+### Key Practices:
+- Keep your chin level with the floor
+- Maintain comfortable eye contact for 3-5 seconds per person
+- Smile warmly to establish rapport
+- Use natural, open gestures
+    `,
+    tags: ["body-language", "technique", "presence"],
+    resources: [
+      { title: "TED Talk: Your Body Language Shapes Who You Are", url: "#" }
+    ]
+  },
+  {
+    id: 8,
+    title: "Overcoming Stage Fright: The Cognitive Reframing Guide",
+    author: "Dr. Marcus Vance",
+    category: "psychology",
+    readTime: "8 min",
+    date: "2026-01-05",
+    image: "https://images.unsplash.com/photo-1498075702571-ecb018f3752d?w=800&q=80",
+    excerpt: "Learn the scientific methods to reframe public speaking anxiety into excitement and control your nervous system.",
+    content: `
+## Reframing Public Speaking Anxiety
+
+Stage fright is a natural biological reaction. The key is not to eliminate it, but to harness it to elevate your performance.
+
+### 1. Reframing the Adrenaline Rush
+When your heart races, tell yourself: "I am excited to share this information," rather than "I am terrified." Physiologically, excitement and anxiety are identical states; reframing changes your psychological response.
+
+### 2. The 3-Step Anchoring Routine
+1. **Physical Anchor**: Press your thumb and forefinger together to ground yourself in the physical present.
+2. **Breath Anchor**: Take a slow 4-second inhale and a 6-second exhale.
+3. **Mantra Anchor**: Say to yourself, "I have valuable insights to share."
+
+### 3. Audience Empathy Shift
+Remember, the audience wants you to succeed. Shift your focus from "How do I look/sound?" to "How can I help the audience understand this point?"
+
+### Takeaways:
+- View physical symptoms as readiness, not fear
+- Practice grounding exercises before going on stage
+- Focus 100% on value delivery to the audience
+- Record dry runs to build cognitive familiarity
+    `,
+    tags: ["stage-fright", "anxiety", "psychology"],
+    resources: [
+      { title: "Research Paper: Cognitive Reframing of Speaking Anxiety", url: "#" }
+    ]
+  }
+];
+
+const renderMarkdown = (text) => {
+  if (!text) return '';
+  const blocks = text.split(/\n\n+/);
+  return blocks.map((block, index) => {
+    const trimmed = block.trim();
+    if (!trimmed) return null;
+    
+    if (trimmed.startsWith('## ')) {
+      return <h2 key={index} className="text-2xl font-bold text-gray-900 dark:text-white mt-6 mb-3 border-b border-gray-150 dark:border-gray-700/50 pb-2">{trimmed.replace('## ', '')}</h2>;
     }
-  ];
+    if (trimmed.startsWith('### ')) {
+      return <h3 key={index} className="text-xl font-bold text-gray-900 dark:text-white mt-4 mb-2">{trimmed.replace('### ', '')}</h3>;
+    }
+    if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+      const items = trimmed.split(/\n[-*]\s+/).map(item => item.replace(/^[-*]\s+/, ''));
+      return (
+        <ul key={index} className="list-disc pl-6 my-3 space-y-1.5 text-gray-750 dark:text-gray-300">
+          {items.map((item, idx) => (
+            <li key={idx}>{parseInlineMarkdown(item)}</li>
+          ))}
+        </ul>
+      );
+    }
+    return (
+      <p key={index} className="my-3 text-gray-750 dark:text-gray-300 leading-relaxed">
+        {parseInlineMarkdown(trimmed)}
+      </p>
+    );
+  });
+};
+
+const parseInlineMarkdown = (text) => {
+  const parts = [];
+  const boldRegex = /\*\*([^*]+)\*\*/g;
+  let match;
+  let lastIndex = 0;
+  
+  while ((match = boldRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
+    }
+    parts.push(<strong key={match.index} className="font-extrabold text-gray-900 dark:text-white">{match[1]}</strong>);
+    lastIndex = boldRegex.lastIndex;
+  }
+  
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+  
+  return parts.length > 0 ? parts : text;
+};
+
+const Community = () => {
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedArticle, setSelectedArticle] = useState(null);
+  const [bookmarkedArticles, setBookmarkedArticles] = useState(() => {
+    const saved = localStorage.getItem('speakwise_bookmarked_articles');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Local storage for articles (includes defaults and user-created/approved articles)
+  const [localArticles, setLocalArticles] = useState(() => {
+    const saved = localStorage.getItem('speakwise_community_articles');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+    }
+    return SEED_ARTICLES;
+  });
+
+  // Moderation / pending approvals queue
+  const [pendingArticles, setPendingArticles] = useState(() => {
+    const saved = localStorage.getItem('speakwise_pending_articles');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+    }
+    return [];
+  });
+
+  // Modal Control
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [previewArticle, setPreviewArticle] = useState(null);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    title: '',
+    author: user?.name || '',
+    category: 'technique',
+    excerpt: '',
+    content: '',
+    tags: '',
+    image: '',
+    resources: ''
+  });
+
+  const [formError, setFormError] = useState('');
+
+  // Persist bookmarks
+  useEffect(() => {
+    localStorage.setItem('speakwise_bookmarked_articles', JSON.stringify(bookmarkedArticles));
+  }, [bookmarkedArticles]);
+
+  // Persist active articles
+  useEffect(() => {
+    localStorage.setItem('speakwise_community_articles', JSON.stringify(localArticles));
+  }, [localArticles]);
+
+  // Persist pending articles
+  useEffect(() => {
+    localStorage.setItem('speakwise_pending_articles', JSON.stringify(pendingArticles));
+  }, [pendingArticles]);
 
   const categories = [
     { id: 'all', label: 'All Articles', icon: BookOpen },
@@ -583,11 +749,11 @@ Create your personal story collection:
     { id: 'storytelling', label: 'Storytelling', icon: BookOpen }
   ];
 
-  const filteredArticles = articles.filter(article => {
+  const filteredArticles = localArticles.filter(article => {
     const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
     const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         article.tags.some(tag => tag.includes(searchQuery.toLowerCase()));
+                         (article.tags && article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
     return matchesCategory && matchesSearch;
   });
 
@@ -599,6 +765,66 @@ Create your personal story collection:
     );
   };
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setFormError('');
+
+    if (!formData.title.trim() || !formData.content.trim()) {
+      setFormError('Title and Content are required fields.');
+      return;
+    }
+
+    const estimatedReadTime = Math.max(1, Math.round(formData.content.trim().split(/\s+/).length / 200));
+
+    const newPending = {
+      id: Date.now(),
+      title: formData.title.trim(),
+      author: formData.author.trim() || 'Anonymous Speaker',
+      category: formData.category,
+      readTime: `${estimatedReadTime} min`,
+      date: new Date().toISOString().split('T')[0],
+      image: formData.image.trim() || 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&q=80',
+      excerpt: formData.excerpt.trim() || (formData.content.trim().substring(0, 120) + '...'),
+      content: formData.content.trim(),
+      tags: formData.tags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean),
+      resources: formData.resources.trim() 
+        ? formData.resources.split('\n').map(line => {
+            const parts = line.split('|');
+            return { title: parts[0]?.trim() || 'Additional Resource', url: parts[1]?.trim() || '#' };
+          })
+        : []
+    };
+
+    setPendingArticles(prev => [newPending, ...prev]);
+    setIsCreateModalOpen(false);
+    
+    // Reset form data
+    setFormData({
+      title: '',
+      author: user?.name || '',
+      category: 'technique',
+      excerpt: '',
+      content: '',
+      tags: '',
+      image: '',
+      resources: ''
+    });
+  };
+
+  const approveArticle = (articleId) => {
+    const articleToApprove = pendingArticles.find(a => a.id === articleId);
+    if (!articleToApprove) return;
+
+    setLocalArticles(prev => [articleToApprove, ...prev]);
+    setPendingArticles(prev => prev.filter(a => a.id !== articleId));
+    setIsPreviewModalOpen(false);
+  };
+
+  const rejectArticle = (articleId) => {
+    setPendingArticles(prev => prev.filter(a => a.id !== articleId));
+    setIsPreviewModalOpen(false);
+  };
+
   if (selectedArticle) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
@@ -606,87 +832,86 @@ Create your personal story collection:
           {/* Back Button */}
           <button
             onClick={() => setSelectedArticle(null)}
-            className="flex items-center gap-2 text-[#1E2A5A] dark:text-blue-400 hover:text-[#2A3A7A] dark:hover:text-blue-300 mb-6 transition-colors"
+            className="flex items-center gap-2 text-[#1E2A5A] dark:text-blue-400 hover:text-[#2A3A7A] dark:hover:text-blue-300 mb-6 transition-colors font-medium cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Community
           </button>
 
           {/* Article Header */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6">
-            <img 
-              src={selectedArticle.image} 
-              alt={selectedArticle.title}
-              className="w-full h-64 object-cover"
-            />
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700/50 mb-6">
+            <div className="relative h-72">
+              <img 
+                src={selectedArticle.image} 
+                alt={selectedArticle.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <span className="absolute bottom-6 left-8 px-4 py-1.5 bg-[#6C63FF] text-white rounded-full text-xs font-semibold uppercase tracking-wider">
+                {selectedArticle.category}
+              </span>
+            </div>
+            
             <div className="p-8">
-              <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
+              <div className="flex items-center gap-6 text-sm text-gray-600 dark:text-gray-400 mb-4">
+                <span className="flex items-center gap-1.5 font-medium">
+                  <Clock className="w-4 h-4 text-[#6C63FF]" />
                   {selectedArticle.readTime}
                 </span>
-                <span className="flex items-center gap-1">
-                  <Eye className="w-4 h-4" />
-                  {selectedArticle.views} views
-                </span>
-                <span className="flex items-center gap-1">
-                  <Heart className="w-4 h-4" />
-                  {selectedArticle.likes} likes
-                </span>
-                <span className="flex items-center gap-1">
-                  <MessageCircle className="w-4 h-4" />
-                  {selectedArticle.comments} comments
+                <span className="text-gray-300 dark:text-gray-600">•</span>
+                <span className="font-medium text-gray-500 dark:text-gray-400">
+                  Published: {selectedArticle.date}
                 </span>
               </div>
 
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight">
                 {selectedArticle.title}
               </h1>
 
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#F8FAFF]0 to-[#6C63FF] rounded-full flex items-center justify-center text-white font-bold">
-                    {selectedArticle.author.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">{selectedArticle.author}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{selectedArticle.date}</p>
-                  </div>
+              <div className="flex items-center gap-3 pb-6 border-b border-gray-100 dark:border-gray-700/50 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#1E2A5A] to-[#6C63FF] rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                  {selectedArticle.author.charAt(0)}
+                </div>
+                <div>
+                  <p className="font-bold text-gray-900 dark:text-white leading-tight">{selectedArticle.author}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">Community Contributor</p>
                 </div>
               </div>
 
               {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {selectedArticle.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-[#EEF2FF] dark:bg-blue-900/30 text-[#2A3A7A] dark:text-blue-300 rounded-full text-sm"
-                  >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
+              {selectedArticle.tags && selectedArticle.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-8">
+                  {selectedArticle.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-[#EEF2FF] dark:bg-blue-900/30 text-[#2A3A7A] dark:text-blue-300 rounded-lg text-xs font-semibold"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )}
 
               {/* Article Content */}
-              <div className="prose dark:prose-invert max-w-none">
-                <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-                  {selectedArticle.content}
+              <div className="prose dark:prose-invert max-w-none mb-8">
+                <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-base sm:text-lg font-light">
+                  {renderMarkdown(selectedArticle.content)}
                 </div>
               </div>
 
               {/* Resources */}
               {selectedArticle.resources && selectedArticle.resources.length > 0 && (
-                <div className="mt-8 p-6 bg-[#F8FAFF] dark:bg-blue-900/20 rounded-lg">
+                <div className="mt-8 p-6 bg-[#F8FAFF] dark:bg-blue-900/20 rounded-xl border border-blue-50/50 dark:border-blue-900/30">
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <ExternalLink className="w-5 h-5" />
+                    <ExternalLink className="w-5 h-5 text-[#6C63FF]" />
                     Additional Resources
                   </h3>
-                  <ul className="space-y-2">
+                  <ul className="space-y-3">
                     {selectedArticle.resources.map((resource, index) => (
                       <li key={index}>
                         <a
                           href={resource.url}
-                          className="text-[#1E2A5A] dark:text-blue-400 hover:underline flex items-center gap-2"
+                          className="text-[#6C63FF] hover:text-[#5A52E8] dark:text-blue-400 dark:hover:text-blue-300 hover:underline flex items-center gap-2 font-medium"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -700,24 +925,20 @@ Create your personal story collection:
               )}
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <button className="flex items-center gap-2 px-4 py-2 bg-[#1E2A5A] hover:bg-[#2A3A7A] text-white rounded-lg transition-colors">
-                  <Heart className="w-4 h-4" />
-                  Like
-                </button>
+              <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
                 <button 
                   onClick={() => toggleBookmark(selectedArticle.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 cursor-pointer shadow-sm ${
                     bookmarkedArticles.includes(selectedArticle.id)
-                      ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800'
+                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'
                   }`}
                 >
-                  <Bookmark className="w-4 h-4" />
-                  {bookmarkedArticles.includes(selectedArticle.id) ? 'Bookmarked' : 'Bookmark'}
+                  <Bookmark className={`w-4 h-4 ${bookmarkedArticles.includes(selectedArticle.id) ? 'fill-amber-500' : ''}`} />
+                  {bookmarkedArticles.includes(selectedArticle.id) ? 'Bookmarked' : 'Bookmark Guide'}
                 </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
-                  <Share2 className="w-4 h-4" />
+                <button className="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-xl font-semibold border border-gray-200 dark:border-gray-600 transition-all duration-200 cursor-pointer shadow-sm">
+                  <Share2 className="w-4 h-4 text-gray-500" />
                   Share
                 </button>
               </div>
@@ -734,22 +955,32 @@ Create your personal story collection:
         
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                Community Hub 🌟
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-2 tracking-tight flex items-center gap-2.5">
+                Community Hub <Sparkles className="w-7 h-7 text-[#6C63FF]" />
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Learn from expert tips, techniques, and insights from the speaking community
+                Explore premium, expert-curated communication techniques, guides, and masterclasses.
               </p>
             </div>
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back
-            </button>
+            
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#6C63FF] to-[#2A3A7A] hover:from-[#5A52E8] hover:to-[#1F2F68] text-white font-semibold rounded-xl shadow-md transition-all cursor-pointer transform hover:scale-105"
+              >
+                <Plus className="w-4 h-4" />
+                Share Your Guide
+              </button>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 transition-colors cursor-pointer font-medium"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </button>
+            </div>
           </div>
 
           {/* Search Bar */}
@@ -757,26 +988,105 @@ Create your personal story collection:
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search articles, tips, techniques..."
+              placeholder="Search guides, tags, techniques..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white"
+              className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white shadow-sm transition-all"
             />
           </div>
         </div>
 
+        {/* Stats Bar */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700/50">
+            <div className="text-3xl font-extrabold text-[#1E2A5A] dark:text-blue-400">{localArticles.length}</div>
+            <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1">Total Articles</div>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700/50">
+            <div className="text-3xl font-extrabold text-amber-600 dark:text-amber-400">
+              {bookmarkedArticles.length}
+            </div>
+            <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1">Bookmarked Guides</div>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700/50">
+            <div className="text-3xl font-extrabold text-green-600 dark:text-green-400">
+              {categories.length - 1}
+            </div>
+            <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1">Active Categories</div>
+          </div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700/50">
+            <div className={`text-3xl font-extrabold ${pendingArticles.length > 0 ? 'text-[#6C63FF] dark:text-blue-400 animate-pulse' : 'text-gray-400'}`}>
+              {pendingArticles.length}
+            </div>
+            <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1">Pending Reviews</div>
+          </div>
+        </div>
+
+        {/* Moderation / Pending Approvals Section */}
+        {pendingArticles.length > 0 && (
+          <div className="mb-10 bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-[#6C63FF]/5 border border-amber-300/40 dark:border-amber-800/40 rounded-2xl p-6">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+              Moderation Queue: Pending Articles ({pendingArticles.length})
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              Since you are the coach administrator, review and approve your custom article submissions to publish them to the active community space.
+            </p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {pendingArticles.map(article => (
+                <div 
+                  key={article.id} 
+                  className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col justify-between"
+                >
+                  <div>
+                    <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 rounded text-xs font-semibold capitalize">
+                      {article.category}
+                    </span>
+                    <h3 className="font-bold text-gray-900 dark:text-white mt-2 line-clamp-1">{article.title}</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">By: {article.author} • {article.date}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 line-clamp-2">{article.excerpt}</p>
+                  </div>
+                  <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+                    <button
+                      onClick={() => {
+                        setPreviewArticle(article);
+                        setIsPreviewModalOpen(true);
+                      }}
+                      className="flex-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                    >
+                      Read Preview
+                    </button>
+                    <button
+                      onClick={() => approveArticle(article.id)}
+                      className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <Check className="w-3.5 h-3.5" /> Approve
+                    </button>
+                    <button
+                      onClick={() => rejectArticle(article.id)}
+                      className="px-3 py-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-900/30 text-red-600 text-xs font-semibold rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" /> Reject
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Category Filters */}
-        <div className="flex items-center gap-3 mb-8 overflow-x-auto pb-2">
+        <div className="flex items-center gap-3 mb-8 overflow-x-auto pb-2 scrollbar-none">
           {categories.map(category => {
             const Icon = category.icon;
             return (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl whitespace-nowrap font-medium text-sm transition-all duration-200 cursor-pointer shadow-sm flex-shrink-0 ${
                   selectedCategory === category.id
-                    ? 'bg-[#1E2A5A] text-white'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    ? 'bg-[#1E2A5A] text-white border border-[#1E2A5A] dark:bg-blue-600 dark:border-blue-600'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700/60'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -786,121 +1096,307 @@ Create your personal story collection:
           })}
         </div>
 
-        {/* Stats Bar */}
-        <div className="grid grid-cols-4 gap-4 mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div className="text-2xl font-bold text-[#1E2A5A] dark:text-blue-400">{articles.length}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Articles</div>
-          </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-              {articles.reduce((sum, a) => sum + a.views, 0).toLocaleString()}
-            </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Total Views</div>
-          </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div className="text-2xl font-bold text-[#6C63FF] dark:text-[#6C63FF]">
-              {articles.reduce((sum, a) => sum + a.likes, 0)}
-            </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Total Likes</div>
-          </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-              {articles.reduce((sum, a) => sum + a.comments, 0)}
-            </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Comments</div>
-          </div>
-        </div>
-
         {/* Articles Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredArticles.map(article => (
             <div
               key={article.id}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
+              className="bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden hover:shadow-xl hover:translate-y-[-2px] border border-gray-100 dark:border-gray-700/40 transition-all duration-300 cursor-pointer flex flex-col justify-between"
               onClick={() => setSelectedArticle(article)}
             >
-              <img 
-                src={article.image} 
-                alt={article.title}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="px-3 py-1 bg-[#EEF2FF] dark:bg-blue-900/30 text-[#2A3A7A] dark:text-blue-300 rounded-full text-xs font-medium capitalize">
-                    {article.category}
-                  </span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {article.readTime}
-                  </span>
-                </div>
-
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                  {article.title}
-                </h3>
-
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
-                  {article.excerpt}
-                </p>
-
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                    <span className="flex items-center gap-1">
-                      <Heart className="w-4 h-4" />
-                      {article.likes}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MessageCircle className="w-4 h-4" />
-                      {article.comments}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-4 h-4" />
-                      {article.views}
+              <div>
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={article.image} 
+                    alt={article.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-[#1E2A5A]/80 dark:bg-blue-600/80 backdrop-blur-sm text-white text-xs font-semibold uppercase tracking-wider rounded-lg">
+                      {article.category}
                     </span>
                   </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleBookmark(article.id);
-                    }}
-                    className={`p-2 rounded-lg transition-colors ${
-                      bookmarkedArticles.includes(article.id)
-                        ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30'
-                        : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
-                    }`}
-                  >
-                    <Bookmark className="w-4 h-4" />
-                  </button>
                 </div>
 
-                <div className="mt-4 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-[#F8FAFF]0 to-[#6C63FF] rounded-full flex items-center justify-center text-white text-sm font-bold">
+                <div className="p-6">
+                  <div className="flex items-center gap-2 mb-3 text-xs font-medium text-gray-500 dark:text-gray-400">
+                    <span className="flex items-center gap-1 text-[#6C63FF]">
+                      <Clock className="w-3.5 h-3.5" />
+                      {article.readTime}
+                    </span>
+                    <span>•</span>
+                    <span>{article.date}</span>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 leading-snug">
+                    {article.title}
+                  </h3>
+
+                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 leading-relaxed mb-4">
+                    {article.excerpt}
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-6 pt-0 mt-auto border-t border-gray-100 dark:border-gray-700/50 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#1E2A5A] to-[#6C63FF] rounded-full flex items-center justify-center text-white text-xs font-bold shadow">
                     {article.author.charAt(0)}
                   </div>
-                  <div className="text-sm">
-                    <p className="font-medium text-gray-900 dark:text-white">{article.author}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{article.date}</p>
+                  <div>
+                    <p className="text-xs font-bold text-gray-900 dark:text-white leading-tight">{article.author}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Contributor</p>
                   </div>
                 </div>
+                
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleBookmark(article.id);
+                  }}
+                  className={`p-2 rounded-xl transition-all shadow-sm ${
+                    bookmarkedArticles.includes(article.id)
+                      ? 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30'
+                      : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 bg-gray-50 dark:bg-gray-700/40 border border-gray-150 dark:border-gray-700/20'
+                  }`}
+                >
+                  <Bookmark className={`w-4 h-4 ${bookmarkedArticles.includes(article.id) ? 'fill-amber-500' : ''}`} />
+                </button>
               </div>
             </div>
           ))}
         </div>
 
         {filteredArticles.length === 0 && (
-          <div className="text-center py-12">
+          <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700/40">
             <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               No articles found
             </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Try adjusting your filters or search query
+            <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto">
+              Try adjusting your filters or search query, or submit your own guide to build the knowledge base!
             </p>
           </div>
         )}
 
       </div>
+
+      {/* Creation Modal */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsCreateModalOpen(false)}></div>
+          <div className="relative bg-white dark:bg-gray-800 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 border border-gray-100 dark:border-gray-700">
+            <button 
+              onClick={() => setIsCreateModalOpen(false)}
+              className="absolute top-4 right-4 p-2 rounded-xl text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+              <BookOpen className="text-[#6C63FF]" /> Share Your Speaking Guide
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              Write a speaking technique, framework, or challenge. The guide will be sent to the moderation queue for approval.
+            </p>
+
+            {formError && (
+              <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/20 text-red-600 text-sm font-medium rounded-lg border border-red-200 dark:border-red-800">
+                {formError}
+              </div>
+            )}
+
+            <form onSubmit={handleFormSubmit} className="space-y-5">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Guide Title *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Master the Art of Vocal Warm-ups"
+                    value={formData.title}
+                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Author Name</label>
+                  <input
+                    type="text"
+                    placeholder="Prefilled or Anonymous"
+                    value={formData.author}
+                    onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Category</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white font-medium"
+                  >
+                    <option value="technique">Technique</option>
+                    <option value="practice">Practice Guide</option>
+                    <option value="psychology">Psychology</option>
+                    <option value="wellness">Wellness</option>
+                    <option value="storytelling">Storytelling</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Tags (comma separated)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. warmup, speech, confidence"
+                    value={formData.tags}
+                    onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Short Excerpt (Brief Summary)</label>
+                <input
+                  type="text"
+                  placeholder="Provide a 1-2 sentence hook to describe your guide."
+                  value={formData.excerpt}
+                  onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Cover Image URL (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="Paste an Unsplash or similar URL (optional)"
+                  value={formData.image}
+                  onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Content Markdown / Body Text *</label>
+                <textarea
+                  required
+                  rows={8}
+                  placeholder="Write the content of your guide. You can use standard markdown format headers (##, ###) and lists (-)."
+                  value={formData.content}
+                  onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white font-mono text-sm leading-relaxed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+                  Additional Resources (Optional, one per line: Title | URL)
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="Vocal Gym Video | https://youtube.com/..."
+                  value={formData.resources}
+                  onChange={(e) => setFormData(prev => ({ ...prev, resources: e.target.value }))}
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-900 dark:text-white text-sm"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setIsCreateModalOpen(false)}
+                  className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 bg-gradient-to-r from-[#6C63FF] to-[#2A3A7A] hover:from-[#5A52E8] hover:to-[#1F2F68] text-white font-semibold rounded-xl shadow-md transition-all cursor-pointer"
+                >
+                  Submit for Approval
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Preview Modal */}
+      {isPreviewModalOpen && previewArticle && (
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsPreviewModalOpen(false)}></div>
+          <div className="relative bg-white dark:bg-gray-800 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 border border-gray-150 dark:border-gray-700">
+            <button 
+              onClick={() => setIsPreviewModalOpen(false)}
+              className="absolute top-4 right-4 p-2 text-gray-450 hover:text-gray-600 dark:hover:text-gray-300 bg-gray-50 dark:bg-gray-750 hover:bg-gray-100 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="mb-4">
+              <span className="px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 rounded-full text-xs font-semibold uppercase tracking-wider">
+                Preview: {previewArticle.category}
+              </span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-4">
+              {previewArticle.title}
+            </h1>
+
+            <div className="flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700/50 mb-6 text-sm text-gray-600 dark:text-gray-400">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#1E2A5A] to-[#6C63FF] rounded-full flex items-center justify-center text-white font-bold">
+                {previewArticle.author.charAt(0)}
+              </div>
+              <div>
+                <p className="font-bold text-gray-900 dark:text-white leading-tight">{previewArticle.author}</p>
+                <p className="text-[10px] text-gray-500 mt-0.5">Submitted: {previewArticle.date} • {previewArticle.readTime} read</p>
+              </div>
+            </div>
+
+            <div className="prose dark:prose-invert max-w-none mb-6">
+              <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm sm:text-base font-light bg-gray-50 dark:bg-gray-900/40 p-5 rounded-xl border border-gray-100 dark:border-gray-800">
+                {renderMarkdown(previewArticle.content)}
+              </div>
+            </div>
+
+            {previewArticle.resources && previewArticle.resources.length > 0 && (
+              <div className="mb-6 p-4 bg-blue-50/40 dark:bg-blue-900/10 rounded-xl border border-blue-50/20 dark:border-blue-900/20">
+                <p className="text-xs font-bold text-gray-900 dark:text-white mb-2">Submitted Resources:</p>
+                <ul className="text-xs space-y-1 text-[#6C63FF] dark:text-blue-400">
+                  {previewArticle.resources.map((res, i) => (
+                    <li key={i}>{res.title} | {res.url}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700/50">
+              <button
+                onClick={() => setIsPreviewModalOpen(false)}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl transition-colors cursor-pointer text-sm"
+              >
+                Close Preview
+              </button>
+              <button
+                onClick={() => approveArticle(previewArticle.id)}
+                className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer text-sm shadow-sm"
+              >
+                <Check className="w-4 h-4" /> Approve & Publish
+              </button>
+              <button
+                onClick={() => rejectArticle(previewArticle.id)}
+                className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer text-sm shadow-sm"
+              >
+                <X className="w-4 h-4" /> Reject Submission
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
