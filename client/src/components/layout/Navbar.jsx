@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mic, LogOut, Sun, Moon, User, ChevronDown } from 'lucide-react';
+import { Mic, LogOut, Sun, Moon, User, ChevronDown, Trophy } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import useThemeStore from '../../store/themeStore';
 
@@ -72,6 +72,16 @@ const Navbar = () => {
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
+            {/* Leaderboard Link */}
+            <button
+              onClick={() => navigate('/dashboard/leaderboard')}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-[#1FB6A6]/10 dark:hover:bg-[#1FB6A6]/20 hover:text-[#1FB6A6] transition-all duration-200 text-gray-600 dark:text-gray-300"
+              title="Leaderboard"
+            >
+              <Trophy className="w-5 h-5" />
+              <span className="hidden md:inline text-sm font-medium">Leaderboard</span>
+            </button>
+
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
