@@ -122,7 +122,7 @@ const Navbar = () => {
                 
                 {/* First Name */}
                 <span className="text-sm font-semibold text-white drop-shadow-sm">
-                  {getFirstName(user?.name)}
+                  {user?.givenName || getFirstName(user?.name)}
                 </span>
                 
                 <ChevronDown className={`w-4 h-4 text-white/90 transition-transform duration-200 group-hover:text-white ${isDropdownOpen ? 'rotate-180' : ''}`} />

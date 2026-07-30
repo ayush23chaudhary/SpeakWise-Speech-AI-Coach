@@ -70,6 +70,21 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  // Google profile enrichment (populated on OAuth sign-in)
+  givenName: {
+    type: String,
+    default: null,
+    trim: true
+  },
+  familyName: {
+    type: String,
+    default: null,
+    trim: true
+  },
+  googleVerified: {
+    type: Boolean,
+    default: false
+  },
   // Streaks & Practice Tracking
   currentStreak: {
     type: Number,
