@@ -116,7 +116,7 @@ Generate ${numberOfQuestions} questions now:`;
       console.log('⚡ Quick scoring answer...');
       
       // Use cheaper 2.0-flash for simple scoring (33% cost savings)
-      const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+      const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
       
       // Minimized prompt - just scores, no detailed feedback
       const prompt = `Rate this interview answer 0-100 for a ${jobTitle} position.

@@ -89,8 +89,8 @@ async function generateOpenAIFeedback(analysisData) {
  * Generate feedback using Google Gemini
  */
 async function generateGeminiFeedback(analysisData) {
-  // Use gemini-2.0-flash model (latest available in Google AI Studio)
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  // Use gemini-2.5-flash model
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
   // Construct a detailed prompt with all the metrics
   const prompt = constructPrompt(analysisData);
