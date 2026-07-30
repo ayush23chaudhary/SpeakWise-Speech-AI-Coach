@@ -194,8 +194,60 @@ const DEFAULT_ACHIEVEMENTS = [
     criteria: { type: 'sessions_count', value: 7 },
     points: 30,
     rarity: 'rare'
+  },
+  // ── Leaderboard-specific badges ───────────────────────────────────────────
+  {
+    badgeId: 'top_speaker',
+    name: 'Top Speaker',
+    description: 'Reach the Top 10 on the global leaderboard',
+    icon: '🏆',
+    category: 'performance',
+    criteria: { type: 'score_threshold', value: 85 },
+    points: 100,
+    rarity: 'epic'
+  },
+  {
+    badgeId: 'consistent_performer',
+    name: 'Consistent Performer',
+    description: 'Practice at least once a day for 30 consecutive days',
+    icon: '🎯',
+    category: 'streak',
+    criteria: { type: 'streak_days', value: 30 },
+    points: 80,
+    rarity: 'epic'
+  },
+  {
+    badgeId: 'fast_improver',
+    name: 'Fast Improver',
+    description: 'Improve your average score by 30% within your first 20 sessions',
+    icon: '🚀',
+    category: 'performance',
+    criteria: { type: 'improvement_rate', value: 30 },
+    points: 75,
+    rarity: 'rare'
+  },
+  {
+    badgeId: 'rising_star',
+    name: 'Rising Star',
+    description: 'Complete 5 sessions and achieve an average score above 60',
+    icon: '⭐',
+    category: 'milestone',
+    criteria: { type: 'sessions_count', value: 5 },
+    points: 35,
+    rarity: 'common'
+  },
+  {
+    badgeId: 'elite_speaker',
+    name: 'Elite Speaker',
+    description: 'Achieve an overall leaderboard score above 90',
+    icon: '💎',
+    category: 'performance',
+    criteria: { type: 'score_threshold', value: 90 },
+    points: 200,
+    rarity: 'legendary'
   }
 ];
+
 
 class AchievementService {
   // Initialize default achievements in database

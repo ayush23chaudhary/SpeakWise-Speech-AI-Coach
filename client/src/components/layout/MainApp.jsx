@@ -13,6 +13,7 @@ import InterviewReport from '../interview/InterviewReport';
 import InterviewHistory from '../interview/InterviewHistory';
 import JourneyMode from '../journey/JourneyMode';
 import Community from '../community/Community';
+import Leaderboard from '../leaderboard/Leaderboard';
 import useThemeStore from '../../store/themeStore';
 
 const MainApp = () => {
@@ -79,6 +80,9 @@ const MainApp = () => {
           
           {/* Community Route */}
           <Route path="/community" element={<Community />} />
+
+          {/* Leaderboard Route */}
+          <Route path="/leaderboard" element={<Leaderboard />} />
           
           {/* Interview Routes */}
           <Route path="/interview" element={<InterviewSetup />} />

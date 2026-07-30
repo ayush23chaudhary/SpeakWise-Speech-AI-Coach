@@ -16,9 +16,11 @@ const interviewRoutes = require("./routes/interview.routes");
 const journeyRoutes = require("./routes/journey.routes");
 const userRoutes = require("./routes/user.routes");
 const contactRoutes = require("./routes/contact.routes");
+const leaderboardRoutes = require("./routes/leaderboard.routes");
 const mongoose = require("mongoose");
 const passport = require("./config/passport"); // Import passport AFTER dotenv
 const AchievementService = require("./services/achievement.service");
+const LeaderboardService = require("./services/leaderboard.service");
 
 const app = express();
 
@@ -58,6 +60,11 @@ connectDB().then(() => {
     AchievementService.seedAchievements()
       .then(() => console.log('✅ Achievements seeded successfully'))
       .catch(err => console.error('❌ Error seeding achievements:', err));
+
+    // Initial leaderboard refresh — computes scores for all existing users
+    LeaderboardService.refreshLeaderboard()
+      .then(({ updatedCount }) => console.log(`✅ Leaderboard initialised: ${updatedCount} entries`))
+      .catch(err => console.error('❌ Error initialising leaderboard:', err));
   }, 1000); // Wait 1 second for connection to stabilize
 });
 
@@ -128,6 +135,7 @@ app.use("/api/interview", interviewRoutes);
 app.use("/api/journey", journeyRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/leaderboard", leaderboardRoutes);
 
 // Root route
 app.get("/", (req, res) => {

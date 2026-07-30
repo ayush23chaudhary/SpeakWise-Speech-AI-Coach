@@ -59,6 +59,17 @@ const userSchema = new mongoose.Schema({
     type: String, // Cover banner image URL or base64
     default: null
   },
+  // Country / region (optional, for leaderboard display)
+  country: {
+    type: String,
+    default: null,
+    trim: true
+  },
+  // Whether this user opts in to appearing on the leaderboard
+  leaderboardVisible: {
+    type: Boolean,
+    default: true
+  },
   // Streaks & Practice Tracking
   currentStreak: {
     type: Number,
