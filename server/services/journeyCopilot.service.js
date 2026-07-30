@@ -16,7 +16,7 @@ class JourneyCopilotService {
     try {
       console.log('🤖 Journey Copilot generating next task...');
       
-      const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' }); // Use cheaper model for simple tasks
+      const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }); // Use cheaper model for simple tasks
       
       // Map user goals to context
       const goalContext = {
